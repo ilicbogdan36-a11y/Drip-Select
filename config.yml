@@ -1,0 +1,20 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/products" 
+public_folder: "/images/products"
+
+collections:
+  - name: "proizvodi"
+    label: "Proizvodi"
+    folder: "content/proizvodi"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Naziv artikla", name: "title", widget: "string" }
+      - { label: "Brend", name: "brand", widget: "select", options: ["Nike", "Jordan", "The North Face", "Napapijri", "Ostalo"] }
+      - { label: "Cena (RSD)", name: "price", widget: "number" }
+      - { label: "Veličina", name: "size", widget: "select", options: ["S", "M", "L", "XL", "XXL"] }
+      - { label: "Slika proizvoda", name: "image", widget: "image" }
+      - { label: "Opis i stanje", name: "body", widget: "markdown" }
