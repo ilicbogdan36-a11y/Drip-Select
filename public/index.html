@@ -175,7 +175,8 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;
 function sync(){try{var v=JSON.parse(ST.getItem("ds3"));if(v&&v.sold&&v.cart){S=v;if(S.p&&!LIVE)P=S.p}}catch(e){}S.cart=S.cart.filter(function(i){return !sold(i)})}
 function save(){if(!LIVE)S.p=P;try{ST.setItem("ds3",JSON.stringify(S))}catch(e){}}
 function go(h){if(location.hash.slice(1)===h)route();else location.hash=h}
-var FP={"sredina":"50% 50%","gore-malo":"50% 25%","gore":"50% 0%","dole-malo":"50% 75%","dole":"50% 100%","levo":"0% 50%","desno":"100% 50%"};
+// opcije opisuju kuda ide PROIZVOD u okviru: "dole" spušta proizvod, pa se isečak slike pomera ka vrhu slike (0%)
+var FP={"sredina":"50% 50%","gore-malo":"50% 75%","gore":"50% 100%","dole-malo":"50% 25%","dole":"50% 0%","levo":"100% 50%","desno":"0% 50%"};
 function tile(p,k,lab){if(p.photos&&p.photos[k])return '<img class="tile" alt="" src="'+p.photos[k]+'" style="width:100%;height:100%;object-fit:cover;object-position:'+(p.pos||"50% 50%")+'">';var a=p.g.split(",");return '<div class="tile" style="background:linear-gradient('+(150+k*25)+'deg,'+a[0]+','+a[1]+')">'+(lab?'[ foto '+(k+1)+'/'+p.imgs+' ]':'')+'</div>'}
 function head(){var f=P.filter(function(p){return !sold(p.id)}).length;$("#pill").textContent=f+"/"+P.length+" unikatni drip";$("#cc").textContent=S.cart.length}
 
