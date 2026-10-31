@@ -6,6 +6,6 @@ size: M
 color: Tamno Plava
 condition: 8
 image: /images/products/img_1136.png
-sold: false
+sold: true
 ---
 Odlično Stanje
