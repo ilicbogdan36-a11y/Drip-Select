@@ -2,7 +2,7 @@ backend:
   name: git-gateway
   branch: main
 
-media_folder: "images/products" 
+media_folder: "images/products"
 public_folder: "/images/products"
 
 collections:
@@ -12,11 +12,11 @@ collections:
     create: true
     slug: "{{slug}}"
     fields:
-  - { label: "Naziv artikla", name: "title", widget: "string" }
-  - { label: "Brend", name: "brand", widget: "select", options: ["Nike", "Jordan", "The North Face", "Napapijri", "Hugo", "Boss", "Hugo Boss", "Tommy Hilfiger", "Ralph Lauren", "New Balance", "Ostalo"] }
-  - { label: "Cena (RSD)", name: "price", widget: "number" }
-  - { label: "Veličina", name: "size", widget: "select", options: ["S", "M", "L", "XL", "XXL"] }
-  - { label: "Boja", name: "color", widget: "string" }
-  - { label: "Stanje (1-10)", name: "condition", widget: "number", value_type: "float", min: 1, max: 10 }
-  - { label: "Slika proizvoda", name: "image", widget: "image" }
-  - { label: "Opis", name: "body", widget: "markdown" }
+      - { label: "Naziv artikla", name: "title", widget: "string" }
+      - { label: "Brend", name: "brand", widget: "select", options: ["Nike", "Jordan", "The North Face", "Napapijri", "Hugo", "Boss", "Hugo Boss", "Tommy Hilfiger", "Ralph Lauren", "New Balance", "Ostalo"] }
+      - { label: "Cena (RSD)", name: "price", widget: "number" }
+      - { label: "Veličina", name: "size", widget: "select", options: ["S", "M", "L", "XL", "XXL"] }
+      - { label: "Boja", name: "color", widget: "string" }
+      - { label: "Stanje (1-10)", name: "condition", widget: "number", value_type: "float", min: 1, max: 10 }
+      - { label: "Slika proizvoda", name: "image", widget: "image" }
+      - { label: "Opis", name: "body", widget: "markdown" }
