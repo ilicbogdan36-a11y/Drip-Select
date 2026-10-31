@@ -175,7 +175,8 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;
 function sync(){try{var v=JSON.parse(ST.getItem("ds3"));if(v&&v.sold&&v.cart){S=v;if(S.p&&!LIVE)P=S.p}}catch(e){}S.cart=S.cart.filter(function(i){return !sold(i)})}
 function save(){if(!LIVE)S.p=P;try{ST.setItem("ds3",JSON.stringify(S))}catch(e){}}
 function go(h){if(location.hash.slice(1)===h)route();else location.hash=h}
-function tile(p,k,lab){if(p.photos&&p.photos[k])return '<img class="tile" alt="" src="'+p.photos[k]+'" style="width:100%;height:100%;object-fit:cover">';var a=p.g.split(",");return '<div class="tile" style="background:linear-gradient('+(150+k*25)+'deg,'+a[0]+','+a[1]+')">'+(lab?'[ foto '+(k+1)+'/'+p.imgs+' ]':'')+'</div>'}
+var FP={"sredina":"50% 50%","gore-malo":"50% 25%","gore":"50% 0%","dole-malo":"50% 75%","dole":"50% 100%","levo":"0% 50%","desno":"100% 50%"};
+function tile(p,k,lab){if(p.photos&&p.photos[k])return '<img class="tile" alt="" src="'+p.photos[k]+'" style="width:100%;height:100%;object-fit:cover;object-position:'+(p.pos||"50% 50%")+'">';var a=p.g.split(",");return '<div class="tile" style="background:linear-gradient('+(150+k*25)+'deg,'+a[0]+','+a[1]+')">'+(lab?'[ foto '+(k+1)+'/'+p.imgs+' ]':'')+'</div>'}
 function head(){var f=P.filter(function(p){return !sold(p.id)}).length;$("#pill").textContent=f+"/"+P.length+" unikatni drip";$("#cc").textContent=S.cart.length}
 
 function home(){
@@ -379,7 +380,7 @@ function fm(text){var m=text.replace(/^\uFEFF/,"").match(/^---\r?\n([\s\S]*?)\r?
   d.body=m[2].trim();return d}
 function hid(s){var h=5381,i;for(i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))>>>0;return h%2147483647||1}
 function readList(a){P=[];SS=[];a.forEach(function(d){if(!d||!d.title)return;var id=hid(d.file),ph=[d.image,d.image2,d.image3,d.image4,d.image5].filter(Boolean).map(function(x){return /^(https?:)?\/\//.test(x)||x[0]==="/"?x:"/"+x});
-      P.push({id:id,file:d.file,brand:d.brand||"",cat:d.category||"Odeća",size:d.size||"",color:d.color||"",hex:d.hex||"#4a5160",name:d.title,cond:(/^\d+([.,]\d+)?$/.test(String(d.condition||"").trim())?String(d.condition).trim().replace(",",".")+"/10":(d.condition||"")),desc:d.description||d.body||"",price:parseFloat(d.price)||0,imgs:ph.length||3,g:"#2a303b,#14161b",photos:ph});
+      P.push({id:id,file:d.file,brand:d.brand||"",cat:d.category||"Odeća",size:d.size||"",color:d.color||"",hex:d.hex||"#4a5160",name:d.title,cond:(/^\d+([.,]\d+)?$/.test(String(d.condition||"").trim())?String(d.condition).trim().replace(",",".")+"/10":(d.condition||"")),desc:d.description||d.body||"",price:parseFloat(d.price)||0,imgs:ph.length||3,g:"#2a303b,#14161b",photos:ph,pos:FP[String(d.focus||"").trim().toLowerCase()]||"50% 50%"});
       if(/^(true|da|yes|1)$/i.test(d.sold||""))SS.push(id)});if(LIVE){sync();var nw=Date.now();S.sold=S.sold.filter(function(i){return SS.indexOf(i)<0&&S.st&&S.st[i]>nw-20000});save()}}
 function viaApi(){return fetch(CFG.API+"/products").then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(j){return j.items.map(function(x){var d=fm(x.text);d.file=x.file;return d})})}
 function viaGithub(){var G=CFG.GH;

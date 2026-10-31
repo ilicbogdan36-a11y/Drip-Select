@@ -29,6 +29,21 @@ collections:
       - { label: "Boja", name: "color", widget: "string" }
       - { label: "Stanje (1-10)", name: "condition", widget: "number", value_type: "float", min: 1, max: 10 }
       - { label: "Slika proizvoda", name: "image", widget: "image" }
+      # kadriranje: sajt seče slike u fiksan okvir od sredine; ovde pomeraš kadar ako proizvod nije u sredini slike
+      - label: "Položaj slike (kadar)"
+        name: "focus"
+        widget: "select"
+        default: "sredina"
+        required: false
+        hint: "Sredina je podrazumevano. Ako je proizvod na slici pomeren, izaberi na koju stranu da se kadar pomeri."
+        options:
+          - { label: "Sredina", value: "sredina" }
+          - { label: "Malo gore", value: "gore-malo" }
+          - { label: "Gore", value: "gore" }
+          - { label: "Malo dole", value: "dole-malo" }
+          - { label: "Dole", value: "dole" }
+          - { label: "Levo", value: "levo" }
+          - { label: "Desno", value: "desno" }
       - { label: "Opis", name: "body", widget: "markdown" }
       # sajt ovo sam prebaci na true kad neko poruči; možeš i ručno da vratiš proizvod u prodaju
       - { label: "Prodato (SOLD OUT)", name: "sold", widget: "boolean", default: false, required: false }
