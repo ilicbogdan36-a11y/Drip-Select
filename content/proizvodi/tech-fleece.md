@@ -3,7 +3,7 @@ title: Tech Fleece
 brand: Nike
 price: 99999
 size: M
-color: Roze
+color: Tamno Plava
 condition: 7
 image: /images/products/img_1136.png
 ---
