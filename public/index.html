@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#07080c;--card:#0f121a;--ln:#1f2430;--tx:#f4f6fa;--mut:#8b93a7;--ac:#1a8cff;--red:#ff453a;--ok:#30d158;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 80px);scroll-behavior:smooth}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--hh,80px) + 30px);scroll-behavior:smooth}
 *,*::before,*::after{box-sizing:inherit}
 body{margin:0;color:var(--tx);font:400 15px/1.5 Inter,system-ui,sans-serif;background:radial-gradient(800px 500px at 90% 75%,#0b2a55 0,transparent 60%),radial-gradient(700px 420px at 5% 5%,#081f3d 0,transparent 60%),var(--bg) fixed}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
@@ -432,6 +432,8 @@ function route(){
   else{home();var el=h&&document.getElementById(h);if(el)el.scrollIntoView();else scrollTo(0,0)}
 }
 $("#hl").src=LOGO;$("#fl").src=LOGO;initBg();if(LIVE)$("#reset").style.display="none";
+function hh(){var e=document.querySelector("header");if(e)document.documentElement.style.setProperty("--hh",e.offsetHeight+"px")}
+hh();addEventListener("resize",hh);addEventListener("orientationchange",hh);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(hh);if(window.ResizeObserver){var ho=document.querySelector("header");if(ho)new ResizeObserver(hh).observe(ho)}
 window.addEventListener("hashchange",route);route();
 </script>
 </body>
