@@ -5,12 +5,18 @@ backend:
 media_folder: "images/products"
 public_folder: "/images/products"
 
+# Imena fajlova bez č/š/ž (npr. "duks-sarena.md"), da automatsko označavanje SOLD OUT uvek pronađe fajl
+slug:
+  encoding: "ascii"
+  clean_accents: true
+
 collections:
   - name: "proizvodi"
     label: "Proizvodi"
     folder: "content/proizvodi"
     create: true
-    slug: "{{slug}}"
+    # datum ispred imena = najnoviji proizvod ide prvi na sajtu
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - { label: "Naziv artikla", name: "title", widget: "string" }
       - { label: "Brend", name: "brand", widget: "select", options: ["Nike", "Jordan", "The North Face", "Napapijri", "Hugo", "Boss", "Hugo Boss", "Tommy Hilfiger", "Ralph Lauren", "New Balance", "Ostalo"] }
@@ -20,3 +26,5 @@ collections:
       - { label: "Stanje (1-10)", name: "condition", widget: "number", value_type: "float", min: 1, max: 10 }
       - { label: "Slika proizvoda", name: "image", widget: "image" }
       - { label: "Opis", name: "body", widget: "markdown" }
+      # novo: sajt ovo sam prebaci na true kad neko poruči; ti možeš i ručno
+      - { label: "Prodato (SOLD OUT)", name: "sold", widget: "boolean", default: false, required: false }

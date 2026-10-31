@@ -127,7 +127,7 @@ nav{align-items:center}nav a{display:inline-flex;align-items:center;line-height:
 .ch{display:flex;gap:8px;flex-wrap:wrap}
 .chip{background:var(--card);border:1px solid var(--ln);color:var(--tx);border-radius:99px;padding:7px 14px;font:600 12px Inter,sans-serif;cursor:pointer;transition:background .2s,border-color .2s}
 .chip:hover{border-color:var(--ac)}.chip.on{background:var(--ac);border-color:var(--ac)}
-.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;border:1px solid #ffffff55}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;border:1px solid #ffffff55}.opt .dot,.specs .dot,.li .dot{vertical-align:middle;position:relative;top:-1px}
 .none{grid-column:1/-1;text-align:center;color:var(--mut);padding:40px 0}
 .drop{text-align:center;padding:50px 20px;margin-bottom:50px}.drop .ic{font-size:44px}
 .drop form{display:flex;gap:8px;max-width:460px;margin:0 auto;flex-wrap:wrap}.drop input{flex:1;min-width:200px}
@@ -204,13 +204,13 @@ function prod(id){
   for(k=0;k<10;k++)mt+='<i class="'+(k<n?'f':'')+'"></i>';
   for(k=0;k<p.imgs;k++)th+='<button type="button" data-th="'+k+'" class="'+(k==ph?'on':'')+'" aria-label="Slika '+(k+1)+'">'+tile(p,k)+'</button>';
   P.forEach(function(q){if(q.id!=id&&!sold(q.id))mo+='<a href="#p-'+q.id+'"><div class="mt">'+tile(q,0)+'</div><small>'+esc(q.name)+'<br><b>'+fmt(q.price)+'</b></small></a>'});
-  var sp=[["Brend",p.brand],["Kategorija",p.cat],["Veličina",p.size],["Boja",p.color],["Stanje",p.cond],["Autentičnost","100% original"]].filter(function(x){return x[1]}).map(function(x){return '<div><small>'+x[0]+'</small>'+esc(x[1])+'</div>'}).join("");
+  var sp=[["Brend",p.brand],["Kategorija",p.cat],["Veličina",p.size],["Boja",p.color],["Stanje",p.cond],["Autentičnost","100% original"]].filter(function(x){return x[1]}).map(function(x){return '<div><small>'+x[0]+'</small>'+(x[0]==="Boja"?'<i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>':'')+esc(x[1])+'</div>'}).join("");
   app.innerHTML='<div class="w"><a class="back" href="#proizvodi">← Nazad na proizvode</a>'+
   '<div class="pg"><div class="fs">'+th+'</div><button class="big" id="big" data-zoom type="button" aria-label="Uvećaj sliku"></button>'+
   '<aside class="panel"><span class="lbl">'+esc(p.brand)+' · '+esc(p.cat)+'</span><h1>'+esc(p.name)+'</h1><span class="price">'+fmt(p.price)+'</span>'+
   '<div class="last'+(s?' no':'')+'">'+(s?'Prodato: ovaj proizvod je već našao vlasnika.':'Jedini proizvod: ko prvi naruči, njegov je.')+'</div>'+
   (p.cond?'<div class="opt">Stanje <b>'+esc(p.cond.split(" ")[0])+'</b></div><div class="meter">'+mt+'</div>':'')+
-  '<div class="opt">Veličina <b>'+esc(p.size)+'</b></div><div class="opt" style="margin:10px 0 0">Boja <b>'+esc(p.color)+'</b></div><span class="sw" style="background:'+p.hex+'"></span>'+
+  '<div class="opt">Veličina <b>'+esc(p.size)+'</b></div><div class="opt" style="margin:10px 0 0">Boja <b><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</b></div>'+
   '<div class="bb">'+(s?'<button class="btn full" disabled>Nije na stanju</button>':'<button class="btn ghost" data-add="'+id+'">Dodaj u korpu</button><button class="btn" data-buy="'+id+'">Naruči odmah</button>')+'</div>'+
   '<div class="row3"><div><b>🚚</b>Dostava<small>Dogovaramo pri potvrdi</small></div><div><b>💵</b>Pouzećem<small>Plaćaš kuriru</small></div><div><b>↩️</b>Povrat 14 dana<small>Bez objašnjenja</small></div></div></aside></div>'+
   '<div class="about">'+(p.desc?'<h2>Opis</h2><p class="lead" style="white-space:pre-line;font-size:15px;margin:10px 0 26px">'+esc(p.desc)+'</p>':'')+'<h2>Detalji proizvoda</h2><div class="specs">'+sp+'</div><h2 style="margin-top:34px">Još iz vaulta</h2><div class="more" style="margin-top:12px">'+(mo||'<p class="cond">Trenutno nema drugih proizvoda.</p>')+'</div></div></div>';
@@ -218,7 +218,7 @@ function prod(id){
 }
 function sum(){
   var t=0,h='';
-  co.forEach(function(i){var p=get(i);t+=p.price;h+='<div class="li"><span class="mini">'+tile(p,0)+'</span><div>'+esc(p.name)+'<small>'+esc(p.size)+' / '+esc(p.color)+' · qty 1</small></div><b>'+fmt(p.price)+'</b></div>'});
+  co.forEach(function(i){var p=get(i);t+=p.price;h+='<div class="li"><span class="mini">'+tile(p,0)+'</span><div>'+esc(p.name)+'<small>'+esc(p.size)+' / <i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+' · qty 1</small></div><b>'+fmt(p.price)+'</b></div>'});
   if(!co.length)return '<h3>Tvoja narudžbina</h3><p class="cond">Nema proizvoda u narudžbini.</p><a class="btn full" href="#proizvodi">Nazad na proizvode</a>';
   return '<h3>Tvoja narudžbina</h3>'+h+'<div class="tr t"><span>Ukupno</span><b>'+fmt(t)+'</b></div>'+
   '<p class="cond">Dostavu dogovaramo pri potvrdi porudžbine.</p><button class="btn full" type="submit" form="f">Naruči - '+fmt(t)+'</button><p class="fine">Klikom na „Naruči“ prihvataš opšte uslove.</p>';
@@ -311,7 +311,15 @@ document.addEventListener("submit",function(e){if(e.target.id!=="wi")return;e.pr
   .catch(function(){bx.insertAdjacentHTML("beforeend",'<p class="err">Slanje nije uspelo, pokušaj ponovo.</p>')})});
 var F={q:"",b:"",s:"",c:""};
 function uniq(k){var a=[];P.forEach(function(p){if(a.indexOf(p[k])<0)a.push(p[k])});return a.sort()}
-function chips(k,l,v){return '<div class="fg"><span class="fl">'+l+'</span><div class="ch">'+uniq(k).map(function(x){var d=k==="color"?'<i class="dot" style="background:'+P.filter(function(p){return p.color===x})[0].hex+'"></i>':'';return '<button type="button" class="chip'+(F[v]===x?' on':'')+'" data-f="'+v+'" data-v="'+esc(x)+'">'+d+esc(x)+'</button>'}).join("")+'</div></div>'}
+var CN=[["crn","#15171c"],["bel","#f2f2f2"],["siv","#8a8f98"],["teget","#14233f"],["plav","#1a6fe0"],["crven","#d32f2f"],["bordo","#6d1a2a"],["zelen","#2e8b57"],["maslin","#4b5d45"],["zut","#f2c94c"],["narandz","#f2994a"],["roz","#f48fb1"],["ljubic","#7e57c2"],["braon","#6d4c41"],["smed","#6d4c41"],["bez","#d9c8a9"],["krem","#efe6d0"],["zlat","#d4af37"],["srebr","#b8bcc4"],["khaki","#a39d6b"],["haki","#a39d6b"]];
+function mixHex(a,b,t){var p=function(h,i){return parseInt(h.substr(1+i*2,2),16)};return "#"+[0,1,2].map(function(i){return ("0"+Math.round(p(a,i)*(1-t)+p(b,i)*t).toString(16)).slice(-2)}).join("")}
+function oneColor(w){var m=w.match(/^(svetlo|tamno)?(.*)$/),k=m[2],mod=m[1],i,h;for(i=0;i<CN.length;i++)if(k.indexOf(CN[i][0])===0){h=CN[i][1];return mod==="svetlo"?mixHex(h,"#ffffff",.4):mod==="tamno"?mixHex(h,"#000000",.4):h}return null}
+function colorBg(c,hex){if(hex&&String(hex).toLowerCase()!=="#4a5160")return hex;
+  var n=String(c||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/đ/g,"dj").replace(/(svetlo|tamno)\s+/g,"$1").trim(),
+  ps=n.split(/[\s\-\/,+]+/).filter(function(w){return w&&w!=="i"}).map(oneColor).filter(Boolean);
+  if(!ps.length)return hex||"#4a5160";
+  return ps.length===1?ps[0]:"linear-gradient(135deg,"+ps[0]+" 50%,"+ps[1]+" 50%)"}
+function chips(k,l,v){return '<div class="fg"><span class="fl">'+l+'</span><div class="ch">'+uniq(k).map(function(x){var d=k==="color"?'<i class="dot" style="background:'+colorBg(x,P.filter(function(p){return p.color===x})[0].hex)+'"></i>':'';return '<button type="button" class="chip'+(F[v]===x?' on':'')+'" data-f="'+v+'" data-v="'+esc(x)+'">'+d+esc(x)+'</button>'}).join("")+'</div></div>'}
 function drawGrid(an){
   var q=F.q.trim().toLowerCase(),h="";
   var list=P.filter(function(p){return(!q||(p.name+" "+p.brand+" "+p.color+" "+p.cat).toLowerCase().indexOf(q)>-1)&&(!F.b||p.brand===F.b)&&(!F.s||p.size===F.s)&&(!F.c||p.color===F.c)}).sort(function(a,b){return sold(a.id)-sold(b.id)});
@@ -372,7 +380,7 @@ function loadSheet(){var G=CFG.GH;
     var fs=l.filter(function(f){return f.type==="file"&&/\.md$/i.test(f.name)}).sort(function(a,b){return b.name.localeCompare(a.name)});
     return Promise.all(fs.map(function(f){return fetch(f.download_url).then(function(r){return r.text()}).then(function(x){var d=fm(x);d.file=f.name;return d}).catch(function(){return null})}))}).then(function(a){
     P=[];SS=[];a.forEach(function(d){if(!d||!d.title)return;var id=hid(d.file),ph=[d.image,d.image2,d.image3,d.image4,d.image5].filter(Boolean).map(function(x){return /^(https?:)?\/\//.test(x)||x[0]==="/"?x:"/"+x});
-      P.push({id:id,file:d.file,brand:d.brand||"",cat:d.category||"Odeća",size:d.size||"",color:d.color||"",hex:d.hex||"#4a5160",name:d.title,cond:d.condition||"",desc:d.description||d.body||"",price:parseFloat(d.price)||0,imgs:ph.length||3,g:"#2a303b,#14161b",photos:ph});
+      P.push({id:id,file:d.file,brand:d.brand||"",cat:d.category||"Odeća",size:d.size||"",color:d.color||"",hex:d.hex||"#4a5160",name:d.title,cond:(/^\d+([.,]\d+)?$/.test(String(d.condition||"").trim())?String(d.condition).trim().replace(",",".")+"/10":(d.condition||"")),desc:d.description||d.body||"",price:parseFloat(d.price)||0,imgs:ph.length||3,g:"#2a303b,#14161b",photos:ph});
       if(/^(true|da|yes|1)$/i.test(d.sold||""))SS.push(id)})})}
 function cart(){
   var t=0,h='';
