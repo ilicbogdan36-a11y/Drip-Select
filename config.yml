@@ -1,7 +1,6 @@
 backend:
-  name: github
-  repo: tvoje-github-korisničko-ime/drip-select # Unesi tvoje korisničko ime i ime repozitorijuma
-  branch: main # Ili master, u zavisnosti kako ti se zove grana na GitHub-u
+  name: git-gateway
+  branch: main # Unesi ime svoje grane (main ili master)
 
 media_folder: "images/products" 
 public_folder: "/images/products"
