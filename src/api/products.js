@@ -4,7 +4,8 @@
 //
 // Promenljive: GITHUB_TOKEN, GH_OWNER, GH_REPO, opciono GH_BRANCH (main), GH_FOLDER (content/proizvodi)
 
-const TTL = 30; // sekundi; posle porudžbine proizvod postaje SOLD OUT na svim uređajima za najviše toliko
+const TTL = 10; // sekundi keša na ivici mreže; porudžbina ga briše odmah, a izmena u adminu se vidi za najviše toliko
+const JSON_H = { "content-type": "application/json; charset=utf-8" };
 
 const QUERY = `query($o:String!,$n:String!,$e:String!){repository(owner:$o,name:$n){object(expression:$e){... on Tree{entries{name type object{... on Blob{text isTruncated}}}}}}}`;
 
@@ -13,7 +14,7 @@ export async function onRequestGet({ request, env, waitUntil }) {
 
   const cache = typeof caches !== "undefined" ? caches.default : null;
   const key = new Request(new URL(request.url).origin + "/api/products");
-  if (cache) { const hit = await cache.match(key); if (hit) return hit; }
+  if (cache) { const hit = await cache.match(key); if (hit) return new Response(hit.body, { headers: { ...JSON_H, "cache-control": "no-store" } }); }
 
   const branch = env.GH_BRANCH || "main", folder = env.GH_FOLDER || "content/proizvodi";
   let r;
@@ -34,9 +35,7 @@ export async function onRequestGet({ request, env, waitUntil }) {
     .map((e) => ({ file: e.name, text: e.object.text }))
     .sort((a, b) => b.file.localeCompare(a.file)); // najnoviji prvi (ime fajla počinje datumom)
 
-  const res = new Response(JSON.stringify({ items }), {
-    headers: { "content-type": "application/json; charset=utf-8", "cache-control": `public, max-age=${TTL}` },
-  });
-  if (cache && waitUntil) waitUntil(cache.put(key, res.clone()));
-  return res;
+  const body = JSON.stringify({ items });
+  if (cache && waitUntil) waitUntil(cache.put(key, new Response(body, { headers: { ...JSON_H, "cache-control": `public, max-age=${TTL}` } })));
+  return new Response(body, { headers: { ...JSON_H, "cache-control": "no-store" } }); // pregledač ne sme da drži staru listu
 }

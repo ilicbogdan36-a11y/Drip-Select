@@ -143,8 +143,17 @@ async function sendMail(env, mail, replyTo, attachments) {
   if (!r.ok) throw new Error(`resend ${r.status} ${(await r.text()).slice(0, 300)}`);
 }
 
+// Posle upisa u GitHub obriši keš liste proizvoda, da SOLD OUT bude vidljiv odmah (najbolji pokušaj)
+function purge(request, waitUntil) {
+  try {
+    if (typeof caches === "undefined") return;
+    const p = caches.default.delete(new Request(new URL(request.url).origin + "/api/products"));
+    if (waitUntil) waitUntil(p.catch(() => {}));
+  } catch (e) { console.error("purge", e); }
+}
+
 // ---------- Handler ----------
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env, waitUntil }) {
   const origin = request.headers.get("origin");
   if (origin) {
     try { if (new URL(origin).host !== new URL(request.url).host) return json({ error: "origin" }, 403); }
@@ -189,13 +198,14 @@ export async function onRequestPost({ request, env }) {
     catch (e) { console.error("reserve", e); return json({ error: "github" }, 502); }
     if (res.conflict) return json({ error: "sold", items: res.conflict }, 409);
     reserved = res.done;
+    if (reserved.length) purge(request, waitUntil);
   }
 
   try {
     await sendMail(env, buildMail(def, d, atts), d.email && isEmail(d.email) ? d.email : null, atts);
   } catch (e) {
     console.error("mail", e);
-    if (reserved.length) await rollback(cfg, reserved); // mejl nije otišao: vrati proizvode u prodaju
+    if (reserved.length) { await rollback(cfg, reserved); purge(request, waitUntil); } // mejl nije otišao: vrati proizvode u prodaju
     return json({ error: "mail" }, 502);
   }
   return json({ ok: true });

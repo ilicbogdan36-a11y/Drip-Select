@@ -380,7 +380,7 @@ function fm(text){var m=text.replace(/^\uFEFF/,"").match(/^---\r?\n([\s\S]*?)\r?
 function hid(s){var h=5381,i;for(i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))>>>0;return h%2147483647||1}
 function readList(a){P=[];SS=[];a.forEach(function(d){if(!d||!d.title)return;var id=hid(d.file),ph=[d.image,d.image2,d.image3,d.image4,d.image5].filter(Boolean).map(function(x){return /^(https?:)?\/\//.test(x)||x[0]==="/"?x:"/"+x});
       P.push({id:id,file:d.file,brand:d.brand||"",cat:d.category||"Odeća",size:d.size||"",color:d.color||"",hex:d.hex||"#4a5160",name:d.title,cond:(/^\d+([.,]\d+)?$/.test(String(d.condition||"").trim())?String(d.condition).trim().replace(",",".")+"/10":(d.condition||"")),desc:d.description||d.body||"",price:parseFloat(d.price)||0,imgs:ph.length||3,g:"#2a303b,#14161b",photos:ph});
-      if(/^(true|da|yes|1)$/i.test(d.sold||""))SS.push(id)});if(LIVE){sync();var nw=Date.now();S.sold=S.sold.filter(function(i){return S.st&&S.st[i]>nw-120000});save()}}
+      if(/^(true|da|yes|1)$/i.test(d.sold||""))SS.push(id)});if(LIVE){sync();var nw=Date.now();S.sold=S.sold.filter(function(i){return SS.indexOf(i)<0&&S.st&&S.st[i]>nw-20000});save()}}
 function viaApi(){return fetch(CFG.API+"/products").then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(j){return j.items.map(function(x){var d=fm(x.text);d.file=x.file;return d})})}
 function viaGithub(){var G=CFG.GH;
   return fetch("https://api.github.com/repos/"+G.owner+"/"+G.repo+"/contents/"+G.folder+"?ref="+encodeURIComponent(G.branch)).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(l){
