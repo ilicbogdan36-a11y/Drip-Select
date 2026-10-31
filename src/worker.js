@@ -3,8 +3,9 @@ import * as submit from "./api/submit.js";
 import * as products from "./api/products.js";
 import * as auth from "./api/auth.js";
 import * as callback from "./api/callback.js";
+import * as status from "./api/status.js";
 
-const ROUTES = { "/api/submit": submit, "/api/products": products, "/api/auth": auth, "/api/callback": callback };
+const ROUTES = { "/api/submit": submit, "/api/products": products, "/api/auth": auth, "/api/callback": callback, "/api/status": status };
 const json = (o, status) => new Response(JSON.stringify(o), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 
 export default {
