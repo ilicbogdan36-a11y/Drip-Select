@@ -6,6 +6,7 @@ size: L
 color: Crna
 condition: 9
 image: /images/products/dwdddddd.png
+focus: dole-malo
 sold: false
 ---
 Gas
