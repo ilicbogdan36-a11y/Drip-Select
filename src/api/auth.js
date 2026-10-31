@@ -1,4 +1,4 @@
-// Cloudflare Pages Function: GET /api/auth
+// Cloudflare Worker (src/worker.js): GET /api/auth
 // Početak prijave u /admin (Decap CMS) preko GitHub naloga. Decap otvara ovu adresu u malom prozoru.
 //
 // Promenljive: GITHUB_CLIENT_ID (iz GitHub OAuth aplikacije), opciono OAUTH_SCOPE (public_repo; za privatan repo stavi repo)

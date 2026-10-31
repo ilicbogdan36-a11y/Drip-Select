@@ -2,11 +2,11 @@ backend:
   name: github
   repo: ilicbogdan36-a11y/Drip-Select
   branch: main
-  # adresa tvog sajta na Cloudflare Pages (bez kose crte na kraju); ako se tvoja razlikuje, promeni samo ovu liniju
-  base_url: https://drip-select.pages.dev
+  # __ORIGIN__ sajt sam zameni adresom na kojoj je otvoren (vidi src/worker.js)
+  base_url: __ORIGIN__
   auth_endpoint: api/auth
 
-media_folder: "images/products"
+media_folder: "public/images/products"
 public_folder: "/images/products"
 
 # Imena fajlova bez č/š/ž (npr. "duks-sarena.md")

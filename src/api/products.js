@@ -1,4 +1,4 @@
-// Cloudflare Pages Function: GET /api/products
+// Cloudflare Worker (src/worker.js): GET /api/products
 // Vraća sve proizvode (.md fajlove iz GitHub foldera) jednim pozivom, sa tokenom (bez limita od 60 poziva na sat)
 // i sa kratkim kešom na ivici mreže, pa sajt ostaje brz i kad ima mnogo posetilaca.
 //

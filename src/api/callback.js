@@ -1,4 +1,4 @@
-// Cloudflare Pages Function: GET /api/callback
+// Cloudflare Worker (src/worker.js): GET /api/callback
 // GitHub vraća korisnika ovde posle prijave. Menjamo kod za token i predajemo ga Decap-u (prozor /admin).
 //
 // Promenljive: GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET (secret), opciono ALLOWED_USERS (GitHub korisnička imena, zarezom)

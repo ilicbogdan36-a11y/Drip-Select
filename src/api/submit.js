@@ -1,10 +1,10 @@
-// Cloudflare Pages Function: POST /api/submit
+// Cloudflare Worker (src/worker.js): POST /api/submit
 // Prima porudžbine i ostale forme sa sajta, šalje mejl vlasniku (Resend) i, za porudžbinu,
 // odmah "rezerviše" proizvod (sold: true u GitHub fajlu) tako da ga niko drugi ne može poručiti.
 //
 // Telo (JSON): { form: "porudzbina"|"prijava"|"zelja"|"kontakt", data: {...}, files: [{filename, content(base64)}], bot: "" }
 //
-// Promenljive (Cloudflare Pages > Settings > Variables and Secrets):
+// Promenljive (Cloudflare > Workers > drip-select > Settings > Variables and Secrets):
 //   GITHUB_TOKEN (secret)  fine-grained token, samo ovaj repo, Contents: Read and write
 //   GH_OWNER, GH_REPO      npr. ilicbogdan36-a11y i Drip-Select
 //   RESEND_API_KEY (secret), MAIL_TO (tvoj mejl; više njih odvoji zarezom)
