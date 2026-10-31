@@ -1,6 +1,6 @@
 // GET /api/status: pomoć pri podešavanju. Pokazuje samo da li je svaka promenljiva podešena i izgleda li ispravno,
 // nikad same vrednosti. Može da se obriše kad sve proradi.
-const BUILD = "2026-10-31-b";
+const BUILD = "2026-10-31-c";
 
 const CHECKS = {
   GITHUB_TOKEN: (v) => /^(github_pat_|ghp_)[A-Za-z0-9_]+$/.test(v),
