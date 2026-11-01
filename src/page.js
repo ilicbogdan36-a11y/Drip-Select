@@ -53,17 +53,13 @@ export function parseProducts(items) {
       color: d.color || "",
       price: parseFloat(d.price) || 0,
       photo: photos[0] || "",
-      focus: String(d.focus || "").trim().toLowerCase(),
       sold: /^(true|da|yes|1)$/i.test(d.sold || ""),
     });
   }
   return out;
 }
 
-// "Kadar slike" iz admina (isto kao na sajtu: gore, dole...) -> tačka oko koje se seče slika za pregled; bez izbora: Cloudflare sam nađe glavni deo slike
-const FOCUS = { sredina: [0.5, 0.5], "gore-malo": [0.5, 0.75], gore: [0.5, 1], "dole-malo": [0.5, 0.25], dole: [0.5, 0], levo: [1, 0.5], desno: [0, 0.5] };
-const gravity = (f) => (FOCUS[f] ? { x: FOCUS[f][0], y: FOCUS[f][1] } : "auto");
-const OG_VER = "2"; // povećaj kad se izgled slike za pregled promeni, da mreže ne drže staru
+const OG_VER = "3"; // povećaj kad se izgled slike za pregled promeni, da mreže ne drže staru
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const fmtPrice = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " din.";
 const hash = (s) => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0; return h.toString(36); };
@@ -86,7 +82,7 @@ export function injectProduct(html, p, origin) {
   const url = origin + "/proizvod/" + p.slug;
   const title = p.name + " – Drip Select";
   const desc = describe(p);
-  const img = origin + "/og-img/" + p.slug + "?v=" + hash((p.photo || "-") + "|" + p.focus + "|" + OG_VER);
+  const img = origin + "/og-img/" + p.slug + "?v=" + hash((p.photo || "-") + "|" + OG_VER);
   head = head.replace(/<title>[\s\S]*?<\/title>/, () => "<title>" + esc(title) + "</title>"); // funkcija: $& i slično u nazivu se ne tumače
   head = setMeta(head, "name", "description", desc);
   head = setMeta(head, "property", "og:title", title);
@@ -152,15 +148,17 @@ export async function ogImage({ request, env, waitUntil }) {
     return res;
   };
 
-  // 1) smanjena verzija 1200x630 preko cele slike (bez traka); radi samo ako su Image Transformations uključene
-  try {
-    const t = await fetch(src, { cf: { image: { width: 1200, height: 630, fit: "cover", gravity: gravity(found.product.focus), quality: 80, format: "jpeg" } } });
-    const ty = t.headers.get("content-type") || "";
-    if (t.ok && /^image\/jpeg/i.test(ty)) {
+  // 1) smanjena verzija: cela slika, svoje proporcije, bez seckanja i traka (ne uvećava se); radi samo ako su Image Transformations uključene.
+  //    Ako ispadne preko ~290 KB, probamo manju i jače kompresovanu.
+  for (const [side, quality] of [[1200, 82], [900, 70], [640, 62]]) {
+    try {
+      const t = await fetch(src, { cf: { image: { width: side, height: side, fit: "scale-down", background: "#ffffff", quality, format: "jpeg" } } });
+      const ty = t.headers.get("content-type") || "";
+      if (!t.ok || !/^image\/jpeg/i.test(ty)) break; // transformacije nisu dostupne: idemo na original
       const buf = await t.arrayBuffer();
       if (buf.byteLength <= MAX_IMG) return done(buf, "image/jpeg");
-    }
-  } catch (e) { /* nije dostupno: probamo original */ }
+    } catch (e) { break; }
+  }
 
   // 2) original, ako je dovoljno mali
   try {
