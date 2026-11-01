@@ -277,7 +277,7 @@ function prod(id){
   (p.cond?'<div class="opt">Stanje <b>'+esc(p.cond.split(" ")[0])+'</b></div><div class="meter">'+mt+'</div>':'')+
   '<div class="opt">Veličina <b>'+esc(p.size)+'</b></div><div class="opt">Boja <b><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</b></div>'+
   '<div class="bb">'+(s?'<button class="btn full" disabled>Nije na stanju</button>':'<button class="btn ghost" data-add="'+id+'">Dodaj u korpu</button><button class="btn" data-buy="'+id+'">Naruči odmah</button>')+'</div>'+
-  '<div class="row3"><div><b>'+ico('truck')+'</b>Dostava<small>Dogovaramo pri potvrdi</small></div><div><b>'+ico('cash')+'</b>Pouzećem<small>Plaćaš kuriru</small></div><div><b>'+ico('back')+'</b>Povrat 14 dana<small>Bez objašnjenja</small></div></div></aside></div>'+
+  '<div class="row3"><div><b>'+ico('truck')+'</b>Dostava<small>Dogovaramo pri potvrdi</small></div><div><b>'+ico('cash')+'</b>Pouzećem<small>Plaćaš kuriru</small></div><div><b>'+ico('back')+'</b>Povrat 14 dana<small>Bez pitanja</small></div></div></aside></div>'+
   '<div class="about">'+(p.desc?'<h2>Opis</h2><p class="lead" style="white-space:pre-line;font-size:15px;margin:10px 0 26px">'+esc(p.desc)+'</p>':'')+'<h2>Detalji proizvoda</h2><div class="specs">'+sp+'</div><h2 style="margin-top:34px">Još iz vaulta</h2><div class="more" style="margin-top:12px">'+(mo||'<p class="cond">Trenutno nema drugih proizvoda.</p>')+'</div></div></div>';
   setImg(ph);
 }
@@ -348,7 +348,7 @@ function faq(){
   var q=[["Kako da naručim?","Otvori artikal i klikni „Naruči odmah“ ili ga dodaj u korpu. Na kasi upišeš kontakt i adresu, a mi te pozovemo radi potvrde."],
   ["Da li su svi proizvodi originalni?","Da. Prodajemo samo originale i svaki proizvod proverimo pre objave."],
   ["Kako se plaća?","Pouzećem, gotovinom kuriru pri preuzimanju paketa. Unapred ne plaćaš ništa."],
-  ["Mogu li da vratim proizvod?","Možeš, u roku od 14 dana, bez objašnjenja. Proizvod mora da bude u stanju u kom je stigao."],
+  ["Mogu li da vratim proizvod?","Možeš, u roku od 14 dana, bez navođenja razloga. Proizvod mora da bude u stanju u kom je stigao."],
   ["Kako ocenjujete stanje?","Skalom od 1 do 10. Novo sa etiketom je 10/10, a sve manje opisujemo iskreno, sa slikama mana."]
   ].map(function(x){return '<details><summary>'+x[0]+'</summary><p>'+x[1]+'</p></details>'}).join("");
   app.innerHTML='<div class="w n"><a class="back" href="#">← Nazad na sajt</a><h1 style="font-size:42px;margin:0 0 20px">Česta pitanja</h1><div class="faq">'+q+'</div><p class="cond" style="margin:24px 0 70px">Nisi našao odgovor? <a href="#kontakt" style="color:#6fb1ff">Piši nam</a>.</p></div>';
@@ -512,7 +512,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=2";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=3";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();
