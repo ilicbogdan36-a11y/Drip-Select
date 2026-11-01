@@ -2,7 +2,7 @@
 title: North Face Jakna
 brand: The North Face
 price: 56000
-old_price: 68000
+old_price: 75000
 size: L
 color: Crna
 condition: 9
