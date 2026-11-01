@@ -339,14 +339,14 @@ document.addEventListener("submit",function(e){
   fl.forEach(function(x){shrink(x,function(u){ph2.push(u);if(ph2.length===fl.length)fin()})});
 });
 function about(){
-  var c=[["Samo originali","Svaki proizvod prolazi proveru pre objave."],["Svaki proizvod je u jednom primerku","Nema ponovnog dopunjavanja: kad ga neko naruči, sklanjamo ga sa sajta."],["Iskrena ocena stanja","Ako ima mane, pišemo ih i slikamo."]].map(function(x){return '<div><small>'+x[0]+'</small>'+x[1]+'</div>'}).join("");
+  var c=[["Samo originali","Prodajemo isključivo originalne proizvode, bez replika."],["Svaki proizvod je u jednom primerku","Nema ponovnog dopunjavanja: kad ga neko naruči, sklanjamo ga sa sajta."],["Iskrena ocena stanja","Ako ima mane, pišemo ih i slikamo."]].map(function(x){return '<div><small>'+x[0]+'</small>'+x[1]+'</div>'}).join("");
   app.innerHTML='<div class="w n"><a class="back" href="#">← Nazad na sajt</a><h1 style="font-size:42px;margin:0 0 14px">O nama</h1>'+
   '<p class="lead">Biramo samo ono što bismo i sami nosili, uvek originalno. Svaki proizvod dobija fotografije iz svih uglova, tačnu veličinu i ocenu stanja od 1 do 10, bez ulepšavanja.</p>'+
   '<div class="specs" style="margin:28px 0">'+c+'</div><a class="btn" href="#proizvodi">Pogledaj proizvode</a><div style="height:70px"></div></div>';
 }
 function faq(){
   var q=[["Kako da naručim?","Otvori artikal i klikni „Naruči odmah“ ili ga dodaj u korpu. Na kasi upišeš kontakt i adresu, a mi te pozovemo radi potvrde."],
-  ["Da li su svi proizvodi originalni?","Da. Prodajemo samo originale i svaki proizvod proverimo pre objave."],
+  ["Da li su svi proizvodi originalni?","Da. Prodajemo isključivo originalne proizvode, bez replika."],
   ["Kako se plaća?","Pouzećem, gotovinom kuriru pri preuzimanju paketa. Unapred ne plaćaš ništa."],
   ["Mogu li da vratim proizvod?","Možeš, u roku od 14 dana, bez navođenja razloga. Proizvod mora da bude u stanju u kom je stigao."],
   ["Kako ocenjujete stanje?","Skalom od 1 do 10. Novo sa etiketom je 10/10, a sve manje opisujemo iskreno, sa slikama mana."]
@@ -512,7 +512,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=3";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=4";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();

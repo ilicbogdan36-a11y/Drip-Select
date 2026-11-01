@@ -63,7 +63,7 @@
     // o nama
     "← Nazad na sajt": "← Back to site",
     "Biramo samo ono što bismo i sami nosili, uvek originalno. Svaki proizvod dobija fotografije iz svih uglova, tačnu veličinu i ocenu stanja od 1 do 10, bez ulepšavanja.": "We only choose what we would wear ourselves, always original. Every item comes with photos from every angle, the exact size and a condition rating from 1 to 10, with no sugar-coating.",
-    "Samo originali": "Only originals", "Svaki proizvod prolazi proveru pre objave.": "Every item is checked before it is listed.",
+    "Samo originali": "Only originals", "Prodajemo isključivo originalne proizvode, bez replika.": "We sell genuine products only, no replicas.",
     "Svaki proizvod je u jednom primerku": "Every item is one of one",
     "Nema ponovnog dopunjavanja: kad ga neko naruči, sklanjamo ga sa sajta.": "No restocking: once someone orders it, we take it off the site.",
     "Iskrena ocena stanja": "Honest condition rating", "Ako ima mane, pišemo ih i slikamo.": "If there are flaws, we write them down and photograph them.",
@@ -71,7 +71,7 @@
     "Kako da naručim?": "How do I order?",
     "Otvori artikal i klikni „Naruči odmah“ ili ga dodaj u korpu. Na kasi upišeš kontakt i adresu, a mi te pozovemo radi potvrde.": "Open an item and click “Order now” or add it to your cart. At checkout you enter your contact details and address, and we call you to confirm.",
     "Da li su svi proizvodi originalni?": "Are all items original?",
-    "Da. Prodajemo samo originale i svaki proizvod proverimo pre objave.": "Yes. We only sell originals and check every item before listing it.",
+    "Da. Prodajemo isključivo originalne proizvode, bez replika.": "Yes. We sell genuine products only, no replicas.",
     "Kako se plaća?": "How do I pay?",
     "Pouzećem, gotovinom kuriru pri preuzimanju paketa. Unapred ne plaćaš ništa.": "Cash on delivery, paid to the courier when you receive your package. You pay nothing in advance.",
     "Mogu li da vratim proizvod?": "Can I return an item?",
