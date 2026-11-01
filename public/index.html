@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>DRIP SELECT – Curated Streetwear Vault</title>
-<meta name="description" content="Unikatni proizvodi Nike, Jordan i The North Face brendova. Svaki proizvod je 1 od 1: ko prvi naruči, njegov je.">
+<title>DRIP SELECT – Povoljno. Kvalitetno. Na jednom mestu.</title>
+<meta name="description" content="Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.">
 <meta name="theme-color" content="#07080c">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
@@ -13,17 +13,17 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="DRIP SELECT">
 <meta property="og:locale" content="sr_RS">
-<meta property="og:title" content="DRIP SELECT – Curated Streetwear Vault">
-<meta property="og:description" content="Unikatni proizvodi Nike, Jordan i The North Face brendova. Svaki proizvod je 1 od 1: ko prvi naruči, njegov je.">
+<meta property="og:title" content="DRIP SELECT – Povoljno. Kvalitetno. Na jednom mestu.">
+<meta property="og:description" content="Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.">
 <meta property="og:url" content="https://dripselect.rs/">
 <meta property="og:image" content="https://dripselect.rs/og.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="DRIP SELECT logo – Curated Streetwear Vault">
+<meta property="og:image:alt" content="DRIP SELECT logo – Povoljno. Kvalitetno. Na jednom mestu.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="DRIP SELECT – Curated Streetwear Vault">
-<meta name="twitter:description" content="Unikatni proizvodi Nike, Jordan i The North Face brendova. Svaki proizvod je 1 od 1: ko prvi naruči, njegov je.">
+<meta name="twitter:title" content="DRIP SELECT – Povoljno. Kvalitetno. Na jednom mestu.">
+<meta name="twitter:description" content="Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.">
 <meta name="twitter:image" content="https://dripselect.rs/og.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,7 +50,7 @@ nav{display:flex;gap:22px;font-weight:600;font-size:14px}nav a:hover{color:var(-
 a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .hero{text-align:center;padding:40px 5vw 56px}
 .hero img{width:min(380px,80vw);height:auto}
-.hero h1{font-size:clamp(32px,6.5vw,60px);line-height:1.04;margin:6px 0 14px;text-transform:uppercase;letter-spacing:-1px}
+.hero h1{font-size:clamp(28px,6vw,56px);line-height:1.06;margin:6px auto 14px;max-width:900px;text-transform:uppercase;letter-spacing:-1px;text-wrap:balance}
 .hero p{max-width:520px;margin:0 auto 26px;color:var(--mut)}
 .w{max-width:1200px;margin:0 auto;padding:0 5vw}
 .n{max-width:980px}
@@ -203,7 +203,7 @@ function head(){var f=P.filter(function(p){return !sold(p.id)}).length;$("#pill"
 
 function home(){
   var av=P.filter(function(p){return !sold(p.id)}).length;
-  var h='<div class="hero"><img src="'+LOGO+'" alt="Drip Select"><h1>Curated streetwear vault</h1><p>Unikatni proizvodi Nike, Jordan i The North Face brendova. Svaki proizvod je 1 od 1: ko prvi naruči, njegov je.</p><a class="btn" href="#proizvodi">Pogledaj proizvode</a></div>'+
+  var h='<div class="hero"><img src="'+LOGO+'" alt="Drip Select"><h1>Povoljno. Kvalitetno. Na jednom mestu.</h1><p>Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.</p><a class="btn" href="#proizvodi">Pogledaj proizvode</a></div>'+
   '<section class="w" id="proizvodi"><div class="sh"><div><span>Kolekcija #01</span><h2>Trenutno na stanju</h2></div><span id="cnt"></span></div>';
   h+=av?'<div class="tools"><input id="q" type="search" placeholder="Pretraži proizvode..." aria-label="Pretraga" value="'+esc(F.q)+'"><div id="flt"></div></div><div class="grid" id="grid"></div>':drop();
   app.innerHTML=h+'<a class="cta" href="#po-zelji"><div><b>Ne nalaziš ono što tražiš?</b><span>Pošalji sliku proizvoda koji želiš, a mi ga potražimo za tebe.</span></div><span class="btn">Naruči po želji</span></a></section>';
@@ -226,7 +226,7 @@ function prod(id){
   app.innerHTML='<div class="w"><a class="back" href="#proizvodi">← Nazad na proizvode</a>'+
   '<div class="pg"><div class="fs">'+th+'</div><button class="big" id="big" data-zoom type="button" aria-label="Uvećaj sliku"></button>'+
   '<aside class="panel"><span class="lbl">'+esc(p.brand)+' · '+esc(p.cat)+'</span><h1>'+esc(p.name)+'</h1><span class="price">'+fmt(p.price)+'</span>'+
-  '<div class="last'+(s?' no':'')+'">'+(s?'Prodato: ovaj proizvod je već našao vlasnika.':'Jedini proizvod: ko prvi naruči, njegov je.')+'</div>'+
+  '<div class="last'+(s?' no':'')+'">'+(s?'Prodato: ovaj proizvod je već našao vlasnika.':'Dostupan je samo jedan primerak.')+'</div>'+
   (p.cond?'<div class="opt">Stanje <b>'+esc(p.cond.split(" ")[0])+'</b></div><div class="meter">'+mt+'</div>':'')+
   '<div class="opt">Veličina <b>'+esc(p.size)+'</b></div><div class="opt" style="margin:10px 0 0">Boja <b><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</b></div>'+
   '<div class="bb">'+(s?'<button class="btn full" disabled>Nije na stanju</button>':'<button class="btn ghost" data-add="'+id+'">Dodaj u korpu</button><button class="btn" data-buy="'+id+'">Naruči odmah</button>')+'</div>'+
@@ -292,7 +292,7 @@ document.addEventListener("submit",function(e){
   fl.forEach(function(x){shrink(x,function(u){ph2.push(u);if(ph2.length===fl.length)fin()})});
 });
 function about(){
-  var c=[["Samo originali","Svaki proizvod prolazi proveru pre objave."],["Svaki proizvod je 1 od 1","Nema ponovnog dopunjavanja. Ko prvi naruči, njegov je."],["Iskrena ocena stanja","Ako ima mane, pišemo ih i slikamo."]].map(function(x){return '<div><small>'+x[0]+'</small>'+x[1]+'</div>'}).join("");
+  var c=[["Samo originali","Svaki proizvod prolazi proveru pre objave."],["Svaki proizvod je u jednom primerku","Nema ponovnog dopunjavanja: kad ga neko naruči, sklanjamo ga sa sajta."],["Iskrena ocena stanja","Ako ima mane, pišemo ih i slikamo."]].map(function(x){return '<div><small>'+x[0]+'</small>'+x[1]+'</div>'}).join("");
   app.innerHTML='<div class="w n"><a class="back" href="#">← Nazad na sajt</a><h1 style="font-size:42px;margin:0 0 14px">O nama</h1>'+
   '<p class="lead">Biramo samo ono što bismo i sami nosili: Nike, Jordan i The North Face, uvek originalno. Svaki proizvod dobija fotografije iz svih uglova, tačnu veličinu i ocenu stanja od 1 do 10, bez uljepšavanja.</p>'+
   '<div class="specs" style="margin:28px 0">'+c+'</div><a class="btn" href="#proizvodi">Pogledaj proizvode</a><div style="height:70px"></div></div>';
