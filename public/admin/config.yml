@@ -35,7 +35,11 @@ collections:
       - { label: "Veličina", name: "size", widget: "select", options: ["S", "M", "L", "XL", "XXL"] }
       - { label: "Boja", name: "color", widget: "string" }
       - { label: "Stanje (1-10)", name: "condition", widget: "number", value_type: "float", min: 1, max: 10 }
-      - { label: "Slika proizvoda", name: "image", widget: "image" }
+      - { label: "Slika proizvoda (glavna)", name: "image", widget: "image" }
+      - { label: "Slika 2 (opciono)", name: "image2", widget: "image", required: false }
+      - { label: "Slika 3 (opciono)", name: "image3", widget: "image", required: false }
+      - { label: "Slika 4 (opciono)", name: "image4", widget: "image", required: false }
+      - { label: "Slika 5 (opciono)", name: "image5", widget: "image", required: false }
       # kadriranje: sajt seče slike u fiksan okvir od sredine; ovde pomeraš proizvod unutar okvira
       - label: "Položaj proizvoda na slici"
         name: "focus"
