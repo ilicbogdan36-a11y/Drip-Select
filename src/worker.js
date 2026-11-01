@@ -4,6 +4,7 @@ import * as products from "./api/products.js";
 import * as auth from "./api/auth.js";
 import * as callback from "./api/callback.js";
 import * as status from "./api/status.js";
+import { productPage, ogImage } from "./page.js";
 
 const ROUTES = { "/api/submit": submit, "/api/products": products, "/api/auth": auth, "/api/callback": callback, "/api/status": status };
 const json = (o, status) => new Response(JSON.stringify(o), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
@@ -18,6 +19,15 @@ export default {
       if (!r.ok) return r;
       const text = (await r.text()).replaceAll("__ORIGIN__", url.origin);
       return new Response(text, { headers: { "content-type": "text/yaml; charset=utf-8", "cache-control": "no-store" } });
+    }
+
+    // Čist link proizvoda i slika za pregled linka (Viber, WhatsApp, Facebook...)
+    if (url.pathname.startsWith("/proizvod/") || url.pathname.startsWith("/og-img/")) {
+      if (request.method !== "GET" && request.method !== "HEAD") return json({ error: "method" }, 405);
+      const h = url.pathname.startsWith("/proizvod/") ? productPage : ogImage;
+      const waitUntil = (p) => ctx.waitUntil(p);
+      try { return await h({ request, env, waitUntil }); }
+      catch (e) { console.error("page", e); return env.ASSETS.fetch(new Request(url.origin + "/")); } // nikad prazna stranica: u najgorem slučaju običan sajt
     }
 
     const mod = ROUTES[url.pathname];
