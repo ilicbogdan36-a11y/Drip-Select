@@ -141,14 +141,14 @@ nav a.hl{padding:5px 14px;border:1px solid var(--ac);border-radius:99px;color:#8
 nav a.hl:hover{color:#fff;box-shadow:0 0 0 3px #1a8cff44,0 0 28px #1a8cffaa}
 .feat{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);margin:0 0 56px;border:1px solid var(--ac);border-radius:20px;overflow:hidden;background:linear-gradient(120deg,#0b2447,#0a1226);box-shadow:0 0 0 4px #1a8cff1f,0 0 40px #1a8cff40}
 .fph{position:relative;display:block;aspect-ratio:1/1;background:#0a1226}
-.fin{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:30px 36px}
+.fin{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:18px;padding:34px 40px}
 .ftag{display:inline-flex;align-items:center;gap:8px;max-width:100%;font:700 13px "Space Grotesk",sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#fff;background:var(--ac);border:1px solid #6fb1ff;border-radius:99px;padding:8px 18px;box-shadow:0 0 0 3px #1a8cff33,0 0 24px #1a8cff88}.ftag::before{content:"★";font-size:13px;line-height:1}
-.fin h2{font-size:clamp(24px,3vw,36px);line-height:1.1;margin:18px 0 6px}.fin h2 a:hover{color:var(--ac)}
-.fbr{color:var(--mut);font-size:13px;text-transform:uppercase;letter-spacing:.5px}
-.fsp{color:var(--mut);font-size:14px;margin:0 0 16px}
+.fin h2{font-size:clamp(26px,3vw,38px);line-height:1.1;margin:0}.fin h2 a:hover{color:var(--ac)}
+.fm{display:flex;flex-wrap:wrap;gap:8px}.fm span{font-size:13px;line-height:1;color:#cfd6e6;background:#ffffff0d;border:1px solid #ffffff1f;border-radius:8px;padding:7px 11px}
+.fpr{width:100%;padding-top:18px;border-top:1px solid #ffffff1a}
 .fin .price{font-size:32px;color:#6fb1ff}.fin .was{font-size:18px}
-.fb{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
-@media(max-width:760px){.feat{grid-template-columns:1fr;margin-bottom:44px}.fin{padding:22px 20px 24px}.fb{width:100%}.fb .btn{flex:1;padding-left:10px;padding-right:10px;white-space:nowrap}}
+.fb{display:flex;gap:10px;flex-wrap:wrap}.fb .btn{padding:14px 26px}
+@media(max-width:760px){.feat{grid-template-columns:1fr;margin-bottom:44px}.fin{padding:22px 20px 24px;gap:16px}.fb{width:100%}.fb .btn{flex:1;padding:14px 10px;white-space:nowrap}}
 .cta{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:-30px 0 70px;padding:22px 24px;border:1px solid var(--ac);border-radius:18px;background:linear-gradient(120deg,#0b2447,#0a1226);box-shadow:0 0 0 4px #1a8cff1f,0 0 40px #1a8cff55}
 .cta b{display:block;font:700 20px "Space Grotesk",sans-serif}.cta span:not(.btn){color:var(--mut);font-size:14px}
 .box.glow{border-color:var(--ac);box-shadow:0 0 0 4px #1a8cff1a,0 0 36px #1a8cff40}
@@ -228,8 +228,8 @@ function head(){var f=P.filter(function(p){return !sold(p.id)}).length;$("#pill"
 
 // istaknut artikal: označen u adminu, a ako nije (ili je prodat) najnoviji koji je na stanju
 function featP(){var a=P.filter(function(p){return !sold(p.id)});if(!a.length)return null;return a.filter(function(p){return p.feat})[0]||a[0]}
-function featBlock(){var p=featP();if(!p)return "";var sp=["Vel. "+p.size,p.color].filter(function(x){return x&&!/^Vel\. $/.test(x)});if(p.cond)sp.push("Stanje "+p.cond);
-  return '<section class="w"><div class="feat"><a class="fph" href="'+pl(p)+'" aria-label="'+esc(p.name)+'">'+tile(p,0)+'</a><div class="fin"><span class="ftag">'+(p.feat?"Izdvajamo":"Najbolje u kolekciji")+'</span><h2><a href="'+pl(p)+'">'+esc(p.name)+'</a></h2>'+(p.brand?'<div class="fbr">'+esc(p.brand)+'</div>':'')+'<p class="fsp">'+sp.map(esc).join(" · ")+'</p>'+pw(p)+'<div class="fb"><a class="btn" href="'+pl(p)+'">Naruči</a><button class="btn ghost" data-add="'+p.id+'" type="button">Dodaj u korpu</button></div></div></div></section>'}
+function featBlock(){var p=featP();if(!p)return "";var sp=[p.brand,p.size?"Vel. "+p.size:"",p.color,p.cond?"Stanje "+p.cond:""].filter(Boolean);
+  return '<section class="w"><div class="feat"><a class="fph" href="'+pl(p)+'" aria-label="'+esc(p.name)+'">'+tile(p,0)+'</a><div class="fin"><span class="ftag">'+(p.feat?"Izdvajamo":"Najbolje u kolekciji")+'</span><h2><a href="'+pl(p)+'">'+esc(p.name)+'</a></h2><div class="fm">'+sp.map(function(x){return "<span>"+esc(x)+"</span>"}).join("")+'</div><div class="fpr">'+pw(p)+'</div><div class="fb"><a class="btn" href="'+pl(p)+'">Naruči</a><button class="btn ghost" data-add="'+p.id+'" type="button">Dodaj u korpu</button></div></div></div></section>'}
 function home(){
   var av=P.filter(function(p){return !sold(p.id)}).length;
   var h='<div class="hero"><img src="'+LOGO+'" alt="Drip Select"><h1>Povoljno. Kvalitetno. Na jednom mestu.</h1><p>Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.</p><a class="btn" href="#proizvodi">Pogledaj proizvode</a></div>'+featBlock()+
