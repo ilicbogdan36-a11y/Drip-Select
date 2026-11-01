@@ -55,6 +55,12 @@ collections:
           - { label: "Pomeri dole", value: "dole" }
           - { label: "Pomeri levo", value: "levo" }
           - { label: "Pomeri desno", value: "desno" }
+      - label: "Istakni na vrhu početne strane"
+        name: "featured"
+        widget: "boolean"
+        default: false
+        required: false
+        hint: "Veliki istaknut artikal ispod naslova. Označi najviše jedan. Ako nijedan nije označen ili je istaknuti prodat, sajt sam prikaže najnoviji koji je na stanju."
       - { label: "Opis", name: "body", widget: "markdown" }
       # sajt ovo sam prebaci na true kad neko poruči; možeš i ručno da vratiš proizvod u prodaju
       - { label: "Prodato (SOLD OUT)", name: "sold", widget: "boolean", default: false, required: false }
