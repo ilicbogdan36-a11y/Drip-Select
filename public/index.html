@@ -249,9 +249,10 @@ function tile(p,k,lab){if(p.photos&&p.photos[k])return '<img class="tile" alt=""
 function head(){var f=P.filter(function(p){return !sold(p.id)}).length;$("#cc").textContent=S.cart.length}
 
 // istaknut artikal: označen u adminu, a ako nije (ili je prodat) najnoviji koji je na stanju
-function featP(){var a=P.filter(function(p){return !sold(p.id)});if(!a.length)return null;return a.filter(function(p){return p.feat})[0]||a[0]}
+/* istaknut je samo proizvod koji je vlasnik označio i koji nije prodat; nema automatskog biranja (oznaka "Najbolje u kolekciji" je tvrdnja koju bira vlasnik) */
+function featP(){return P.filter(function(p){return p.feat&&!sold(p.id)})[0]||null}
 function featBlock(){var p=featP();if(!p)return "";var sp=[p.brand,p.size?"Vel. "+p.size:"",p.color,p.cond?"Stanje "+p.cond:""].filter(Boolean);
-  return '<section class="w"><div class="feat"><a class="fph" href="'+pl(p)+'" aria-label="'+esc(p.name)+'">'+tile(p,0)+'</a><div class="fin"><span class="ftag">'+(p.feat?"Izdvajamo":"Najbolje u kolekciji")+'</span><h2><a href="'+pl(p)+'">'+esc(p.name)+'</a></h2><div class="fm">'+sp.map(function(x){return "<span>"+esc(x)+"</span>"}).join("")+'</div><div class="fpr">'+pw(p)+'</div><div class="fb"><a class="btn" href="'+pl(p)+'">Naruči</a><button class="btn ghost" data-add="'+p.id+'" type="button">Dodaj u korpu</button></div></div></div></section>'}
+  return '<section class="w"><div class="feat"><a class="fph" href="'+pl(p)+'" aria-label="'+esc(p.name)+'">'+tile(p,0)+'</a><div class="fin"><span class="ftag">Najbolje u kolekciji</span><h2><a href="'+pl(p)+'">'+esc(p.name)+'</a></h2><div class="fm">'+sp.map(function(x){return "<span>"+esc(x)+"</span>"}).join("")+'</div><div class="fpr">'+pw(p)+'</div><div class="fb"><a class="btn" href="'+pl(p)+'">Naruči</a><button class="btn ghost" data-add="'+p.id+'" type="button">Dodaj u korpu</button></div></div></div></section>'}
 function home(){
   var av=P.filter(function(p){return !sold(p.id)}).length;
   var h='<div class="hero"><img src="'+LOGO+'" alt="Drip Select"><h1>Povoljno. Kvalitetno. Na jednom mestu.</h1><p>Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.</p><a class="btn" href="#proizvodi">Pogledaj proizvode</a></div>'+featBlock()+

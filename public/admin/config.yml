@@ -60,7 +60,7 @@ collections:
         widget: "boolean"
         default: false
         required: false
-        hint: "Veliki istaknut artikal ispod naslova. Označi najviše jedan. Ako nijedan nije označen ili je istaknuti prodat, sajt sam prikaže najnoviji koji je na stanju."
+        hint: "Veliki istaknut artikal ispod naslova sa oznakom „Najbolje u kolekciji“. Označi najviše jedan. Kad se istaknuti proda (ili nijedan nije označen), taj deo se ne prikazuje dok ne istakneš novi."
       - { label: "Opis", name: "body", widget: "markdown" }
       # sajt ovo sam prebaci na true kad neko poruči; možeš i ručno da vratiš proizvod u prodaju
       - { label: "Prodato (SOLD OUT)", name: "sold", widget: "boolean", default: false, required: false }
