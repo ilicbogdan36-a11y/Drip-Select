@@ -123,6 +123,36 @@ input:focus,textarea:focus{border-color:var(--ac)}
 .tr.t{color:var(--tx);font:700 20px "Space Grotesk",sans-serif;border-top:1px solid var(--ln);margin-top:8px;padding-top:14px}.tr.t b{color:#6fb1ff}
 .err{background:#ff453a1f;border:1px solid var(--red);color:#ffb3ad;border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:12px}
 .fine{font-size:11px;color:var(--mut);text-align:center;margin:10px 0 0}
+/* kasa */
+.ck{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px}
+.ck .box{border-radius:16px;padding:24px;background:linear-gradient(180deg,#121620,#0e1118);margin-bottom:18px}
+.ck .box h3{display:flex;align-items:center;gap:12px;font-size:18px;margin:0 0 6px}
+.sn{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:700 13px "Space Grotesk",sans-serif;color:#6fb1ff;background:#0b1830;border:1px solid #1d3a63;box-shadow:0 0 14px #1a8cff33}
+.ck label{margin:14px 0 6px}
+.ck .r2{gap:0 14px}
+.ck input,.ck textarea{background:#090b10;border-radius:10px;padding:13px 14px;transition:border-color .2s,box-shadow .2s}
+.ck input:hover,.ck textarea:hover{border-color:#2d3647}
+.ck input:focus,.ck textarea:focus,.ck input:focus-visible,.ck textarea:focus-visible{border-color:var(--ac);box-shadow:0 0 0 3px #1a8cff29;outline:none}
+.ck input:user-invalid{border-color:var(--red);box-shadow:0 0 0 3px #ff453a1f}
+.ck input::placeholder,.ck textarea::placeholder{color:#566073}
+.ck .pay{gap:14px;padding:16px;border-radius:12px;border:1px solid var(--ac);background:#0b1830;box-shadow:0 0 0 3px #1a8cff14;margin-top:10px}
+.ck .pay b{font-size:14px}.ck .pay small{margin-top:2px}
+.pay .pi{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#6fb1ff;background:#0f2442;border:1px solid #1d3a63}.pay .pi svg{width:22px;height:22px}
+#sum.box{position:sticky;top:calc(var(--hh,72px) + 18px)}
+#sum h3{margin:0 0 4px}
+#sum .li{gap:14px;padding:16px 0}
+#sum .li .mini{width:64px;height:76px;border-radius:10px;border:1px solid var(--ln)}
+#sum .lt{min-width:0;display:flex;flex-direction:column;gap:7px}
+#sum .ln{font-weight:600;font-size:14px;line-height:1.3}
+#sum .lm{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin:0}
+#sum .sz{font-size:11px;font-weight:600;color:var(--tx);border:1px solid #2a3342;border-radius:6px;padding:2px 8px}
+#sum .cl{font-size:12px;color:var(--mut);white-space:nowrap}
+#sum .li b{font-size:15px}
+#sum .tr.t{margin-top:0;border-top:0;padding-top:14px}
+.dn{display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.5;color:var(--mut);margin:8px 0 16px}.dn svg{flex:none;width:18px;height:18px;color:#6fb1ff;margin-top:1px}
+#sum .btn.full{padding:15px 18px;font-size:15px;border-radius:12px}
+.pay>div{flex:1;min-width:0}
+@media(max-width:800px){.ck .box{padding:20px 18px}#sum.box{position:static}.pay .tg{display:none}.pay .pi{width:38px;height:38px}.pay .pi svg{width:19px;height:19px}}
 .done{text-align:center;padding:60px 0 90px;max-width:480px;margin:0 auto}.done p{color:var(--mut)}
 footer{padding:52px max(5vw,calc(50% - 600px + 5vw)) 22px;border-top:1px solid var(--ln);color:var(--mut);font-size:14px;background:#000}
 .fw{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:36px}
@@ -292,20 +322,21 @@ function prod(id){
 }
 function sum(){
   var t=0,h='';
-  co.forEach(function(i){var p=get(i);t+=p.price;h+='<div class="li"><span class="mini">'+tile(p,0)+'</span><div>'+esc(p.name)+'<small>'+esc(p.size)+' / <i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+' · qty 1</small></div><b>'+fmt(p.price)+'</b></div>'});
+  co.forEach(function(i){var p=get(i);t+=p.price;h+='<div class="li"><span class="mini">'+tile(p,0)+'</span><div class="lt"><span class="ln">'+esc(p.name)+'</span><small class="lm">'+(p.size?'<span class="sz">'+esc(p.size)+'</span>':'')+(p.color?'<span class="cl"><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</span>':'')+'</small></div><b>'+fmt(p.price)+'</b></div>'});
   if(!co.length)return '<h3>Tvoja narudžbina</h3><p class="cond">Nema proizvoda u narudžbini.</p><a class="btn full" href="#proizvodi">Nazad na proizvode</a>';
   return '<h3>Tvoja narudžbina</h3>'+h+'<div class="tr t"><span>Ukupno</span><b>'+fmt(t)+'</b></div>'+
-  '<p class="cond">Dostavu dogovaramo pri potvrdi porudžbine.</p><button class="btn full" type="submit" form="f">Naruči - '+fmt(t)+'</button><p class="fine">Klikom na „Naruči“ prihvataš opšte uslove.</p>';
+  '<p class="dn">'+ico('truck')+'<span>Dostavu dogovaramo pri potvrdi porudžbine.</span></p><button class="btn full" type="submit" form="f">Naruči - '+fmt(t)+'</button><p class="fine">Klikom na „Naruči“ prihvataš opšte uslove.</p>';
 }
 function kasa(){
   if(!co.length)co=S.cart.slice();
   if(!co.length)return go("");
-  var f=function(id,l,x){return '<div><label for="'+id+'">'+l+' *</label><input id="'+id+'" required '+(x||'')+'></div>'};
+  var f=function(id,l,x){return '<div><label for="'+id+'">'+l+' *</label><input id="'+id+'" required '+(x||'')+'></div>'},
+      st=function(k,t){return '<h3><span class="sn">'+k+'</span>'+t+'</h3>'};
   app.innerHTML='<div class="w n"><div class="crumbs"><a href="#">Početna</a> / <a href="#" data-cart>Korpa</a> / <b>Kasa</b></div><h1 style="font-size:40px;margin:0 0 6px">Kasa</h1><p class="cond" style="font-size:14px">Plaćanje pouzećem: popunite podatke i naručite. Pitanja? Piši nam na <a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a>.</p>'+
-  '<div class="ck" style="margin-top:22px"><form id="f"><div class="box"><h3>Kontakt podaci</h3><div class="r2">'+f("fn","Ime",'autocomplete="given-name"')+f("ln","Prezime",'autocomplete="family-name"')+f("em","Email",'type="email" autocomplete="email"')+f("tl","Telefon",'type="tel" autocomplete="tel"')+'</div></div>'+
-  '<div class="box"><h3>Adresa za isporuku</h3>'+f("ad","Adresa",'autocomplete="street-address"')+'<div class="r2">'+f("gr","Grad",'autocomplete="address-level2"')+f("zp","Poštanski broj",'inputmode="numeric" autocomplete="postal-code"')+'</div>'+
+  '<div class="ck" style="margin-top:22px"><form id="f"><div class="box">'+st(1,"Kontakt podaci")+'<div class="r2">'+f("fn","Ime",'autocomplete="given-name"')+f("ln","Prezime",'autocomplete="family-name"')+f("em","Email",'type="email" autocomplete="email" placeholder="ime@email.com"')+f("tl","Telefon",'type="tel" autocomplete="tel" placeholder="064 123 4567"')+'</div></div>'+
+  '<div class="box">'+st(2,"Adresa za isporuku")+f("ad","Adresa",'autocomplete="street-address" placeholder="Ulica i broj"')+'<div class="r2">'+f("gr","Grad",'autocomplete="address-level2"')+f("zp","Poštanski broj",'inputmode="numeric" autocomplete="postal-code" placeholder="11000"')+'</div>'+
   '<label for="dr2">Država</label><input id="dr2" value="Srbija"><label for="nt">Napomena (opciono)</label><textarea id="nt" rows="3"></textarea></div>'+
-  '<div class="box"><h3>Plaćanje</h3><div class="pay"><input type="radio" checked style="width:auto"><div><b>Pouzećem (gotovinom kuriru)</b><small>Plati gotovinom kuriru pri preuzimanju paketa.</small></div><span class="tg">jedina opcija</span></div></div></form>'+
+  '<div class="box">'+st(3,"Plaćanje")+'<div class="pay"><span class="pi">'+ico('cash')+'</span><div><b>Pouzećem (gotovinom kuriru)</b><small>Plati gotovinom kuriru pri preuzimanju paketa.</small></div><span class="tg">jedina opcija</span></div></div></form>'+
   '<aside class="box" id="sum">'+sum()+'</aside></div></div>';
 }
 document.addEventListener("submit",function(e){
@@ -531,7 +562,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=6";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=7";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();
