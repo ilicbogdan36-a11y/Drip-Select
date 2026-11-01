@@ -108,11 +108,11 @@ export function buildDrop(items, env) {
     `<p style="margin:0 0 24px;font:15px Arial,sans-serif;color:#8b93a7">Upisao/la si mejl da ti javimo kad izađe nešto novo. Evo šta je dodato.</p>` +
     `<table role="presentation" width="100%" cellpadding="0" cellspacing="0">${shown.map(card).join("")}</table>` +
     (more > 0 ? `<p style="margin:0 0 20px;font:14px Arial,sans-serif;color:#8b93a7">Na sajtu ima još ${more} ${more === 1 ? "proizvod" : "proizvoda"}.</p>` : "") +
-    `<p style="margin:0 0 28px"><a href="${S}/#proizvodi" style="color:#6fb1ff;font:600 15px Arial,sans-serif">Pogledaj sve proizvode →</a></p>` +
+    `<p style="margin:0 0 28px"><a href="${S}/proizvodi" style="color:#6fb1ff;font:600 15px Arial,sans-serif">Pogledaj sve proizvode →</a></p>` +
     `<p style="margin:0;padding:18px 0 26px;border-top:1px solid #1f2430;font:12px/1.6 Arial,sans-serif;color:#6b7387">Dobijaš ovaj mejl jer si se prijavio/la za obaveštenja o novom dropu na dripselect.rs. Pitanja: info@dripselect.rs. <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#8b93a7">Odjavi se</a></p>` +
     `</td></tr></table></td></tr></table></body></html>`;
   const text = `Novi drop je stigao\n\n` + shown.map((p) => `${p.name}${facts(p) ? "\n" + facts(p) : ""}\n${fmtPrice(p.price)}\n${S}/proizvod/${p.slug}\n`).join("\n") +
-    (more > 0 ? `\nNa sajtu ima još ${more}.\n` : "") + `\nSvi proizvodi: ${S}/#proizvodi\n\nDobijaš ovaj mejl jer si se prijavio/la za obaveštenja o novom dropu. Odjava: {{{RESEND_UNSUBSCRIBE_URL}}}`;
+    (more > 0 ? `\nNa sajtu ima još ${more}.\n` : "") + `\nSvi proizvodi: ${S}/proizvodi\n\nDobijaš ovaj mejl jer si se prijavio/la za obaveštenja o novom dropu. Odjava: {{{RESEND_UNSUBSCRIBE_URL}}}`;
   return { subject, html, text };
 }
 

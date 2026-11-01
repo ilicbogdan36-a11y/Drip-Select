@@ -4,7 +4,7 @@ import * as products from "./api/products.js";
 import * as auth from "./api/auth.js";
 import * as callback from "./api/callback.js";
 import * as status from "./api/status.js";
-import { productPage, ogImage } from "./page.js";
+import { productPage, ogImage, sitePage, PAGE_TITLES } from "./page.js";
 import { checkDrop } from "./drop.js";
 
 const ROUTES = { "/api/submit": submit, "/api/products": products, "/api/auth": auth, "/api/callback": callback, "/api/status": status };
@@ -20,6 +20,13 @@ export default {
       if (!r.ok) return r;
       const text = (await r.text()).replaceAll("__ORIGIN__", url.origin);
       return new Response(text, { headers: { "content-type": "text/yaml; charset=utf-8", "cache-control": "no-store" } });
+    }
+
+    // Čiste adrese strana (/kasa, /o-nama...): isti sajt, samo sa svojim naslovom u zaglavlju
+    if (Object.hasOwn(PAGE_TITLES, url.pathname.replace(/^\/+|\/+$/g, ""))) {
+      if (request.method !== "GET" && request.method !== "HEAD") return json({ error: "method" }, 405);
+      try { return await sitePage({ request, env }); }
+      catch (e) { console.error("sitePage", e); return env.ASSETS.fetch(new Request(url.origin + "/")); }
     }
 
     // Čist link proizvoda i slika za pregled linka (Viber, WhatsApp, Facebook...)

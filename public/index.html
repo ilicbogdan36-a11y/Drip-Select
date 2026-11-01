@@ -224,16 +224,16 @@ nav{align-items:center}nav a{display:inline-flex;align-items:center;line-height:
 <body>
 <canvas id="bg" aria-hidden="true"></canvas>
 <header>
-  <a href="#" aria-label="Drip Select početna"><img id="hl" alt="Drip Select"></a>
-  <nav><a href="#proizvodi">Proizvodi</a><a href="#o-nama">O nama</a><a href="#pitanja">Česta pitanja</a><a href="#kontakt">Kontakt</a><a class="hl" href="#po-zelji">Naruči po želji</a></nav>
+  <a href="/" aria-label="Drip Select početna"><img id="hl" alt="Drip Select"></a>
+  <nav><a href="/proizvodi">Proizvodi</a><a href="/o-nama">O nama</a><a href="/pitanja">Česta pitanja</a><a href="/kontakt">Kontakt</a><a class="hl" href="/po-zelji">Naruči po želji</a></nav>
   <div class="hr"><div class="lg" role="group" aria-label="Jezik / Language"><button type="button" data-lang="sr" class="on" aria-pressed="true">SR</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div><button class="ib" data-cart type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Korpa <b id="cc">0</b></button></div>
 </header>
 <main id="app"></main>
 <footer id="dostava">
   <div class="fw">
     <div class="fc fb1"><img id="fl" alt="Drip Select"><p>Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.</p></div>
-    <div class="fc"><h4>Prodavnica</h4><a href="#proizvodi">Proizvodi</a><a href="#po-zelji">Naruči po želji</a></div>
-    <div class="fc"><h4>Informacije</h4><a href="#o-nama">O nama</a><a href="#pitanja">Česta pitanja</a><a href="#kontakt">Kontakt</a></div>
+    <div class="fc"><h4>Prodavnica</h4><a href="/proizvodi">Proizvodi</a><a href="/po-zelji">Naruči po želji</a></div>
+    <div class="fc"><h4>Informacije</h4><a href="/o-nama">O nama</a><a href="/pitanja">Česta pitanja</a><a href="/kontakt">Kontakt</a></div>
     <div class="fc"><h4>Kontakt</h4><a id="fm" class="ml"></a><span>Odgovaramo u roku od 24 sata</span></div>
   </div>
   <div class="fbar"><span>© <span id="cy"></span> Drip Select</span><span>Plaćanje pouzećem • 100% originali</span><button id="reset" type="button">Resetuj demo</button></div>
@@ -272,7 +272,10 @@ var LK="",T0="Drip Select – Sve na jednom mestu";
 function cu(){return location.pathname+location.hash}
 function rs(u){try{history.replaceState(null,"",u)}catch(e){}LK=cu()}
 function nav(u){try{history.pushState(null,"",u)}catch(e){location.href=u;return}route()}
-function go(h){var u="/"+(h?"#"+h:"");if(cu()===u)return route();nav(u)}
+function go(h){var u=h?"/"+h:"/";if(cu()===u)return route();nav(u)}
+function goR(u){rs(u);route()} /* preusmeravanje unutar prikaza: menja adresu, ne dodaje korak u istoriju (da "nazad" ne vraća u petlju) */
+function isPg(k){return Object.prototype.hasOwnProperty.call(PG,k)}
+var PG={"proizvodi":"Proizvodi","kasa":"Kasa","gotovo":"Hvala na porudžbini","o-nama":"O nama","pitanja":"Česta pitanja","kontakt":"Kontakt","po-zelji":"Naruči po želji"};
 // opcije opisuju kuda ide PROIZVOD u okviru: "dole" spušta proizvod, pa se isečak slike pomera ka vrhu slike (0%)
 var FP={"sredina":"50% 50%","gore-malo":"50% 75%","gore":"50% 100%","dole-malo":"50% 25%","dole":"50% 0%","levo":"100% 50%","desno":"0% 50%"};
 function tile(p,k,lab){if(p.photos&&p.photos[k])return '<img class="tile" alt="" src="'+p.photos[k]+'" style="width:100%;height:100%;object-fit:cover;object-position:'+(p.pos||"50% 50%")+'">';var a=p.g.split(",");return '<div class="tile" style="background:linear-gradient('+(150+k*25)+'deg,'+a[0]+','+a[1]+')">'+(lab?'[ foto '+(k+1)+'/'+p.imgs+' ]':'')+'</div>'}
@@ -285,10 +288,10 @@ function featBlock(){var p=featP();if(!p)return "";var sp=[p.brand,p.size?"Vel. 
   return '<section class="w"><div class="feat"><a class="fph" href="'+pl(p)+'" aria-label="'+esc(p.name)+'">'+tile(p,0)+'</a><div class="fin"><span class="ftag">Najbolje u kolekciji</span><h2><a href="'+pl(p)+'">'+esc(p.name)+'</a></h2><div class="fm">'+sp.map(function(x){return "<span>"+esc(x)+"</span>"}).join("")+'</div><div class="fpr">'+pw(p)+'</div><div class="fb"><a class="btn" href="'+pl(p)+'">Naruči</a><button class="btn ghost" data-add="'+p.id+'" type="button">Dodaj u korpu</button></div></div></div></section>'}
 function home(){
   var av=P.filter(function(p){return !sold(p.id)}).length;
-  var h='<div class="hero"><img src="'+LOGO+'" alt="Drip Select"><h1>Povoljno. Kvalitetno. Na jednom mestu.</h1><p>Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.</p><a class="btn" href="#proizvodi">Pogledaj proizvode</a></div>'+featBlock()+
+  var h='<div class="hero"><img src="'+LOGO+'" alt="Drip Select"><h1>Povoljno. Kvalitetno. Na jednom mestu.</h1><p>Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.</p><a class="btn" href="/proizvodi">Pogledaj proizvode</a></div>'+featBlock()+
   '<section class="w" id="proizvodi"><div class="sh"><div><span>Kolekcija #01</span><h2>Trenutno na stanju</h2></div><span id="cnt"></span></div>';
   h+=av?'<div class="tools"><input id="q" type="search" placeholder="Pretraži proizvode..." aria-label="Pretraga" value="'+esc(F.q)+'"><div id="flt"></div></div><div class="grid" id="grid"></div>':drop();
-  app.innerHTML=h+'<a class="cta" href="#po-zelji"><div><b>Ne nalaziš ono što tražiš?</b><span>Pošalji sliku proizvoda koji želiš, a mi ga potražimo za tebe.</span></div><span class="btn">Naruči po želji</span></a></section>';
+  app.innerHTML=h+'<a class="cta" href="/po-zelji"><div><b>Ne nalaziš ono što tražiš?</b><span>Pošalji sliku proizvoda koji želiš, a mi ga potražimo za tebe.</span></div><span class="btn">Naruči po želji</span></a></section>';
   if(av)drawGrid(1);
 }
 
@@ -303,13 +306,13 @@ function similar(p){var lc=function(x){return String(x||"").toLowerCase()};
   function sc(q){return(lc(q.brand)&&lc(q.brand)===lc(p.brand)?4:0)+(lc(q.cat)&&lc(q.cat)===lc(p.cat)?2:0)}
   return P.filter(function(q){return q.id!=p.id&&!sold(q.id)}).sort(function(a,b){return sc(b)-sc(a)||Math.abs(a.price-p.price)-Math.abs(b.price-p.price)}).slice(0,4)}
 function prod(id){
-  var p=get(id);if(!p)return go("");cur=id;
+  var p=get(id);if(!p)return goR("/");cur=id;
   var s=sold(id),n=Math.floor(parseFloat(p.cond)||0),mt="",th="",mo="",k;
   for(k=0;k<10;k++)mt+='<i class="'+(k<n?'f':'')+'"></i>';
   for(k=0;k<p.imgs;k++)th+='<button type="button" data-th="'+k+'" class="'+(k==ph?'on':'')+'" aria-label="Slika '+(k+1)+'">'+tile(p,k)+'</button>';
   similar(p).forEach(function(q){mo+='<a href="'+pl(q)+'"><div class="mt">'+tile(q,0)+'</div><small><span class="mn">'+esc(q.name)+'</span><b>'+fmt(q.price)+'</b>'+(was(q)?' <s class="was">'+fmt(was(q))+'</s>':'')+'</small></a>'});
   var sp=[["Brend",p.brand],["Kategorija",p.cat],["Veličina",p.size],["Boja",p.color],["Stanje",p.cond],["Autentičnost","100% original"]].filter(function(x){return x[1]}).map(function(x){return '<div><small>'+x[0]+'</small>'+(x[0]==="Boja"?'<i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>':'')+esc(x[1])+'</div>'}).join("");
-  app.innerHTML='<div class="w"><a class="back" href="#proizvodi">← Nazad na proizvode</a>'+
+  app.innerHTML='<div class="w"><a class="back" href="/proizvodi">← Nazad na proizvode</a>'+
   '<div class="pg"><div class="fs">'+th+'</div><button class="big" id="big" data-zoom type="button" aria-label="Uvećaj sliku"></button>'+
   '<aside class="panel"><span class="lbl">'+esc(p.brand)+' · '+esc(p.cat)+'</span><h1>'+esc(p.name)+'</h1>'+pw(p)+
   '<div class="last'+(s?' no':'')+'">'+(s?'Ovaj proizvod je već prodat.':'Dostupan je samo jedan primerak.')+'</div>'+
@@ -323,16 +326,16 @@ function prod(id){
 function sum(){
   var t=0,h='';
   co.forEach(function(i){var p=get(i);t+=p.price;h+='<div class="li"><span class="mini">'+tile(p,0)+'</span><div class="lt"><span class="ln">'+esc(p.name)+'</span><small class="lm">'+(p.size?'<span class="sz">'+esc(p.size)+'</span>':'')+(p.color?'<span class="cl"><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</span>':'')+'</small></div><b>'+fmt(p.price)+'</b></div>'});
-  if(!co.length)return '<h3>Tvoja narudžbina</h3><p class="cond">Nema proizvoda u narudžbini.</p><a class="btn full" href="#proizvodi">Nazad na proizvode</a>';
+  if(!co.length)return '<h3>Tvoja narudžbina</h3><p class="cond">Nema proizvoda u narudžbini.</p><a class="btn full" href="/proizvodi">Nazad na proizvode</a>';
   return '<h3>Tvoja narudžbina</h3>'+h+'<div class="tr t"><span>Ukupno</span><b>'+fmt(t)+'</b></div>'+
   '<p class="dn">'+ico('truck')+'<span>Dostavu dogovaramo pri potvrdi porudžbine.</span></p><button class="btn full" type="submit" form="f">Naruči - '+fmt(t)+'</button><p class="fine">Klikom na „Naruči“ prihvataš opšte uslove.</p>';
 }
 function kasa(){
   if(!co.length)co=S.cart.slice();
-  if(!co.length)return go("");
+  if(!co.length)return goR("/");
   var f=function(id,l,x){return '<div><label for="'+id+'">'+l+' *</label><input id="'+id+'" required '+(x||'')+'></div>'},
       st=function(k,t){return '<h3><span class="sn">'+k+'</span>'+t+'</h3>'};
-  app.innerHTML='<div class="w n"><div class="crumbs"><a href="#">Početna</a> / <a href="#" data-cart>Korpa</a> / <b>Kasa</b></div><h1 style="font-size:40px;margin:0 0 6px">Kasa</h1><p class="cond" style="font-size:14px">Plaćanje pouzećem: popunite podatke i naručite. Pitanja? Piši nam na <a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a>.</p>'+
+  app.innerHTML='<div class="w n"><div class="crumbs"><a href="/">Početna</a> / <a href="/" data-cart>Korpa</a> / <b>Kasa</b></div><h1 style="font-size:40px;margin:0 0 6px">Kasa</h1><p class="cond" style="font-size:14px">Plaćanje pouzećem: popunite podatke i naručite. Pitanja? Piši nam na <a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a>.</p>'+
   '<div class="ck" style="margin-top:22px"><form id="f"><div class="box">'+st(1,"Kontakt podaci")+'<div class="r2">'+f("fn","Ime",'autocomplete="given-name"')+f("ln","Prezime",'autocomplete="family-name"')+f("em","Email",'type="email" autocomplete="email" placeholder="ime@email.com"')+f("tl","Telefon",'type="tel" autocomplete="tel" placeholder="064 123 4567"')+'</div></div>'+
   '<div class="box">'+st(2,"Adresa za isporuku")+f("ad","Adresa",'autocomplete="street-address" placeholder="Ulica i broj"')+'<div class="r2">'+f("gr","Grad",'autocomplete="address-level2"')+f("zp","Poštanski broj",'inputmode="numeric" autocomplete="postal-code" placeholder="11000"')+'</div>'+
   '<label for="dr2">Država</label><input id="dr2" value="Srbija"><label for="nt">Napomena (opciono)</label><textarea id="nt" rows="3"></textarea></div>'+
@@ -356,8 +359,8 @@ document.addEventListener("submit",function(e){
     $("#sum").insertAdjacentHTML("afterbegin",'<div class="err">Slanje nije uspelo. Proveri internet pa pokušaj ponovo, a ako se ponovi, javi nam se preko strane Kontakt.</div>')});
 });
 function done(){
-  if(!last)return go("");
-  app.innerHTML='<div class="w"><div class="done"><div class="ic">'+ico('ok')+'</div><h1>Hvala na porudžbini!</h1><p>Hvala, '+esc(last.n)+'! Javljamo se na telefon radi potvrde, a zatim dogovaramo dostavu.</p><p><b style="color:var(--tx)">'+last.names.map(esc).join("<br>")+'</b><br>Cena artikala (plaćanje pouzećem): '+fmt(last.total)+'</p><a class="btn" href="#proizvodi">Vrati se na proizvode</a></div></div>';confetti();
+  if(!last)return goR("/");
+  app.innerHTML='<div class="w"><div class="done"><div class="ic">'+ico('ok')+'</div><h1>Hvala na porudžbini!</h1><p>Hvala, '+esc(last.n)+'! Javljamo se na telefon radi potvrde, a zatim dogovaramo dostavu.</p><p><b style="color:var(--tx)">'+last.names.map(esc).join("<br>")+'</b><br>Cena artikala (plaćanje pouzećem): '+fmt(last.total)+'</p><a class="btn" href="/proizvodi">Vrati se na proizvode</a></div></div>';confetti();
 }
 function admin(){
   var f=function(id,l,x){return '<div><label for="'+id+'">'+l+'</label><input id="'+id+'" required '+(x||'')+'></div>'};
@@ -365,7 +368,7 @@ function admin(){
   var m=(S.mail||[]).map(function(x){return '<div class="li"><div>'+esc(x.m)+'<small>'+esc(x.t)+'</small></div></div>'}).join("")||'<p class="cond">Još nema prijava.</p>';
   var r=(S.req||[]).map(function(x){return '<div class="li"><div><strong>'+esc(x.w)+'</strong> · vel. '+esc(x.sz)+(x.bd?' · do '+fmt(+x.bd):'')+'<small>'+esc(x.n)+' · '+esc(x.tl)+' · '+esc(x.em)+'</small><small>'+(x.nt?esc(x.nt)+' · ':'')+x.np+' slika · '+esc(x.t)+'</small></div></div>'}).join("")||'<p class="cond">Još nema zahteva.</p>';
   var l=P.map(function(p){var s=sold(p.id);return '<div class="li"><span class="mini">'+tile(p,0)+'</span><div>'+esc(p.name)+'<small>'+fmt(p.price)+' · '+(s?'PRODATO':'Na stanju')+'</small></div><span style="margin-left:auto;display:flex;gap:6px"><button class="btn ghost" data-sold="'+p.id+'">'+(s?'Vrati':'Prodato')+'</button><button class="btn ghost" data-del="'+p.id+'">Ukloni</button></span></div>'}).join("")||'<p class="cond">Nema artikala.</p>';
-  app.innerHTML='<div class="w n"><a class="back" href="#">← Nazad na sajt</a><h1 style="font-size:34px;margin:0 0 6px">Admin</h1><p class="cond" style="font-size:14px">Simulacija: na pravom sajtu je ovo Framer CMS, a porudžbine ti stižu na mejl.</p>'+
+  app.innerHTML='<div class="w n"><a class="back" href="/">← Nazad na sajt</a><h1 style="font-size:34px;margin:0 0 6px">Admin</h1><p class="cond" style="font-size:14px">Simulacija: na pravom sajtu je ovo Framer CMS, a porudžbine ti stižu na mejl.</p>'+
   '<div class="box" style="margin-top:20px"><h3>Porudžbine</h3>'+o+'</div><div class="box"><h3>Prijave za novi drop</h3>'+m+'</div><div class="box"><h3>Zahtevi „Naruči po želji“</h3>'+r+'</div><div class="box"><h3>Artikli</h3>'+l+'</div>'+
   '<div class="box"><h3>Dodaj novi artikal</h3><form id="np"><div class="r2">'+f("nn","Naziv")+f("nb","Brend")+f("nk","Kategorija")+f("ns","Veličina")+f("nl","Boja")+f("nc","Cena (din.)",'type="number" min="0"')+'</div>'+f("nd","Stanje",'placeholder="npr. 9.5/10 (Odlično)"')+
   '<label for="nf">Slike (do 6)</label><input id="nf" type="file" accept="image/*" multiple><p class="cond">Slike se čuvaju samo u tvom browseru (demo).</p><button class="btn full" type="submit">Dodaj artikal</button></form></div></div>';
@@ -380,9 +383,9 @@ document.addEventListener("submit",function(e){
 });
 function about(){
   var c=[["Samo originali","Prodajemo isključivo originalne proizvode."],["Svaki proizvod je u jednom primerku","Nema ponovnog dopunjavanja: kad ga neko naruči, sklanjamo ga sa sajta."],["Iskrena ocena stanja","Ako ima mane, pišemo ih i slikamo."]].map(function(x){return '<div><small>'+x[0]+'</small>'+x[1]+'</div>'}).join("");
-  app.innerHTML='<div class="w n"><a class="back" href="#">← Nazad na sajt</a><h1 style="font-size:42px;margin:0 0 14px">O nama</h1>'+
+  app.innerHTML='<div class="w n"><a class="back" href="/">← Nazad na sajt</a><h1 style="font-size:42px;margin:0 0 14px">O nama</h1>'+
   '<p class="lead">Biramo samo ono što bismo i sami nosili, uvek originalno. Svaki proizvod dobija fotografije iz svih uglova, tačnu veličinu i ocenu stanja od 1 do 10, bez ulepšavanja.</p>'+
-  '<div class="specs" style="margin:28px 0">'+c+'</div><a class="btn" href="#proizvodi">Pogledaj proizvode</a><div style="height:70px"></div></div>';
+  '<div class="specs" style="margin:28px 0">'+c+'</div><a class="btn" href="/proizvodi">Pogledaj proizvode</a><div style="height:70px"></div></div>';
 }
 function faq(){
   var q=[["Kako da naručim?","Otvori artikal i klikni „Naruči odmah“ ili ga dodaj u korpu. Na kasi upišeš kontakt i adresu, a mi te pozovemo radi potvrde."],
@@ -391,11 +394,11 @@ function faq(){
   ["Mogu li da vratim proizvod?","Možeš, u roku od 14 dana, bez navođenja razloga. Proizvod mora da bude u stanju u kom je stigao."],
   ["Kako ocenjujete stanje?","Skalom od 1 do 10. Novo sa etiketom je 10/10, a sve manje opisujemo iskreno, sa slikama mana."]
   ].map(function(x){return '<details><summary>'+x[0]+'</summary><p>'+x[1]+'</p></details>'}).join("");
-  app.innerHTML='<div class="w n"><a class="back" href="#">← Nazad na sajt</a><h1 style="font-size:42px;margin:0 0 20px">Česta pitanja</h1><div class="faq">'+q+'</div><p class="cond" style="margin:24px 0 70px">Nisi našao odgovor? <a href="#kontakt" style="color:#6fb1ff">Piši nam</a>.</p></div>';
+  app.innerHTML='<div class="w n"><a class="back" href="/">← Nazad na sajt</a><h1 style="font-size:42px;margin:0 0 20px">Česta pitanja</h1><div class="faq">'+q+'</div><p class="cond" style="margin:24px 0 70px">Nisi našao odgovor? <a href="/kontakt" style="color:#6fb1ff">Piši nam</a>.</p></div>';
 }
 function contact(){
   var g=function(id,l,x){return '<div><label for="'+id+'">'+l+'</label>'+(x?'<textarea id="'+id+'" rows="5" required></textarea>':'<input id="'+id+'" required'+(id==="cm"?' type="email"':'')+'>')+'</div>'};
-  app.innerHTML='<div class="w n"><a class="back" href="#">← Nazad na sajt</a><h1 style="font-size:42px;margin:0 0 8px">Imaš pitanje?</h1><p class="lead">Piši nam, odgovaramo u roku od 24 sata.</p>'+
+  app.innerHTML='<div class="w n"><a class="back" href="/">← Nazad na sajt</a><h1 style="font-size:42px;margin:0 0 8px">Imaš pitanje?</h1><p class="lead">Piši nam, odgovaramo u roku od 24 sata.</p>'+
   '<div class="ck" style="margin-top:24px"><div class="box"><form id="cf"><div class="r2">'+g("cn","Ime")+g("cm","Mejl")+'</div>'+g("cp","Poruka",1)+'<button class="btn full" type="submit" style="margin-top:16px">Pošalji poruku</button></form></div>'+
   '<aside class="box"><h3>Ili nas nađi ovde</h3><div class="li"><div>Mejl<small><a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a></small></div></div><div class="li"><div>Odgovor<small>U roku od 24 sata, svaki dan</small></div></div></aside></div></div>';
 }
@@ -403,7 +406,7 @@ document.addEventListener("submit",function(e){if(e.target.id!=="cf")return;e.pr
   post("contact",{ime:$("#cn").value.trim(),email:$("#cm").value.trim(),poruka:$("#cp").value.trim(),vreme:new Date().toLocaleString("sr-RS")}).then(function(){bx.innerHTML='<div class="done" style="padding:30px 0"><div class="ic">'+ico('mail')+'</div><h3>Poruka je poslata</h3><p>Javljamo se u roku od 24 sata.'+(LIVE?'':' (Simulacija: na pravom sajtu ti stiže na mejl.)')+'</p></div>'}).catch(function(){bx.insertAdjacentHTML("beforeend",'<p class="err">Slanje nije uspelo, pokušaj ponovo.</p>')})});
 function wish(){
   var g=function(id,l,x,r){return '<div><label for="'+id+'">'+l+(r?'':' (nije obavezno)')+'</label><input id="'+id+'" '+(r?'required ':'')+(x||'')+'></div>'};
-  app.innerHTML='<div class="w n"><a class="back" href="#">← Nazad na sajt</a><span class="lbl">Naruči po želji</span><h1 style="font-size:42px;margin:6px 0 10px">Ne nalaziš ono što tražiš?</h1><p class="lead">Pošalji nam sliku duksa, jakne, patika ili bilo kog proizvoda koji želiš, a mi ga potražimo za tebe.</p>'+
+  app.innerHTML='<div class="w n"><a class="back" href="/">← Nazad na sajt</a><span class="lbl">Naruči po želji</span><h1 style="font-size:42px;margin:6px 0 10px">Ne nalaziš ono što tražiš?</h1><p class="lead">Pošalji nam sliku duksa, jakne, patika ili bilo kog proizvoda koji želiš, a mi ga potražimo za tebe.</p>'+
   '<div class="row3" style="margin:22px 0"><div><b>1</b>Pošalješ sliku<small>i veličinu</small></div><div><b>2</b>Tražimo proizvod<small>i javljamo cenu</small></div><div><b>3</b>Potvrdiš<small>i dogovaramo dostavu</small></div></div>'+
   '<div class="box glow"><form id="wi"><div class="r2">'+g("wn","Ime",'autocomplete="name"',1)+g("wt","Telefon",'type="tel"',1)+'</div>'+g("we","Mejl",'type="email"',1)+g("ww","Šta tražiš?",'placeholder="npr. Nike Tech Fleece duks, siv"',1)+'<div class="r2">'+g("wz","Veličina",'',1)+g("wb","Budžet (din.)",'type="number" min="0"')+'</div>'+
   '<label for="wf">Slike proizvoda (do 4)</label><input id="wf" type="file" accept="image/*" multiple><div class="wp" id="wp"></div>'+
@@ -536,23 +539,24 @@ function route(){
   LK=cu();
   if(LIVE&&Date.now()-LT>300000){LT=Date.now();if(!P.length)app.innerHTML='<div class="w"><p class="cond" style="padding:90px 0;text-align:center">Učitavanje...</p></div>';return loadSheet().then(route,route)}
   sync();head();$("#lb").classList.remove("on");
-  var h=location.hash.slice(1),ps=pathSlug(),lg=h.match(/^p-(.+)$/),pp=null;
-  if(ps&&h&&!lg){rs("/#"+h);ps=null;h=location.hash.slice(1)} /* /proizvod/x#kasa (npr. otvoreno u novom tabu) -> obična strana */
+  var h=location.hash.slice(1),ps=pathSlug(),lg=h.match(/^p-(.+)$/),pp=null,pg="";
+  if(h&&!lg&&isPg(h)){rs("/"+h);ps=null;h=""} /* stari link /#kasa (ili /proizvod/x#kasa) -> /kasa */
+  var pth=location.pathname.replace(/\/+$/,"").slice(1);if(isPg(pth)&&!ps)pg=pth;
   var sl=ps||(lg&&lg[1]);
   if(sl){pp=pBySlug(sl);
     if(pp){if(location.pathname!=="/proizvod/"+pp.slug||location.hash)rs("/proizvod/"+pp.slug)} /* stari link #p-ime postaje /proizvod/ime */
     else if(P.length){rs("/");h=""} /* proizvoda nema: početna */
     else h=lg?"":h}
-  document.title=pp?pp.name+" – Drip Select":T0;
+  document.title=pp?pp.name+" – Drip Select":(pg&&pg!=="proizvodi"?PG[pg]+" – Drip Select":T0);
   if(pp){ph=0;prod(pp.id);scrollTo(0,0)}
-  else if(h==="kasa"){kasa();scrollTo(0,0)}
-  else if(h==="gotovo"){done();scrollTo(0,0)}
+  else if(pg==="kasa"){kasa();scrollTo(0,0)}
+  else if(pg==="gotovo"){done();scrollTo(0,0)}
   else if(h==="admin"&&!LIVE){admin();scrollTo(0,0)}
-  else if(h==="o-nama"){about();scrollTo(0,0)}
-  else if(h==="pitanja"){faq();scrollTo(0,0)}
-  else if(h==="kontakt"){contact();scrollTo(0,0)}
-  else if(h==="po-zelji"){wish();scrollTo(0,0)}
-  else{home();var el=h&&document.getElementById(h);if(el)el.scrollIntoView();else scrollTo(0,0)}
+  else if(pg==="o-nama"){about();scrollTo(0,0)}
+  else if(pg==="pitanja"){faq();scrollTo(0,0)}
+  else if(pg==="kontakt"){contact();scrollTo(0,0)}
+  else if(pg==="po-zelji"){wish();scrollTo(0,0)}
+  else{home();var el=document.getElementById(pg==="proizvodi"?"proizvodi":h);if(el)el.scrollIntoView();else scrollTo(0,0)}
 }
 var cy_=$("#cy");if(cy_)cy_.textContent=new Date().getFullYear();var fm_=$("#fm");if(fm_){fm_.href="mailto:"+CFG.MAIL;fm_.textContent=CFG.MAIL}$("#hl").src=LOGO;$("#fl").src=LOGO;initBg();if(LIVE)$("#reset").style.display="none";
 function hh(){var e=document.querySelector("header");if(e)document.documentElement.style.setProperty("--hh",e.offsetHeight+"px")}
@@ -566,14 +570,15 @@ function applyLang(){
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();
-/* linkovi unutar sajta: #strana postaje /#strana, a /proizvod/ime ostaje čist put; ostalo (mailto, spoljni linkovi, novi tab) radi kao i pre */
+/* linkovi unutar sajta (/kasa, /proizvodi, /proizvod/ime, /): bez ponovnog učitavanja strane; starо #strana se prebacuje na čist put; ostalo (mailto, spoljni linkovi, novi tab) radi kao i pre */
+function ipath(h){if(h==="#")return "/";if(h.charAt(0)==="#"){var x=h.slice(1);return isPg(x)?"/"+x:null}
+  if(h.indexOf("/proizvod/")===0)return h;var m=h.match(/^\/([a-z-]*)$/);return m&&(m[1]===""||isPg(m[1]))?h:null}
 document.addEventListener("click",function(e){
   if(e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
   var a=e.target.closest&&e.target.closest("a[href]");if(!a||a.target||a.hasAttribute("download"))return;
-  var h=a.getAttribute("href"),u;
-  if(h==="#")u="/";else if(h.charAt(0)==="#")u="/"+h;else if(h.indexOf("/proizvod/")===0)u=h;else return;
+  var u=ipath(a.getAttribute("href"));if(!u)return;
   e.preventDefault();
-  if(cu()===u||(u==="/"&&location.pathname==="/"&&!location.hash)){var id=u.slice(2),el=id&&document.getElementById(id);if(el)el.scrollIntoView();else scrollTo(0,0);return}
+  if(cu()===u){var id=u==="/"?"":u.slice(1),el=id&&document.getElementById(id);if(el)el.scrollIntoView();else scrollTo(0,0);return}
   nav(u)});
 function onNav(){if(cu()!==LK)route()} /* nazad/napred u pregledaču; popstate i hashchange mogu stići oba, drugi se preskače */
 window.addEventListener("popstate",onNav);window.addEventListener("hashchange",onNav);route();if(LANG==="en")applyLang();

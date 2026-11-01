@@ -100,6 +100,31 @@ export function injectProduct(html, p, origin) {
   return head + html.slice(i);
 }
 
+// ---- ostale strane sajta: isti sajt (index.html), ali sa svojim naslovom u zaglavlju (kartica pregledača, pregled linka)
+export const PAGE_TITLES = { proizvodi: "Proizvodi", kasa: "Kasa", gotovo: "Hvala na porudžbini", "o-nama": "O nama", pitanja: "Česta pitanja", kontakt: "Kontakt", "po-zelji": "Naruči po želji" };
+export function injectPage(html, key, origin) {
+  const i = html.indexOf("</head>");
+  if (i < 0 || !Object.hasOwn(PAGE_TITLES, key)) return html;
+  let head = html.slice(0, i);
+  const url = origin + "/" + key;
+  const title = key === "proizvodi" ? "Drip Select – Sve na jednom mestu" : PAGE_TITLES[key] + " – Drip Select";
+  head = head.replace(/<title>[\s\S]*?<\/title>/, () => "<title>" + esc(title) + "</title>");
+  head = setMeta(head, "property", "og:title", title);
+  head = setMeta(head, "name", "twitter:title", title);
+  head = setMeta(head, "property", "og:url", url);
+  head += '<link rel="canonical" href="' + esc(url) + '">\n';
+  if (key === "kasa" || key === "gotovo") head += '<meta name="robots" content="noindex">\n'; // kasa i potvrda ne treba da se pojavljuju u pretrazi
+  return head + html.slice(i);
+}
+export async function sitePage({ request, env }) {
+  const url = new URL(request.url);
+  const key = url.pathname.replace(/^\/+|\/+$/g, "");
+  const idx = await env.ASSETS.fetch(new Request(url.origin + "/"));
+  if (!idx.ok) return idx;
+  const html = injectPage(await idx.text(), key, url.origin);
+  return new Response(request.method === "HEAD" ? null : html, { status: 200, headers: HTML_H });
+}
+
 const slugOf = (url, prefix) => {
   let s = url.pathname.slice(prefix.length).replace(/\/+$/, "");
   try { s = decodeURIComponent(s); } catch (e) { /* ostaje kako je */ }
