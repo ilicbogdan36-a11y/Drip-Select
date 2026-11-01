@@ -7,6 +7,7 @@ size: L
 color: Crna
 condition: 9
 image: /images/products/dwdddddd.png
+image2: /images/products/26051011_56214957_1000.webp
 focus: dole
 sold: false
 ---
