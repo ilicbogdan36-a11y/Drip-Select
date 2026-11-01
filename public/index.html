@@ -113,7 +113,7 @@ input:focus,textarea:focus{border-color:var(--ac)}
 .fine{font-size:11px;color:var(--mut);text-align:center;margin:10px 0 0}
 .done{text-align:center;padding:60px 0 90px;max-width:480px;margin:0 auto}.done p{color:var(--mut)}.done .ic{font-size:46px}
 footer{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:22px 5vw;border-top:1px solid var(--ln);color:var(--mut);font-size:13px;background:#000}
-footer img{height:40px}footer button{background:none;border:0;color:var(--mut);text-decoration:underline;cursor:pointer;font:inherit}
+footer img{height:40px}.ml{color:inherit;text-decoration:underline;text-underline-offset:3px}.ml:hover{color:var(--ac)}footer button{background:none;border:0;color:var(--mut);text-decoration:underline;cursor:pointer;font:inherit}
 .dv{position:fixed;inset:0;z-index:50;background:#000b;display:none;justify-content:flex-end}.dv.on{display:flex}
 .dr{width:min(400px,100%);height:100%;overflow:auto;background:var(--card);border-left:1px solid var(--ln);padding:20px;animation:sl .2s ease-out}
 @keyframes sl{from{transform:translateX(40px);opacity:0}}
@@ -170,7 +170,7 @@ nav{align-items:center}nav a{display:inline-flex;align-items:center;line-height:
 <footer id="dostava">
   <img id="fl" alt="Drip Select">
   <span>Plaćanje pouzećem • 100% originali</span>
-  <span><button id="reset" type="button">Resetuj demo</button></span>
+  <span><a id="fm" class="ml"></a><button id="reset" type="button">Resetuj demo</button></span>
 </footer>
 <div class="lb" id="lb" role="dialog" aria-label="Galerija"></div>
 <div class="dv" id="dv"><aside class="dr" id="dr" role="dialog" aria-label="Korpa"></aside></div>
@@ -245,7 +245,7 @@ function kasa(){
   if(!co.length)co=S.cart.slice();
   if(!co.length)return go("");
   var f=function(id,l,x){return '<div><label for="'+id+'">'+l+' *</label><input id="'+id+'" required '+(x||'')+'></div>'};
-  app.innerHTML='<div class="w n"><div class="crumbs"><a href="#">Početna</a> / <a href="#" data-cart>Korpa</a> / <b>Kasa</b></div><h1 style="font-size:40px;margin:0 0 6px">Kasa</h1><p class="cond" style="font-size:14px">Plaćanje pouzećem: popunite podatke i naručite.</p>'+
+  app.innerHTML='<div class="w n"><div class="crumbs"><a href="#">Početna</a> / <a href="#" data-cart>Korpa</a> / <b>Kasa</b></div><h1 style="font-size:40px;margin:0 0 6px">Kasa</h1><p class="cond" style="font-size:14px">Plaćanje pouzećem: popunite podatke i naručite. Pitanja? Piši nam na <a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a>.</p>'+
   '<div class="ck" style="margin-top:22px"><form id="f"><div class="box"><h3>Kontakt podaci</h3><div class="r2">'+f("fn","Ime",'autocomplete="given-name"')+f("ln","Prezime",'autocomplete="family-name"')+f("em","Email",'type="email" autocomplete="email"')+f("tl","Telefon",'type="tel" autocomplete="tel"')+'</div></div>'+
   '<div class="box"><h3>Adresa za isporuku</h3>'+f("ad","Adresa",'autocomplete="street-address"')+'<div class="r2">'+f("gr","Grad",'autocomplete="address-level2"')+f("zp","Poštanski broj",'inputmode="numeric" autocomplete="postal-code"')+'</div>'+
   '<label for="dr2">Država</label><input id="dr2" value="Srbija"><label for="nt">Napomena (opciono)</label><textarea id="nt" rows="3"></textarea></div>'+
@@ -310,7 +310,7 @@ function contact(){
   var g=function(id,l,x){return '<div><label for="'+id+'">'+l+'</label>'+(x?'<textarea id="'+id+'" rows="5" required></textarea>':'<input id="'+id+'" required'+(id==="cm"?' type="email"':'')+'>')+'</div>'};
   app.innerHTML='<div class="w n"><a class="back" href="#">← Nazad na sajt</a><h1 style="font-size:42px;margin:0 0 8px">Imaš pitanje?</h1><p class="lead">Piši nam, odgovaramo u roku od 24 sata.</p>'+
   '<div class="ck" style="margin-top:24px"><div class="box"><form id="cf"><div class="r2">'+g("cn","Ime")+g("cm","Mejl")+'</div>'+g("cp","Poruka",1)+'<button class="btn full" type="submit" style="margin-top:16px">Pošalji poruku</button></form></div>'+
-  '<aside class="box"><h3>Ili nas nađi ovde</h3><div class="li"><div>Mejl<small>'+CFG.MAIL+'</small></div></div><div class="li"><div>Odgovor<small>U roku od 24 sata, svaki dan</small></div></div></aside></div></div>';
+  '<aside class="box"><h3>Ili nas nađi ovde</h3><div class="li"><div>Mejl<small><a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a></small></div></div><div class="li"><div>Odgovor<small>U roku od 24 sata, svaki dan</small></div></div></aside></div></div>';
 }
 document.addEventListener("submit",function(e){if(e.target.id!=="cf")return;e.preventDefault();var bx=e.target.parentNode;
   post("contact",{ime:$("#cn").value.trim(),email:$("#cm").value.trim(),poruka:$("#cp").value.trim(),vreme:new Date().toLocaleString("sr-RS")}).then(function(){bx.innerHTML='<div class="done" style="padding:30px 0"><div class="ic">✉️</div><h3>Poruka je poslata</h3><p>Javljamo se u roku od 24 sata.'+(LIVE?'':' (Simulacija: na pravom sajtu ti stiže na mejl.)')+'</p></div>'}).catch(function(){bx.insertAdjacentHTML("beforeend",'<p class="err">Slanje nije uspelo, pokušaj ponovo.</p>')})});
@@ -454,7 +454,7 @@ function route(){
   else if(h==="po-zelji"){wish();scrollTo(0,0)}
   else{home();var el=h&&document.getElementById(h);if(el)el.scrollIntoView();else scrollTo(0,0)}
 }
-$("#hl").src=LOGO;$("#fl").src=LOGO;initBg();if(LIVE)$("#reset").style.display="none";
+var fm_=$("#fm");if(fm_){fm_.href="mailto:"+CFG.MAIL;fm_.textContent=CFG.MAIL}$("#hl").src=LOGO;$("#fl").src=LOGO;initBg();if(LIVE)$("#reset").style.display="none";
 function hh(){var e=document.querySelector("header");if(e)document.documentElement.style.setProperty("--hh",e.offsetHeight+"px")}
 hh();addEventListener("resize",hh);addEventListener("orientationchange",hh);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(hh);if(window.ResizeObserver){var ho=document.querySelector("header");if(ho)new ResizeObserver(hh).observe(ho)}
 window.addEventListener("hashchange",route);route();
