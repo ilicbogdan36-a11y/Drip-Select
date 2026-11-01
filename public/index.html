@@ -270,7 +270,7 @@ function lb(){var p=get(cur);$("#lb").innerHTML='<div class="im">'+tile(p,ph,1)+
 /* slični proizvodi: isti brend prvi, pa ista kategorija, pa najbliža cena; prodati se ne prikazuju */
 function similar(p){var lc=function(x){return String(x||"").toLowerCase()};
   function sc(q){return(lc(q.brand)&&lc(q.brand)===lc(p.brand)?4:0)+(lc(q.cat)&&lc(q.cat)===lc(p.cat)?2:0)}
-  return P.filter(function(q){return q.id!=p.id&&!sold(q.id)}).sort(function(a,b){return sc(b)-sc(a)||Math.abs(a.price-p.price)-Math.abs(b.price-p.price)}).slice(0,8)}
+  return P.filter(function(q){return q.id!=p.id&&!sold(q.id)}).sort(function(a,b){return sc(b)-sc(a)||Math.abs(a.price-p.price)-Math.abs(b.price-p.price)}).slice(0,4)}
 function prod(id){
   var p=get(id);if(!p)return go("");cur=id;
   var s=sold(id),n=Math.floor(parseFloat(p.cond)||0),mt="",th="",mo="",k;
