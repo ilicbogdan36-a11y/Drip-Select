@@ -10,6 +10,8 @@
 //   RESEND_API_KEY (secret), MAIL_TO (tvoj mejl; više njih odvoji zarezom)
 //   opciono: GH_BRANCH (main), GH_FOLDER (content/proizvodi), MAIL_FROM
 
+import { addSubscriber } from "../drop.js";
+
 const MAX_BODY = 4000000;   // znakova; slike stižu već smanjene iz pregledača
 const MAX_FILE = 1000000;   // znakova base64 po slici
 const FILE_RE = /^[^\/\\|]+\.md$/;
@@ -115,14 +117,15 @@ async function reserve(cfg, files) {
 }
 
 // ---------- Mejl (Resend) ----------
-function buildMail(def, d, atts) {
+function buildMail(def, d, atts, extra = "") {
   const keys = def.all.filter((k) => d[k] && k !== "fajlovi");
   const rows = keys.map((k) =>
     `<tr><td style="padding:6px 16px 6px 0;color:#666;vertical-align:top;white-space:nowrap">${LABELS[k] || k}</td><td style="padding:6px 0">${esc(d[k]).replace(/\n/g, "<br>")}</td></tr>`).join("");
   const note = def === FORMS.porudzbina ? '<p style="color:#666;font-size:13px">Proizvodi iz ove porudžbine su automatski označeni kao prodati na sajtu.</p>' : "";
   const att = atts.length ? `<p style="color:#666;font-size:13px">U prilogu: ${atts.length} slika.</p>` : "";
-  const html = `<div style="font-family:Arial,sans-serif;font-size:15px;color:#111"><h2 style="margin:0 0 14px">${def.title}</h2><table style="border-collapse:collapse">${rows}</table>${note}${att}</div>`;
-  const text = `${def.title}\n\n` + keys.map((k) => `${LABELS[k] || k}: ${d[k]}`).join("\n");
+  const ex = extra ? `<p style="color:#666;font-size:13px">${esc(extra)}</p>` : "";
+  const html = `<div style="font-family:Arial,sans-serif;font-size:15px;color:#111"><h2 style="margin:0 0 14px">${def.title}</h2><table style="border-collapse:collapse">${rows}</table>${note}${att}${ex}</div>`;
+  const text = `${def.title}\n\n` + keys.map((k) => `${LABELS[k] || k}: ${d[k]}`).join("\n") + (extra ? `\n\n${extra}` : "");
   let subject = def.title;
   if (d.ime) subject += `: ${d.ime}${d.prezime ? " " + d.prezime : ""}`;
   else if (d.email) subject += `: ${d.email}`;
@@ -201,8 +204,20 @@ export async function onRequestPost({ request, env, waitUntil }) {
     if (reserved.length) purge(request, waitUntil);
   }
 
+  // prijava za drop: upiši mejl u listu pretplatnika (Resend); neuspeh ne sme da blokira prijavu, ali vlasnik dobija napomenu u mejlu
+  let extra = "";
+  if (body.form === "prijava") {
+    try {
+      const r = await addSubscriber(env, d.email);
+      if (!r.skipped) extra = "Upisan u listu pretplatnika za novi drop.";
+    } catch (e) {
+      console.error("subscribe", e);
+      extra = "UPOZORENJE: ova adresa NIJE upisana u listu pretplatnika (" + String(e.message).slice(0, 120) + "). Proveri Resend ključ (potreban je Full access) i javi se.";
+    }
+  }
+
   try {
-    await sendMail(env, buildMail(def, d, atts), d.email && isEmail(d.email) ? d.email : null, atts);
+    await sendMail(env, buildMail(def, d, atts, extra), d.email && isEmail(d.email) ? d.email : null, atts);
   } catch (e) {
     console.error("mail", e);
     if (reserved.length) { await rollback(cfg, reserved); purge(request, waitUntil); } // mejl nije otišao: vrati proizvode u prodaju

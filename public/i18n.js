@@ -48,7 +48,7 @@
     "Početna": "Home", "Kasa": "Checkout",
     "Plaćanje pouzećem: popunite podatke i naručite. Pitanja? Piši nam na": "Cash on delivery: fill in your details and place your order. Questions? Write to us at",
     "Kontakt podaci": "Contact details", "Ime": "Name", "Prezime": "Last name", "Email": "Email", "Telefon": "Phone",
-    "Adresa za isporuku": "Delivery address", "Ulica i broj": "Street and number", "Adresa": "Address", "Grad": "City", "Poštanski broj": "Postal code", "Država": "Country",
+    "Adresa za isporuku": "Delivery address", "Ulica i broj": "Street and number", "Mejl koristimo samo za obaveštenje o novom dropu. Odjava je u svakom mejlu.": "We only use your email to notify you about new drops. You can unsubscribe in every email.", "Adresa": "Address", "Grad": "City", "Poštanski broj": "Postal code", "Država": "Country",
     "Napomena (opciono)": "Notes (optional)", "Napomena": "Notes",
     "Plaćanje": "Payment", "Pouzećem (gotovinom kuriru)": "Cash on delivery (pay the courier in cash)",
     "Plati gotovinom kuriru pri preuzimanju paketa.": "Pay the courier in cash when you receive your package.",

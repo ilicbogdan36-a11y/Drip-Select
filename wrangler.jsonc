@@ -16,7 +16,11 @@
     "GH_REPO": "Drip-Select",
     "ALLOWED_USERS": "ilicbogdan36-a11y",
     // adresa pošiljaoca mejlova o porudžbinama (domen mail.dripselect.rs je verifikovan u Resend-u)
-    "MAIL_FROM": "Drip Select <porudzbine@mail.dripselect.rs>"
+    "MAIL_FROM": "Drip Select <porudzbine@mail.dripselect.rs>",
+    // adresa sajta za linkove u mejlu o novom dropu
+    "SITE_URL": "https://dripselect.rs"
   },
+  // na svakih 10 minuta proveri ima li novih proizvoda pa javi pretplatnicima (src/drop.js)
+  "triggers": { "crons": ["*/10 * * * *"] },
   "observability": { "enabled": true }
 }

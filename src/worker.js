@@ -5,6 +5,7 @@ import * as auth from "./api/auth.js";
 import * as callback from "./api/callback.js";
 import * as status from "./api/status.js";
 import { productPage, ogImage } from "./page.js";
+import { checkDrop } from "./drop.js";
 
 const ROUTES = { "/api/submit": submit, "/api/products": products, "/api/auth": auth, "/api/callback": callback, "/api/status": status };
 const json = (o, status) => new Response(JSON.stringify(o), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
@@ -36,5 +37,10 @@ export default {
     const handler = mod["onRequest" + m[0] + m.slice(1).toLowerCase()] || mod.onRequest;
     if (!handler) return json({ error: "method" }, 405);
     return handler({ request, env, waitUntil: (p) => ctx.waitUntil(p) });
+  },
+
+  // Cron Trigger (wrangler.jsonc): javlja pretplatnicima kad izađu novi proizvodi (src/drop.js)
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(checkDrop(env).then((r) => console.log("drop", JSON.stringify(r)), (e) => console.error("drop", e)));
   },
 };

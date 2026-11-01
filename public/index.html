@@ -438,7 +438,7 @@ function drawGrid(an){
   $("#grid").className="grid"+(an?"":" na");
   $("#grid").innerHTML=h||'<div class="none">Nema rezultata. <button class="rm" data-fx type="button">Poništi filtere</button></div>';
 }
-function drop(){return '<div class="box glow drop"><div class="ic">'+ico('flame')+'</div><h2 style="margin:0 0 8px">Novi drop uskoro</h2><p class="lead" style="margin:0 auto 18px">Svi proizvodi su rasprodati. Upiši mejl i javljamo ti čim izađe novi drop.</p><form id="dn"><input id="dm" type="email" required placeholder="tvoj@mejl.rs" aria-label="Mejl"><button class="btn" type="submit">Obavesti me</button></form></div>'}
+function drop(){return '<div class="box glow drop"><div class="ic">'+ico('flame')+'</div><h2 style="margin:0 0 8px">Novi drop uskoro</h2><p class="lead" style="margin:0 auto 18px">Svi proizvodi su rasprodati. Upiši mejl i javljamo ti čim izađe novi drop.</p><form id="dn"><input id="dm" type="email" required placeholder="tvoj@mejl.rs" aria-label="Mejl"><button class="btn" type="submit">Obavesti me</button></form><p class="fine" style="margin-top:14px">Mejl koristimo samo za obaveštenje o novom dropu. Odjava je u svakom mejlu.</p></div>'}
 document.addEventListener("input",function(e){if(e.target.id==="q"){F.q=e.target.value;drawGrid(0)}});
 document.addEventListener("submit",function(e){if(e.target.id!=="dn")return;e.preventDefault();var m=$("#dm").value.trim();S.mail=S.mail||[];
   if(!S.mail.some(function(x){return x.m===m}))S.mail.unshift({m:m,t:new Date().toLocaleString("sr-RS")});save();var fm=e.target;post("drop",{email:m,vreme:new Date().toLocaleString("sr-RS")}).then(function(){fm.innerHTML='<p class="ok">'+ico('check')+'Hvala! Javljamo ti se čim izađe novi drop.</p>'}).catch(function(){fm.insertAdjacentHTML("beforeend",'<p class="err">Slanje nije uspelo, pokušaj ponovo.</p>')})});
@@ -562,7 +562,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=7";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=8";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();
