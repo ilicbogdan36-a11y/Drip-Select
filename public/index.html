@@ -131,8 +131,8 @@ footer img{height:40px}.ml{color:inherit;text-decoration:underline;text-underlin
 .x{background:none;border:0;color:var(--mut);font-size:28px;line-height:1;cursor:pointer}
 .rm{background:none;border:0;color:var(--mut);font-size:11px;text-decoration:underline;cursor:pointer;padding:0}
 .lg{display:inline-flex;height:34px;border:1px solid #3a4255;border-radius:10px;overflow:hidden}.lg button{display:inline-flex;align-items:center;justify-content:center;height:100%;background:none;border:0;color:var(--mut);font:700 12px "Space Grotesk",sans-serif;letter-spacing:.5px;padding:0 11px;cursor:pointer;min-width:40px}.lg button.on{background:var(--ac);color:#fff}.lg button:not(.on):hover{color:var(--tx)}
-.ib{display:inline-flex;align-items:center;height:34px;background:none;border:1px solid #3a4255;color:var(--tx);border-radius:10px;padding:0 13px;cursor:pointer;font:600 13px Inter,sans-serif}
-.ib b{background:var(--ac);border-radius:99px;padding:1px 7px;margin-left:4px;font-size:11px}
+.ib{display:inline-flex;align-items:center;gap:7px;height:34px;background:none;border:1px solid #3a4255;color:var(--tx);border-radius:10px;padding:0 13px;cursor:pointer;font:600 13px Inter,sans-serif}
+.ib b{background:var(--ac);border-radius:99px;padding:1px 7px;font-size:11px}.ib svg{flex:none}
 @media(max-width:800px){header{flex-wrap:wrap}nav{order:3;width:100%;overflow-x:auto;white-space:nowrap;gap:18px}.pg,.ck{grid-template-columns:1fr}}
 .faq details{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:14px 16px;margin-bottom:10px}
 .faq summary{cursor:pointer;font-weight:600}.faq p{color:var(--mut);margin:10px 0 0}
@@ -142,7 +142,7 @@ nav a.hl:hover{color:#fff;box-shadow:0 0 0 3px #1a8cff44,0 0 28px #1a8cffaa}
 .feat{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);margin:0 0 56px;border:1px solid var(--ac);border-radius:20px;overflow:hidden;background:linear-gradient(120deg,#0b2447,#0a1226);box-shadow:0 0 0 4px #1a8cff1f,0 0 40px #1a8cff40}
 .fph{position:relative;display:block;aspect-ratio:1/1;background:#0a1226}
 .fin{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:18px;padding:34px 40px}
-.ftag{display:inline-flex;align-items:center;gap:8px;max-width:100%;font:700 13px "Space Grotesk",sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#fff;background:var(--ac);border:1px solid #6fb1ff;border-radius:99px;padding:8px 18px;box-shadow:0 0 0 3px #1a8cff33,0 0 24px #1a8cff88}.ftag::before{content:"★";font-size:13px;line-height:1}
+.ftag{display:inline-flex;align-items:center;gap:8px;max-width:100%;font:700 13px "Space Grotesk",sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#fff;background:var(--ac);border:1px solid #6fb1ff;border-radius:99px;padding:8px 18px;box-shadow:0 0 0 3px #1a8cff33,0 0 24px #1a8cff88}.ftag::before{content:"🔥";font-size:14px;line-height:1}
 .fin h2{font-size:clamp(26px,3vw,38px);line-height:1.1;margin:0}.fin h2 a:hover{color:var(--ac)}
 .fm{display:flex;flex-wrap:wrap;gap:8px}.fm span{font-size:13px;line-height:1;color:#cfd6e6;background:#ffffff0d;border:1px solid #ffffff1f;border-radius:8px;padding:7px 11px}
 .fpr{width:100%;padding-top:18px;border-top:1px solid #ffffff1a}
@@ -187,7 +187,7 @@ nav{align-items:center}nav a{display:inline-flex;align-items:center;line-height:
 <header>
   <a href="#" aria-label="Drip Select početna"><img id="hl" alt="Drip Select"></a>
   <nav><a href="#proizvodi">Proizvodi</a><a href="#o-nama">O nama</a><a href="#pitanja">Česta pitanja</a><a href="#kontakt">Kontakt</a><a class="hl" href="#po-zelji">Naruči po želji</a></nav>
-  <div class="hr"><div class="lg" role="group" aria-label="Jezik / Language"><button type="button" data-lang="sr" class="on" aria-pressed="true">SR</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div><button class="ib" data-cart type="button">Korpa <b id="cc">0</b></button></div>
+  <div class="hr"><div class="lg" role="group" aria-label="Jezik / Language"><button type="button" data-lang="sr" class="on" aria-pressed="true">SR</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div><button class="ib" data-cart type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Korpa <b id="cc">0</b></button></div>
 </header>
 <main id="app"></main>
 <footer id="dostava">
