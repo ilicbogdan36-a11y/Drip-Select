@@ -57,8 +57,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 .sh h2{margin:0;font-size:26px}.sh span{color:var(--mut);font-size:13px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:22px;padding-bottom:60px}
 .card{background:var(--card);border:1px solid var(--ln);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
-.ph{position:relative;display:block;aspect-ratio:1/1.05}
-.tile{position:absolute;inset:0;display:grid;place-items:center;color:#ffffff55;font-size:12px}
+.ph{position:relative;display:block;aspect-ratio:1/1.05;overflow:hidden}
+.tile{position:absolute;inset:0;display:grid;place-items:center;color:#ffffff55;font-size:12px;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.card:not(.sold):hover .ph .tile{transform:scale(1.045)}
+.ic{width:72px;height:72px;margin:0 auto 16px;display:grid;place-items:center;border-radius:50%;background:#0b1830;border:1px solid #1d3a63;color:#6fb1ff;box-shadow:0 0 0 5px #1a8cff14,0 0 30px #1a8cff40}.ic svg{width:34px;height:34px}
+.ok svg{width:18px;height:18px;vertical-align:-3px;margin-right:6px;color:var(--ok)}
 .card.sold .tile{filter:grayscale(1) blur(3px) brightness(.5)}
 .tags{position:absolute;top:12px;left:12px;display:flex;gap:6px;z-index:2}
 .tag{font-size:11px;padding:4px 9px;border-radius:6px;background:#000c;border:1px solid #ffffff1f}
@@ -96,7 +99,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 .last{margin:14px 0;padding:10px 12px;border-radius:10px;background:#0b1830;border:1px solid #1d3a63;font-size:13px;color:#8cc3ff}
 .last.no{background:#ff453a1a;border-color:var(--red);color:#ffb3ad}
 .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
-.row3 div{border:1px solid var(--ln);border-radius:10px;padding:10px 6px;font-size:12px;text-align:center}.row3 b{display:block;font-size:18px}.row3 small{color:var(--mut);display:block;line-height:1.3}
+.row3 div{border:1px solid var(--ln);border-radius:10px;padding:10px 6px;font-size:12px;text-align:center}.row3 b{display:grid;place-items:center;height:30px;margin-bottom:4px;font-size:18px;color:#6fb1ff}.row3 b svg{width:23px;height:23px}.row3 small{color:var(--mut);display:block;line-height:1.3}
 .specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:14px 0}.specs div{border-left:2px solid var(--ac);padding-left:12px}.specs small{display:block;color:var(--mut);font-size:11px}
 .more{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}.more a{flex:none;width:150px}.more .mt{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;border:1px solid var(--ln)}.more small{display:block;font-size:12px;margin-top:6px}
 .about{margin:40px 0 60px;padding-top:26px;border-top:1px solid var(--ln)}.about h2{margin:0;font-size:22px}
@@ -120,8 +123,13 @@ input:focus,textarea:focus{border-color:var(--ac)}
 .tr.t{color:var(--tx);font:700 20px "Space Grotesk",sans-serif;border-top:1px solid var(--ln);margin-top:8px;padding-top:14px}.tr.t b{color:#6fb1ff}
 .err{background:#ff453a1f;border:1px solid var(--red);color:#ffb3ad;border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:12px}
 .fine{font-size:11px;color:var(--mut);text-align:center;margin:10px 0 0}
-.done{text-align:center;padding:60px 0 90px;max-width:480px;margin:0 auto}.done p{color:var(--mut)}.done .ic{font-size:46px}
-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:22px 5vw;border-top:1px solid var(--ln);color:var(--mut);font-size:13px;background:#000}
+.done{text-align:center;padding:60px 0 90px;max-width:480px;margin:0 auto}.done p{color:var(--mut)}
+footer{padding:52px max(5vw,calc(50% - 600px + 5vw)) 22px;border-top:1px solid var(--ln);color:var(--mut);font-size:14px;background:#000}
+.fw{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:36px}
+.fc h4{margin:0 0 14px;font:700 12px "Space Grotesk",sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx)}
+.fc a,.fc span{display:block;padding:5px 0}.fc a:hover{color:var(--ac)}.fc p{margin:14px 0 0;max-width:300px;line-height:1.55}
+.fbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:40px;padding-top:20px;border-top:1px solid var(--ln);font-size:12px}
+@media(max-width:800px){footer{padding-top:40px}.fw{grid-template-columns:1fr 1fr;gap:28px}.fc.fb1{grid-column:1/-1}.fbar{justify-content:center;text-align:center}}
 footer img{height:40px}.ml{color:inherit;text-decoration:underline;text-underline-offset:3px}.ml:hover{color:var(--ac)}footer button{background:none;border:0;color:var(--mut);text-decoration:underline;cursor:pointer;font:inherit}
 .dv{position:fixed;inset:0;z-index:50;background:#000b;display:none;justify-content:flex-end}.dv.on{display:flex}
 .dr{width:min(400px,100%);height:100%;overflow:auto;background:var(--card);border-left:1px solid var(--ln);padding:20px;animation:sl .2s ease-out}
@@ -171,7 +179,7 @@ nav{align-items:center}nav a{display:inline-flex;align-items:center;line-height:
 .chip:hover{border-color:var(--ac)}.chip.on{background:var(--ac);border-color:var(--ac)}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;border:1px solid #ffffff55}.opt .dot,.specs .dot,.li .dot{vertical-align:middle;position:relative;top:-1px}
 .none{grid-column:1/-1;text-align:center;color:var(--mut);padding:40px 0}
-.drop{text-align:center;padding:50px 20px;margin-bottom:50px}.drop .ic{font-size:44px}
+.drop{text-align:center;padding:50px 20px;margin-bottom:50px}
 .drop form{display:flex;gap:8px;max-width:460px;margin:0 auto;flex-wrap:wrap}.drop input{flex:1;min-width:200px}
 .ok{color:var(--ok);margin:0 auto}
 @media(max-width:800px){input,textarea{font-size:16px}.fg{flex-direction:column;align-items:flex-start;gap:6px;width:100%}.ch{flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding-bottom:4px}.chip{white-space:nowrap;flex:none}header img{height:44px}}
@@ -192,9 +200,13 @@ nav{align-items:center}nav a{display:inline-flex;align-items:center;line-height:
 </header>
 <main id="app"></main>
 <footer id="dostava">
-  <img id="fl" alt="Drip Select">
-  <span>Plaćanje pouzećem • 100% originali</span>
-  <span><a id="fm" class="ml"></a><button id="reset" type="button">Resetuj demo</button></span>
+  <div class="fw">
+    <div class="fc fb1"><img id="fl" alt="Drip Select"><p>Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.</p></div>
+    <div class="fc"><h4>Prodavnica</h4><a href="#proizvodi">Proizvodi</a><a href="#po-zelji">Naruči po želji</a></div>
+    <div class="fc"><h4>Informacije</h4><a href="#o-nama">O nama</a><a href="#pitanja">Česta pitanja</a><a href="#kontakt">Kontakt</a></div>
+    <div class="fc"><h4>Kontakt</h4><a id="fm" class="ml"></a><span>Odgovaramo u roku od 24 sata</span></div>
+  </div>
+  <div class="fbar"><span>© <span id="cy"></span> Drip Select</span><span>Plaćanje pouzećem • 100% originali</span><button id="reset" type="button">Resetuj demo</button></div>
 </footer>
 <div class="lb" id="lb" role="dialog" aria-label="Galerija"></div>
 <div class="dv" id="dv"><aside class="dr" id="dr" role="dialog" aria-label="Korpa"></aside></div>
@@ -215,6 +227,8 @@ var DEF=JSON.stringify(P),SH=580,S={sold:[3],cart:[]},co=[],last=null,ph=0,app=d
 function $(s){return document.querySelector(s)}
 function get(i){return P.filter(function(p){return p.id==i})[0]}
 function sold(i){return S.sold.indexOf(+i)>-1||SS.indexOf(+i)>-1}
+var ICP={truck:'<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',cash:'<rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',back:'<path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>',ok:'<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',mail:'<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',send:'<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>',flame:'<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',check:'<path d="M20 6 9 17l-5-5"/>'};
+function ico(n){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICP[n]+'</svg>'}
 function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,".")+" din."}
 // stara cena: prikazuje se samo kad je upisana i veća od cene (sniženje od bar 1%)
 function was(p){var w=+p.old||0;return w>p.price&&p.price>0&&Math.round((1-p.price/w)*100)>=1?w:0}
@@ -263,7 +277,7 @@ function prod(id){
   (p.cond?'<div class="opt">Stanje <b>'+esc(p.cond.split(" ")[0])+'</b></div><div class="meter">'+mt+'</div>':'')+
   '<div class="opt">Veličina <b>'+esc(p.size)+'</b></div><div class="opt">Boja <b><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</b></div>'+
   '<div class="bb">'+(s?'<button class="btn full" disabled>Nije na stanju</button>':'<button class="btn ghost" data-add="'+id+'">Dodaj u korpu</button><button class="btn" data-buy="'+id+'">Naruči odmah</button>')+'</div>'+
-  '<div class="row3"><div><b>🚚</b>Dostava<small>Dogovaramo pri potvrdi</small></div><div><b>💵</b>Pouzećem<small>Plaćaš kuriru</small></div><div><b>↩️</b>Povrat 14 dana<small>Bez objašnjenja</small></div></div></aside></div>'+
+  '<div class="row3"><div><b>'+ico('truck')+'</b>Dostava<small>Dogovaramo pri potvrdi</small></div><div><b>'+ico('cash')+'</b>Pouzećem<small>Plaćaš kuriru</small></div><div><b>'+ico('back')+'</b>Povrat 14 dana<small>Bez objašnjenja</small></div></div></aside></div>'+
   '<div class="about">'+(p.desc?'<h2>Opis</h2><p class="lead" style="white-space:pre-line;font-size:15px;margin:10px 0 26px">'+esc(p.desc)+'</p>':'')+'<h2>Detalji proizvoda</h2><div class="specs">'+sp+'</div><h2 style="margin-top:34px">Još iz vaulta</h2><div class="more" style="margin-top:12px">'+(mo||'<p class="cond">Trenutno nema drugih proizvoda.</p>')+'</div></div></div>';
   setImg(ph);
 }
@@ -303,7 +317,7 @@ document.addEventListener("submit",function(e){
 });
 function done(){
   if(!last)return go("");
-  app.innerHTML='<div class="w"><div class="done"><div class="ic">🎉</div><h1>Hvala na porudžbini!</h1><p>Hvala, '+esc(last.n)+'! Javljamo se na telefon radi potvrde, a zatim dogovaramo dostavu.</p><p><b style="color:var(--tx)">'+last.names.map(esc).join("<br>")+'</b><br>Cena artikala (plaćanje pouzećem): '+fmt(last.total)+'</p><a class="btn" href="#proizvodi">Vrati se na proizvode</a></div></div>';confetti();
+  app.innerHTML='<div class="w"><div class="done"><div class="ic">'+ico('ok')+'</div><h1>Hvala na porudžbini!</h1><p>Hvala, '+esc(last.n)+'! Javljamo se na telefon radi potvrde, a zatim dogovaramo dostavu.</p><p><b style="color:var(--tx)">'+last.names.map(esc).join("<br>")+'</b><br>Cena artikala (plaćanje pouzećem): '+fmt(last.total)+'</p><a class="btn" href="#proizvodi">Vrati se na proizvode</a></div></div>';confetti();
 }
 function admin(){
   var f=function(id,l,x){return '<div><label for="'+id+'">'+l+'</label><input id="'+id+'" required '+(x||'')+'></div>'};
@@ -346,7 +360,7 @@ function contact(){
   '<aside class="box"><h3>Ili nas nađi ovde</h3><div class="li"><div>Mejl<small><a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a></small></div></div><div class="li"><div>Odgovor<small>U roku od 24 sata, svaki dan</small></div></div></aside></div></div>';
 }
 document.addEventListener("submit",function(e){if(e.target.id!=="cf")return;e.preventDefault();var bx=e.target.parentNode;
-  post("contact",{ime:$("#cn").value.trim(),email:$("#cm").value.trim(),poruka:$("#cp").value.trim(),vreme:new Date().toLocaleString("sr-RS")}).then(function(){bx.innerHTML='<div class="done" style="padding:30px 0"><div class="ic">✉️</div><h3>Poruka je poslata</h3><p>Javljamo se u roku od 24 sata.'+(LIVE?'':' (Simulacija: na pravom sajtu ti stiže na mejl.)')+'</p></div>'}).catch(function(){bx.insertAdjacentHTML("beforeend",'<p class="err">Slanje nije uspelo, pokušaj ponovo.</p>')})});
+  post("contact",{ime:$("#cn").value.trim(),email:$("#cm").value.trim(),poruka:$("#cp").value.trim(),vreme:new Date().toLocaleString("sr-RS")}).then(function(){bx.innerHTML='<div class="done" style="padding:30px 0"><div class="ic">'+ico('mail')+'</div><h3>Poruka je poslata</h3><p>Javljamo se u roku od 24 sata.'+(LIVE?'':' (Simulacija: na pravom sajtu ti stiže na mejl.)')+'</p></div>'}).catch(function(){bx.insertAdjacentHTML("beforeend",'<p class="err">Slanje nije uspelo, pokušaj ponovo.</p>')})});
 function wish(){
   var g=function(id,l,x,r){return '<div><label for="'+id+'">'+l+(r?'':' (nije obavezno)')+'</label><input id="'+id+'" '+(r?'required ':'')+(x||'')+'></div>'};
   app.innerHTML='<div class="w n"><a class="back" href="#">← Nazad na sajt</a><span class="lbl">Naruči po želji</span><h1 style="font-size:42px;margin:6px 0 10px">Ne nalaziš ono što tražiš?</h1><p class="lead">Pošalji nam sliku duksa, jakne, patika ili bilo kog proizvoda koji želiš, a mi ga potražimo za tebe.</p>'+
@@ -360,7 +374,7 @@ document.addEventListener("submit",function(e){if(e.target.id!=="wi")return;e.pr
   (S.req=S.req||[]).unshift({n:$("#wn").value,tl:$("#wt").value,em:$("#we").value,w:$("#ww").value,sz:$("#wz").value,bd:$("#wb").value,nt:$("#wm").value,np:Math.min(4,$("#wf").files.length),t:new Date().toLocaleString("sr-RS")});save();
   var bx=e.target.parentNode,fl=[].slice.call($("#wf").files,0,4),w=function(i){return $("#"+i).value.trim()};
   post("wish",{ime:w("wn"),telefon:w("wt"),email:w("we"),sta_trazi:w("ww"),velicina:w("wz"),budzet:w("wb"),napomena:w("wm"),vreme:new Date().toLocaleString("sr-RS")},fl)
-  .then(function(){bx.innerHTML='<div class="done" style="padding:30px 0"><div class="ic">📨</div><h3>Zahtev je poslat</h3><p>Javljamo ti se sa cenom čim nađemo proizvod.'+(LIVE?'':' (Simulacija: na pravom sajtu ti stiže na mejl.)')+'</p></div>'})
+  .then(function(){bx.innerHTML='<div class="done" style="padding:30px 0"><div class="ic">'+ico('send')+'</div><h3>Zahtev je poslat</h3><p>Javljamo ti se sa cenom čim nađemo proizvod.'+(LIVE?'':' (Simulacija: na pravom sajtu ti stiže na mejl.)')+'</p></div>'})
   .catch(function(){bx.insertAdjacentHTML("beforeend",'<p class="err">Slanje nije uspelo, pokušaj ponovo.</p>')})});
 var F={q:"",b:"",s:"",c:""};
 function uniq(k){var a=[];P.forEach(function(p){if(a.indexOf(p[k])<0)a.push(p[k])});return a.sort()}
@@ -384,10 +398,10 @@ function drawGrid(an){
   $("#grid").className="grid"+(an?"":" na");
   $("#grid").innerHTML=h||'<div class="none">Nema rezultata. <button class="rm" data-fx type="button">Poništi filtere</button></div>';
 }
-function drop(){return '<div class="box glow drop"><div class="ic">🔥</div><h2 style="margin:0 0 8px">Novi drop uskoro</h2><p class="lead" style="margin:0 auto 18px">Svi proizvodi su rasprodati. Upiši mejl i javljamo ti čim izađe novi drop.</p><form id="dn"><input id="dm" type="email" required placeholder="tvoj@mejl.rs" aria-label="Mejl"><button class="btn" type="submit">Obavesti me</button></form></div>'}
+function drop(){return '<div class="box glow drop"><div class="ic">'+ico('flame')+'</div><h2 style="margin:0 0 8px">Novi drop uskoro</h2><p class="lead" style="margin:0 auto 18px">Svi proizvodi su rasprodati. Upiši mejl i javljamo ti čim izađe novi drop.</p><form id="dn"><input id="dm" type="email" required placeholder="tvoj@mejl.rs" aria-label="Mejl"><button class="btn" type="submit">Obavesti me</button></form></div>'}
 document.addEventListener("input",function(e){if(e.target.id==="q"){F.q=e.target.value;drawGrid(0)}});
 document.addEventListener("submit",function(e){if(e.target.id!=="dn")return;e.preventDefault();var m=$("#dm").value.trim();S.mail=S.mail||[];
-  if(!S.mail.some(function(x){return x.m===m}))S.mail.unshift({m:m,t:new Date().toLocaleString("sr-RS")});save();var fm=e.target;post("drop",{email:m,vreme:new Date().toLocaleString("sr-RS")}).then(function(){fm.innerHTML='<p class="ok">✅ Hvala! Javljamo ti se čim izađe novi drop.</p>'}).catch(function(){fm.insertAdjacentHTML("beforeend",'<p class="err">Slanje nije uspelo, pokušaj ponovo.</p>')})});
+  if(!S.mail.some(function(x){return x.m===m}))S.mail.unshift({m:m,t:new Date().toLocaleString("sr-RS")});save();var fm=e.target;post("drop",{email:m,vreme:new Date().toLocaleString("sr-RS")}).then(function(){fm.innerHTML='<p class="ok">'+ico('check')+'Hvala! Javljamo ti se čim izađe novi drop.</p>'}).catch(function(){fm.insertAdjacentHTML("beforeend",'<p class="err">Slanje nije uspelo, pokušaj ponovo.</p>')})});
 function confetti(){
   if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
   var c=document.createElement("canvas");c.style.cssText="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:80";document.body.appendChild(c);
@@ -490,7 +504,7 @@ function route(){
   else if(h==="po-zelji"){wish();scrollTo(0,0)}
   else{home();var el=h&&document.getElementById(h);if(el)el.scrollIntoView();else scrollTo(0,0)}
 }
-var fm_=$("#fm");if(fm_){fm_.href="mailto:"+CFG.MAIL;fm_.textContent=CFG.MAIL}$("#hl").src=LOGO;$("#fl").src=LOGO;initBg();if(LIVE)$("#reset").style.display="none";
+var cy_=$("#cy");if(cy_)cy_.textContent=new Date().getFullYear();var fm_=$("#fm");if(fm_){fm_.href="mailto:"+CFG.MAIL;fm_.textContent=CFG.MAIL}$("#hl").src=LOGO;$("#fl").src=LOGO;initBg();if(LIVE)$("#reset").style.display="none";
 function hh(){var e=document.querySelector("header");if(e)document.documentElement.style.setProperty("--hh",e.offsetHeight+"px")}
 hh();addEventListener("resize",hh);addEventListener("orientationchange",hh);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(hh);if(window.ResizeObserver){var ho=document.querySelector("header");if(ho)new ResizeObserver(hh).observe(ho)}
 // jezik: srpski je podrazumevan; engleski prevod (i18n.js) se učitava tek kad ga neko izabere
@@ -498,7 +512,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=1";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=2";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();

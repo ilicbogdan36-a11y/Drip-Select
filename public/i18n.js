@@ -9,6 +9,7 @@
     "Proizvodi": "Products", "O nama": "About us", "Česta pitanja": "FAQ", "Kontakt": "Contact",
     "Naruči po želji": "Request an item", "Korpa": "Cart", "Drip Select početna": "Drip Select home",
     "Plaćanje pouzećem • 100% originali": "Cash on delivery • 100% original", "Resetuj demo": "Reset demo",
+    "Prodavnica": "Shop", "Informacije": "Information", "Odgovaramo u roku od 24 sata": "We reply within 24 hours",
     // početna
     "Povoljno. Kvalitetno. Na jednom mestu.": "Affordable. Quality. All in one place.",
     "Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.": "Well-known brands and a carefully chosen selection at affordable prices.",
@@ -24,7 +25,7 @@
     "Novi drop uskoro": "New drop coming soon",
     "Svi proizvodi su rasprodati. Upiši mejl i javljamo ti čim izađe novi drop.": "Everything is sold out. Enter your email and we'll let you know as soon as the new drop is out.",
     "tvoj@mejl.rs": "your@email.com", "Mejl": "Email", "Obavesti me": "Notify me",
-    "✅ Hvala! Javljamo ti se čim izađe novi drop.": "✅ Thanks! We'll let you know as soon as the new drop is out.",
+    "Hvala! Javljamo ti se čim izađe novi drop.": "Thanks! We'll let you know as soon as the new drop is out.",
     "Slanje nije uspelo, pokušaj ponovo.": "Sending failed, please try again.",
     "Učitavanje...": "Loading...",
     // proizvod
