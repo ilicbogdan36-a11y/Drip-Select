@@ -227,7 +227,7 @@ function home(){
 
 var cur=0;
 function setImg(k){var p=get(cur);ph=(k+p.imgs)%p.imgs;
-  $("#big").innerHTML=tile(p,ph,1)+'<span class="bt" style="top:12px;left:12px">1 od 1</span><span class="bt" style="bottom:12px;right:12px">'+(ph+1)+' / '+p.imgs+'</span>';
+  $("#big").innerHTML=tile(p,ph,1)+'<span class="bt" style="bottom:12px;right:12px">'+(ph+1)+' / '+p.imgs+'</span>';
   [].forEach.call(document.querySelectorAll(".fs button"),function(b,i){b.className=i==ph?"on":""});
   if($("#lb").classList.contains("on"))lb()}
 function lb(){var p=get(cur);$("#lb").innerHTML='<div class="im">'+tile(p,ph,1)+'</div><button class="nv" style="left:14px" data-nav="-1" aria-label="Prethodna">‹</button><button class="nv" style="right:14px" data-nav="1" aria-label="Sledeća">›</button><button class="x" data-lbx style="position:absolute;top:12px;right:18px;color:#fff" aria-label="Zatvori">×</button>';$("#lb").classList.add("on")}
