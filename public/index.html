@@ -88,7 +88,12 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 .panel .was{font-size:18px}
 .pct{color:#fff;background:#d92d20;border-radius:6px;padding:2px 8px;font:700 12px "Space Grotesk",sans-serif;align-self:center}
 .offb{position:absolute;top:12px;right:12px;z-index:2;color:#fff;background:#d92d20;border-radius:8px;padding:5px 10px;font:700 13px "Space Grotesk",sans-serif;box-shadow:0 4px 14px #0008}
-.meter{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;margin:8px 0 4px}.meter i{height:6px;border-radius:2px;background:#232938}.meter i.f{background:var(--ac)}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--ln);font-size:14px;color:var(--mut);line-height:1.2}
+.last+.opt{border-top:0;padding-top:4px}
+.opt b{display:inline-flex;align-items:center;color:var(--tx);font-weight:600;font-size:15px;text-align:right}
+.panel .opt .dot{width:12px;height:12px;margin-right:8px;top:0}
+.bb{display:flex;gap:10px;margin-top:6px;padding-top:18px;border-top:1px solid var(--ln)}.bb .btn{flex:1;padding-left:10px;padding-right:10px}
+.meter{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;margin:0 0 14px}.meter i{height:6px;border-radius:2px;background:#232938}.meter i.f{background:var(--ac)}
 .last{margin:14px 0;padding:10px 12px;border-radius:10px;background:#0b1830;border:1px solid #1d3a63;font-size:13px;color:#8cc3ff}
 .last.no{background:#ff453a1a;border-color:var(--red);color:#ffb3ad}
 .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
@@ -238,7 +243,7 @@ function prod(id){
   '<aside class="panel"><span class="lbl">'+esc(p.brand)+' · '+esc(p.cat)+'</span><h1>'+esc(p.name)+'</h1>'+pw(p)+
   '<div class="last'+(s?' no':'')+'">'+(s?'Prodato: ovaj proizvod je već našao vlasnika.':'Dostupan je samo jedan primerak.')+'</div>'+
   (p.cond?'<div class="opt">Stanje <b>'+esc(p.cond.split(" ")[0])+'</b></div><div class="meter">'+mt+'</div>':'')+
-  '<div class="opt">Veličina <b>'+esc(p.size)+'</b></div><div class="opt" style="margin:10px 0 0">Boja <b><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</b></div>'+
+  '<div class="opt">Veličina <b>'+esc(p.size)+'</b></div><div class="opt">Boja <b><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</b></div>'+
   '<div class="bb">'+(s?'<button class="btn full" disabled>Nije na stanju</button>':'<button class="btn ghost" data-add="'+id+'">Dodaj u korpu</button><button class="btn" data-buy="'+id+'">Naruči odmah</button>')+'</div>'+
   '<div class="row3"><div><b>🚚</b>Dostava<small>Dogovaramo pri potvrdi</small></div><div><b>💵</b>Pouzećem<small>Plaćaš kuriru</small></div><div><b>↩️</b>Povrat 14 dana<small>Bez objašnjenja</small></div></div></aside></div>'+
   '<div class="about">'+(p.desc?'<h2>Opis</h2><p class="lead" style="white-space:pre-line;font-size:15px;margin:10px 0 26px">'+esc(p.desc)+'</p>':'')+'<h2>Detalji proizvoda</h2><div class="specs">'+sp+'</div><h2 style="margin-top:34px">Još iz vaulta</h2><div class="more" style="margin-top:12px">'+(mo||'<p class="cond">Trenutno nema drugih proizvoda.</p>')+'</div></div></div>';
