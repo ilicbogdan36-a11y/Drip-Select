@@ -36,7 +36,7 @@
     "Dostava": "Delivery", "Dogovaramo pri potvrdi": "Arranged on confirmation",
     "Pouzećem": "Cash on delivery", "Plaćaš kuriru": "Pay the courier",
     "Povrat 14 dana": "14-day returns", "Bez pitanja": "No questions asked",
-    "Opis": "Description", "Detalji proizvoda": "Product details", "Još iz vaulta": "More from the vault",
+    "Opis": "Description", "Detalji proizvoda": "Product details", "Slični proizvodi": "Similar products",
     "Trenutno nema drugih proizvoda.": "No other products right now.",
     "Kategorija": "Category", "Autentičnost": "Authenticity",
     "Uvećaj sliku": "Enlarge image", "Galerija": "Gallery", "Prethodna": "Previous", "Sledeća": "Next", "Zatvori": "Close",

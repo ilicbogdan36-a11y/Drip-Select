@@ -101,7 +101,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
 .row3 div{border:1px solid var(--ln);border-radius:10px;padding:10px 6px;font-size:12px;text-align:center}.row3 b{display:grid;place-items:center;height:30px;margin-bottom:4px;font-size:18px;color:#6fb1ff}.row3 b svg{width:23px;height:23px}.row3 small{color:var(--mut);display:block;line-height:1.3}
 .specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:14px 0}.specs div{border-left:2px solid var(--ac);padding-left:12px}.specs small{display:block;color:var(--mut);font-size:11px}
-.more{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}.more a{flex:none;width:150px}.more .mt{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;border:1px solid var(--ln)}.more small{display:block;font-size:12px;margin-top:6px}
+.more{display:flex;gap:16px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}.more a{flex:none;width:210px;scroll-snap-align:start}.more .mt{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;border:1px solid var(--ln);transition:border-color .2s}.more .mt img{transition:transform .5s ease}.more a:hover .mt{border-color:rgba(76,141,255,.55)}.more a:hover .mt img{transform:scale(1.05)}.more small{display:block;font-size:15px;margin-top:10px;line-height:1.35}.more .mn{display:block;font-size:14px;opacity:.85;margin-bottom:2px}.more small b{font-size:16px}@media(max-width:560px){.more a{width:176px}}
 .about{margin:40px 0 60px;padding-top:26px;border-top:1px solid var(--ln)}.about h2{margin:0;font-size:22px}
 .lb{position:fixed;inset:0;z-index:60;background:#000e;display:none;align-items:center;justify-content:center;padding:20px}.lb.on{display:flex}
 .lb .im{position:relative;width:min(520px,86vw);aspect-ratio:4/5;border-radius:16px;overflow:hidden}
@@ -267,12 +267,16 @@ function setImg(k){var p=get(cur);ph=(k+p.imgs)%p.imgs;
   [].forEach.call(document.querySelectorAll(".fs button"),function(b,i){b.className=i==ph?"on":""});
   if($("#lb").classList.contains("on"))lb()}
 function lb(){var p=get(cur);$("#lb").innerHTML='<div class="im">'+tile(p,ph,1)+'</div><button class="nv" style="left:14px" data-nav="-1" aria-label="Prethodna">‹</button><button class="nv" style="right:14px" data-nav="1" aria-label="Sledeća">›</button><button class="x" data-lbx style="position:absolute;top:12px;right:18px;color:#fff" aria-label="Zatvori">×</button>';$("#lb").classList.add("on")}
+/* slični proizvodi: isti brend prvi, pa ista kategorija, pa najbliža cena; prodati se ne prikazuju */
+function similar(p){var lc=function(x){return String(x||"").toLowerCase()};
+  function sc(q){return(lc(q.brand)&&lc(q.brand)===lc(p.brand)?4:0)+(lc(q.cat)&&lc(q.cat)===lc(p.cat)?2:0)}
+  return P.filter(function(q){return q.id!=p.id&&!sold(q.id)}).sort(function(a,b){return sc(b)-sc(a)||Math.abs(a.price-p.price)-Math.abs(b.price-p.price)}).slice(0,8)}
 function prod(id){
   var p=get(id);if(!p)return go("");cur=id;
   var s=sold(id),n=Math.floor(parseFloat(p.cond)||0),mt="",th="",mo="",k;
   for(k=0;k<10;k++)mt+='<i class="'+(k<n?'f':'')+'"></i>';
   for(k=0;k<p.imgs;k++)th+='<button type="button" data-th="'+k+'" class="'+(k==ph?'on':'')+'" aria-label="Slika '+(k+1)+'">'+tile(p,k)+'</button>';
-  P.forEach(function(q){if(q.id!=id&&!sold(q.id))mo+='<a href="'+pl(q)+'"><div class="mt">'+tile(q,0)+'</div><small>'+esc(q.name)+'<br><b>'+fmt(q.price)+'</b>'+(was(q)?' <s class="was">'+fmt(was(q))+'</s>':'')+'</small></a>'});
+  similar(p).forEach(function(q){mo+='<a href="'+pl(q)+'"><div class="mt">'+tile(q,0)+'</div><small><span class="mn">'+esc(q.name)+'</span><b>'+fmt(q.price)+'</b>'+(was(q)?' <s class="was">'+fmt(was(q))+'</s>':'')+'</small></a>'});
   var sp=[["Brend",p.brand],["Kategorija",p.cat],["Veličina",p.size],["Boja",p.color],["Stanje",p.cond],["Autentičnost","100% original"]].filter(function(x){return x[1]}).map(function(x){return '<div><small>'+x[0]+'</small>'+(x[0]==="Boja"?'<i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>':'')+esc(x[1])+'</div>'}).join("");
   app.innerHTML='<div class="w"><a class="back" href="#proizvodi">← Nazad na proizvode</a>'+
   '<div class="pg"><div class="fs">'+th+'</div><button class="big" id="big" data-zoom type="button" aria-label="Uvećaj sliku"></button>'+
@@ -282,7 +286,7 @@ function prod(id){
   '<div class="opt">Veličina <b>'+esc(p.size)+'</b></div><div class="opt">Boja <b><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</b></div>'+
   '<div class="bb">'+(s?'<button class="btn full" disabled>Nije na stanju</button>':'<button class="btn ghost" data-add="'+id+'">Dodaj u korpu</button><button class="btn" data-buy="'+id+'">Naruči odmah</button>')+'</div>'+
   '<div class="row3"><div><b>'+ico('truck')+'</b>Dostava<small>Dogovaramo pri potvrdi</small></div><div><b>'+ico('cash')+'</b>Pouzećem<small>Plaćaš kuriru</small></div><div><b>'+ico('back')+'</b>Povrat 14 dana<small>Bez pitanja</small></div></div></aside></div>'+
-  '<div class="about">'+(p.desc?'<h2>Opis</h2><p class="lead" style="white-space:pre-line;font-size:15px;margin:10px 0 26px">'+esc(p.desc)+'</p>':'')+'<h2>Detalji proizvoda</h2><div class="specs">'+sp+'</div><h2 style="margin-top:34px">Još iz vaulta</h2><div class="more" style="margin-top:12px">'+(mo||'<p class="cond">Trenutno nema drugih proizvoda.</p>')+'</div></div></div>';
+  '<div class="about">'+(p.desc?'<h2>Opis</h2><p class="lead" style="white-space:pre-line;font-size:15px;margin:10px 0 26px">'+esc(p.desc)+'</p>':'')+'<h2>Detalji proizvoda</h2><div class="specs">'+sp+'</div><h2 style="margin-top:34px">Slični proizvodi</h2><div class="more" style="margin-top:14px">'+(mo||'<p class="cond">Trenutno nema drugih proizvoda.</p>')+'</div></div></div>';
   setImg(ph);
 }
 function sum(){
@@ -526,7 +530,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=5";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=6";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();
