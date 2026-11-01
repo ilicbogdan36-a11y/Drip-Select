@@ -241,7 +241,7 @@ function prod(id){
   app.innerHTML='<div class="w"><a class="back" href="#proizvodi">← Nazad na proizvode</a>'+
   '<div class="pg"><div class="fs">'+th+'</div><button class="big" id="big" data-zoom type="button" aria-label="Uvećaj sliku"></button>'+
   '<aside class="panel"><span class="lbl">'+esc(p.brand)+' · '+esc(p.cat)+'</span><h1>'+esc(p.name)+'</h1>'+pw(p)+
-  '<div class="last'+(s?' no':'')+'">'+(s?'Prodato: ovaj proizvod je već našao vlasnika.':'Dostupan je samo jedan primerak.')+'</div>'+
+  '<div class="last'+(s?' no':'')+'">'+(s?'Ovaj proizvod je već prodat.':'Dostupan je samo jedan primerak.')+'</div>'+
   (p.cond?'<div class="opt">Stanje <b>'+esc(p.cond.split(" ")[0])+'</b></div><div class="meter">'+mt+'</div>':'')+
   '<div class="opt">Veličina <b>'+esc(p.size)+'</b></div><div class="opt">Boja <b><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</b></div>'+
   '<div class="bb">'+(s?'<button class="btn full" disabled>Nije na stanju</button>':'<button class="btn ghost" data-add="'+id+'">Dodaj u korpu</button><button class="btn" data-buy="'+id+'">Naruči odmah</button>')+'</div>'+
