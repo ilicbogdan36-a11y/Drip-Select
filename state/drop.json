@@ -3,5 +3,11 @@
   "2026-10-31-north-face-jakna.md",
   "2026-10-31-tech-fleece.md"
  ],
- "pending": null
+ "pending": {
+  "files": [
+   "2026-11-01-napapijri-jakna.md"
+  ],
+  "since": 1793542238938,
+  "first": 1793542238938
+ }
 }
