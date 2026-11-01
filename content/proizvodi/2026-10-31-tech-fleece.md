@@ -8,6 +8,7 @@ color: Tamno Plava
 condition: 8
 image: /images/products/img_1136.png
 image2: /images/products/sdasdadaddad.png
+featured: true
 sold: false
 ---
 Odlično Stanje
