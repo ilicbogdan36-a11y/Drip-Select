@@ -481,19 +481,20 @@ function galInit(){var b=$("#big"),t=$("#trk"),p=get(cur);if(!b||!t||!p||p.imgs<
 
 /* ---- zum na prelazak mišem: slika se uveća u svom okviru i prati kursor (samo uređaji sa mišem) ---- */
 var CANH=!!(window.matchMedia&&matchMedia("(hover:hover) and (pointer:fine)").matches),
-    HZ={timer:0,ins:0,on:0,el:null,s:2.4,cs:1,ts:1,cx:0,cy:0,tx:0,ty:0,w:1,h:1,mx:0,my:0,raf:0};
+    HZ={timer:0,ins:0,on:0,el:null,s:2.4,cs:1,ts:1,cx:0,cy:0,sx:0,sy:0,w:1,h:1,mx:0,my:0,raf:0};
 function hzTile(){var s=document.querySelectorAll("#trk .sl")[ph];return s&&s.firstElementChild}
 function hzApply(){var t=HZ.el,m;if(!t)return;t.style.transform="translate3d("+HZ.cx+"px,"+HZ.cy+"px,0) scale("+HZ.cs+")";
   m=$(".mm i");if(m&&HZ.cs>1.001){m.style.width=(100/HZ.cs)+"%";m.style.height=(100/HZ.cs)+"%";m.style.left=(-HZ.cx/HZ.cs/HZ.w*100)+"%";m.style.top=(-HZ.cy/HZ.cs/HZ.h*100)+"%"}}
+/* pomeraj se uvek računa iz trenutnog zuma i (uglačane) tačke miša: tako slika u svakom kadru pokriva ceo okvir, pa nema belih traka pri izlasku miša sa ivice */
 function hzLoop(){var k=RM?1:.2,d;HZ.raf=0;
-  HZ.tx=-(HZ.cs-1)*HZ.mx;HZ.ty=-(HZ.cs-1)*HZ.my;
-  HZ.cs+=(HZ.ts-HZ.cs)*k;HZ.cx+=(HZ.tx-HZ.cx)*k;HZ.cy+=(HZ.ty-HZ.cy)*k;
-  d=Math.abs(HZ.ts-HZ.cs)+Math.abs(HZ.tx-HZ.cx)/HZ.w+Math.abs(HZ.ty-HZ.cy)/HZ.h;
+  HZ.sx+=(HZ.mx-HZ.sx)*k;HZ.sy+=(HZ.my-HZ.sy)*k;HZ.cs+=(HZ.ts-HZ.cs)*k;
+  HZ.cx=-(HZ.cs-1)*HZ.sx;HZ.cy=-(HZ.cs-1)*HZ.sy;
+  d=Math.abs(HZ.ts-HZ.cs)+Math.abs(HZ.mx-HZ.sx)/HZ.w+Math.abs(HZ.my-HZ.sy)/HZ.h;
   if(d<.002&&!HZ.on){HZ.cs=1;HZ.cx=0;HZ.cy=0;if(HZ.el){HZ.el.style.transform="";HZ.el.style.willChange=""}HZ.el=null;return}
   hzApply();if(d>=.002)HZ.raf=requestAnimationFrame(hzLoop)}
 function hzOn(){var t=hzTile(),b=$("#big"),g=$(".gal"),m=$(".mm"),p=get(cur);HZ.timer=0;if(!t||!b||!g||!p||HZ.on||G.dr)return;
   if(HZ.el&&HZ.el!==t){HZ.el.style.transform="";HZ.el.style.willChange=""}
-  HZ.el=t;HZ.on=1;HZ.s=Math.max(2,Math.min(2.6,((t.naturalWidth||1000)/(b.clientWidth||400))*.9));HZ.ts=HZ.s;
+  HZ.el=t;HZ.on=1;if(HZ.cs<=1.001){HZ.sx=HZ.mx;HZ.sy=HZ.my}HZ.s=Math.max(2,Math.min(2.6,((t.naturalWidth||1000)/(b.clientWidth||400))*.9));HZ.ts=HZ.s;
   t.style.willChange="transform";
   if(m){m.style.backgroundImage=p.photos&&p.photos[ph]?'url("'+p.photos[ph].replace(/"/g,"%22")+'")':"linear-gradient(150deg,"+p.g.split(",").join(",")+")";m.style.backgroundPosition=p.pos||"50% 50%"}
   g.classList.add("hz");if(!HZ.raf)HZ.raf=requestAnimationFrame(hzLoop)}
@@ -915,7 +916,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=18";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=19";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();
