@@ -1,0 +1,37 @@
+name: Smanji slike proizvoda
+
+# Kad se doda ili izmeni proizvod/slika, prevelike slike se same smanje (WebP, najviše 1600 px)
+# i putanja u proizvodu se ispravi. Ako nema šta da se smanji, ne radi ništa.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public/images/products/**"
+      - "content/proizvodi/**"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: smanji-slike
+  cancel-in-progress: false
+
+jobs:
+  smanji:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow
+      - run: python .github/scripts/shrink_images.py .
+      - name: Snimi izmene
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "Drip Select bot"
+            git config user.email "bot@dripselect.rs"
+            git add -A
+            git commit -m "Slike: automatski smanjene"
+            for i in 1 2 3; do git pull --rebase && git push && break; sleep 3; done
+          fi
