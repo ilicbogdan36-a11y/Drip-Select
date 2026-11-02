@@ -6,8 +6,8 @@ old_price: 60000
 size: M
 color: Tamno Plava
 condition: 8
-image: /images/products/img_1136.png
-image2: /images/products/sdasdadaddad.png
+image: /images/products/img_1136.webp
+image2: /images/products/sdasdadaddad.webp
 featured: true
 sold: false
 ---
