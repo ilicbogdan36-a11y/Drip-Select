@@ -22,7 +22,7 @@
     "Cena": "Price", "Naruči": "Order", "Dodaj u korpu": "Add to cart", "Rasprodato": "Sold out",
     "Nema rezultata.": "No results.", "Poništi filtere": "Clear filters",
     "Izdvajamo": "Featured", "Najbolje u kolekciji": "Best in the collection",
-    "Novi drop uskoro": "New drop coming soon",
+    "Novi drop uskoro": "New drop coming soon", "Jedan mejl po dropu": "One email per drop", "Odjava u svakom mejlu": "Unsubscribe in every email",
     "Svi proizvodi su rasprodati. Upiši mejl i javljamo ti čim izađe novi drop.": "Everything is sold out. Enter your email and we'll let you know as soon as the new drop is out.",
     "tvoj@mejl.rs": "your@email.com", "Mejl": "Email", "Obavesti me": "Notify me",
     "Hvala! Javljamo ti se čim izađe novi drop.": "Thanks! We'll let you know as soon as the new drop is out.",
