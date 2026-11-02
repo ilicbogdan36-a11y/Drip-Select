@@ -40,6 +40,8 @@ collections:
       - { label: "Slika 3 (opciono)", name: "image3", widget: "image", required: false }
       - { label: "Slika 4 (opciono)", name: "image4", widget: "image", required: false }
       - { label: "Slika 5 (opciono)", name: "image5", widget: "image", required: false }
+      - { label: "Slika 6 (opciono)", name: "image6", widget: "image", required: false }
+      - { label: "Slika 7 (opciono)", name: "image7", widget: "image", required: false }
       # kadriranje: sajt seče slike u fiksan okvir od sredine; ovde pomeraš proizvod unutar okvira
       - label: "Položaj proizvoda na slici"
         name: "focus"

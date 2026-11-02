@@ -44,7 +44,7 @@ export function parseProducts(items) {
   for (const it of items || []) {
     const d = fm(it.text);
     if (!d.title) continue; // kao na sajtu: bez naslova nema proizvoda (ni slug-a)
-    const photos = [d.image, d.image2, d.image3, d.image4, d.image5].filter(Boolean).map((x) => (/^(https?:)?\/\//.test(x) || x[0] === "/" ? x : "/" + x));
+    const photos = [d.image, d.image2, d.image3, d.image4, d.image5, d.image6, d.image7].filter(Boolean).map((x) => (/^(https?:)?\/\//.test(x) || x[0] === "/" ? x : "/" + x));
     out.push({
       file: it.file,
       slug: mkSlug(it.file, used),

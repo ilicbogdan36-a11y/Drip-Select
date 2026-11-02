@@ -154,9 +154,9 @@ html.lbo{overflow:hidden}
 .lb .nv{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:48px;height:48px;border-radius:50%}
 .lb .nv.pv{left:max(16px,env(safe-area-inset-left))}.lb .nv.nx{right:max(16px,env(safe-area-inset-right))}
 .lb .nv[hidden]{display:none}
-.lbf{flex:none;display:flex;justify-content:center;gap:8px;padding:12px 16px max(16px,env(safe-area-inset-bottom));overflow-x:auto;touch-action:pan-x}
+.lbf{position:relative;flex:none;display:flex;gap:8px;padding:12px 16px max(16px,env(safe-area-inset-bottom));overflow-x:auto;touch-action:pan-x}
 .lbf button{position:relative;flex:none;width:58px;height:58px;border-radius:10px;overflow:hidden;border:1px solid #ffffff24;padding:0;background:none;opacity:.5;cursor:pointer;transition:opacity .2s,border-color .2s}
-.lbf button:hover{opacity:.85}.lbf button.on{opacity:1;border-color:var(--ac)}
+.lbf button:first-child{margin-left:auto}.lbf button:last-child{margin-right:auto}.lbf button:hover{opacity:.85}.lbf button.on{opacity:1;border-color:var(--ac)}
 @media(hover:none){.lb .nv{display:none}}
 @media(max-width:560px){.lbf button{width:50px;height:50px}.lbt{gap:8px}.lbg{gap:6px}.lbb{width:40px;height:40px}.lbb.lbp{min-width:52px}}
 @media(max-width:900px){.pg,.pg.one{grid-template-columns:1fr}.fs{flex-direction:row;order:1}.fs button{width:60px}.panel{position:static;order:2}}
@@ -433,13 +433,14 @@ function lbMeasure(){var s=$("#lbs"),zi=$("#zi"),f;if(!s||!zi||!zi.naturalWidth)
   if(Z.s>Z.max)Z.s=Z.max;lbClamp();lbApply(0)}
 function lbZoom(ns,cx,cy,ms){ns=Math.max(1,Math.min(Z.max,ns));if(ns<Z.s&&ns<1.03)ns=1;
   var r=ns/Z.s;Z.x=cx-(cx-Z.x)*r;Z.y=cy-(cy-Z.y)*r;Z.s=ns;if(ns===1){Z.x=0;Z.y=0}lbClamp();lbApply(ms)}
-function lbShow(dir){var p=get(cur),l=$("#lb"),zi=$("#zi"),zw=$("#zw"),c=$("#lbc"),a,n;if(!p||!zi)return;
+function lbShow(dir){var p=get(cur),l=$("#lb"),zi=$("#zi"),zw=$("#zw"),c=$("#lbc"),a,n,f,cb;if(!p||!zi)return;
   Z.s=1;Z.x=0;Z.y=0;zw.style.transform="";l.style.removeProperty("--bk");
   zi.onload=lbMeasure;zi.style.transition="none";zi.style.transform="none";zi.src=lbSrc(p,ph);
   if(zi.complete&&zi.naturalWidth)lbMeasure();else{Z.w0=0;Z.h0=0}
   lbApply(0);
   if(c)c.textContent=p.imgs>1?(ph+1)+" / "+p.imgs:"";
   [].forEach.call(l.querySelectorAll("[data-lth]"),function(b,i){b.className=i==ph?"on":""});
+  f=l.querySelector(".lbf");cb=f&&f.children[ph];if(cb&&f.scrollWidth>f.clientWidth)f.scrollTo({left:cb.offsetLeft-(f.clientWidth-cb.offsetWidth)/2,behavior:RM?"auto":"smooth"});
   a=l.querySelector(".nv.pv");n=l.querySelector(".nv.nx");if(a)a.hidden=ph<=0;if(n)n.hidden=ph>=p.imgs-1;
   anim(zw,dir?[{opacity:0,transform:"translateX("+dir*40+"px)"},{opacity:1,transform:"none"}]:[{opacity:0,transform:"scale(.97)"},{opacity:1,transform:"none"}],dir?260:320);
   [ph-1,ph+1].forEach(function(k){if(k>=0&&k<p.imgs&&p.photos&&p.photos[k]){var i=new Image();i.src=p.photos[k]}})}
@@ -695,7 +696,7 @@ function hid(s){var h=5381,i;for(i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))
 function mkSlug(f,u){var s=String(f||"").replace(/\.md$/i,"").replace(/^\d{4}-\d{2}-\d{2}-/,"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/đ/g,"dj").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");if(!s)s="proizvod";var b=s,n=2;while(u[s])s=b+"-"+(n++);u[s]=1;return s}
 function pl(p){return "/proizvod/"+(p.slug||p.id)}
 function pBySlug(s){try{s=decodeURIComponent(s)}catch(e){}return P.filter(function(p){return p.slug===s})[0]||P.filter(function(p){return String(p.id)===s})[0]}
-function readList(a){P=[];SS=[];var used={};a.forEach(function(d){if(!d||!d.title)return;var id=hid(d.file),ph=[d.image,d.image2,d.image3,d.image4,d.image5].filter(Boolean).map(function(x){return /^(https?:)?\/\//.test(x)||x[0]==="/"?x:"/"+x});
+function readList(a){P=[];SS=[];var used={};a.forEach(function(d){if(!d||!d.title)return;var id=hid(d.file),ph=[d.image,d.image2,d.image3,d.image4,d.image5,d.image6,d.image7].filter(Boolean).map(function(x){return /^(https?:)?\/\//.test(x)||x[0]==="/"?x:"/"+x});
       P.push({id:id,file:d.file,brand:d.brand||"",cat:d.category||"Odeća",size:d.size||"",color:d.color||"",hex:d.hex||"#4a5160",name:d.title,cond:(/^\d+([.,]\d+)?$/.test(String(d.condition||"").trim())?String(d.condition).trim().replace(",",".")+"/10":(d.condition||"")),desc:d.description||d.body||"",price:parseFloat(d.price)||0,old:parseFloat(d.old_price)||0,feat:/^(true|da|yes|1)$/i.test(String(d.featured||"")),slug:mkSlug(d.file,used),imgs:ph.length||3,g:"#2a303b,#14161b",photos:ph,pos:FP[String(d.focus||"").trim().toLowerCase()]||"50% 50%"});
       if(/^(true|da|yes|1)$/i.test(d.sold||""))SS.push(id)});if(LIVE){sync();var nw=Date.now();S.sold=S.sold.filter(function(i){return SS.indexOf(i)<0&&S.st&&S.st[i]>nw-20000});save()}}
 function viaApi(){return fetch(CFG.API+"/products").then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(j){return j.items.map(function(x){var d=fm(x.text);d.file=x.file;return d})})}
