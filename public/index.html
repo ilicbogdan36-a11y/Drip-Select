@@ -357,6 +357,7 @@ small{font-size:11.5px}
  .x{width:40px;height:40px}
  a.ml{padding:11px 2px}
  .fc a,.fc span{padding:11px 0}
+ .ck label.cb{padding:9px 0}
  nav a{padding-top:12px;padding-bottom:12px}
  .rm{padding:12px 8px}
  .back{padding:11px 0;margin:12px 0 4px}
@@ -365,6 +366,15 @@ small{font-size:11.5px}
 header img,#fl,.hero img{aspect-ratio:640/398}
 
 /* Instagram */
+.ck label.cb{display:flex;align-items:flex-start;gap:12px;margin:14px 0 0;font-size:14px;letter-spacing:0;text-transform:none;color:var(--tx);cursor:pointer;line-height:1.4;padding:4px 0}
+.ck label.cb span{flex:1;min-width:0}
+.ck label.cb small{display:block;margin-top:2px;font-size:12px;color:var(--mut)}
+.ck .cb input{-webkit-appearance:none;appearance:none;width:22px;height:22px;min-width:22px;flex:none;margin:0;padding:0;border:1.5px solid #3a4258;border-radius:6px;background:#090b10;display:grid;place-content:center;cursor:pointer;transition:background .15s,border-color .15s,box-shadow .15s}
+.ck .cb input::after{content:"";width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) scale(0);margin-top:-2px;transition:transform .12s}
+.ck .cb input:checked{background:var(--ac);border-color:var(--ac)}
+.ck .cb input:checked::after{transform:rotate(45deg) scale(1)}
+.ck .cb input:hover{border-color:var(--ac)}
+.ck .cb input:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
 .fc a.fig{display:flex;align-items:center;gap:9px}
 .fc a.fig[hidden]{display:none}
 .fc a.fig svg{width:18px;height:18px;flex:none;display:block;color:#6fb1ff}
@@ -655,18 +665,25 @@ function sum(){
   return '<h3>Tvoja narudžbina</h3>'+h+shipBox(co.length,"kasa",ab)+'<div class="tr"><span>Dostava</span><b class="'+(sp.fr?'fr':'')+'">'+sp.txt+'</b></div><div class="tr t"><span>Ukupno</span><b>'+fmt(sp.tot)+'</b></div>'+
   '<button class="btn full" type="submit" form="f">Naruči - '+fmt(sp.tot)+'</button><p class="fine">Klikom na „Naruči“ prihvataš opšte uslove.</p>';
 }
+var CK="dscust";
+function custLoad(){try{var o=JSON.parse(localStorage.getItem(CK)||"null");return o&&typeof o==="object"?o:null}catch(e){return null}}
+function custSave(o){try{if(o)localStorage.setItem(CK,JSON.stringify(o));else localStorage.removeItem(CK)}catch(e){}}
+function cb(id,t,sub){return '<label class="cb" for="'+id+'"><input type="checkbox" id="'+id+'"><span>'+t+(sub?'<small>'+sub+'</small>':'')+'</span></label>'}
 function kasa(){
   if(!co.length)co=S.cart.slice();
   if(!co.length)return goR("/");
   var f=function(id,l,x){return '<div><label for="'+id+'">'+l+' *</label><input id="'+id+'" required '+(x||'')+'></div>'},
       st=function(k,t){return '<h3><span class="sn">'+k+'</span>'+t+'</h3>'};
   app.innerHTML='<div class="w n"><div class="crumbs"><a href="/">Početna</a> / <a href="/" data-cart>Korpa</a> / <b>Kasa</b></div><h1 style="font-size:40px;margin:0 0 6px">Kasa</h1><p class="cond" style="font-size:14px">Plaćanje pouzećem: popunite podatke i naručite. Pitanja? Piši nam na <a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a>.</p>'+(igOn()?'<p class="igl">'+ico('ig')+'Najbrže nas stigneš na Instagramu '+igLink()+'</p>':'')+
-  '<div class="ck" style="margin-top:22px"><form id="f"><div class="box">'+st(1,"Kontakt podaci")+'<div class="r2">'+f("fn","Ime",'autocomplete="given-name"')+f("ln","Prezime",'autocomplete="family-name"')+f("em","Email",'type="email" autocomplete="email" placeholder="ime@email.com"')+f("tl","Telefon",'type="tel" autocomplete="tel" placeholder="064 123 4567"')+'</div></div>'+
+  '<div class="ck" style="margin-top:22px"><form id="f"><div class="box">'+st(1,"Kontakt podaci")+'<div class="r2">'+f("fn","Ime",'autocomplete="given-name"')+f("ln","Prezime",'autocomplete="family-name"')+f("em","Email",'type="email" autocomplete="email" placeholder="ime@email.com"')+f("tl","Telefon",'type="tel" autocomplete="tel" placeholder="064 123 4567"')+'</div>'+cb("nw","Pošalji mi novosti i ponude mejlom")+'</div>'+
   '<div class="box">'+st(2,"Adresa za isporuku")+f("ad","Adresa",'autocomplete="street-address" placeholder="Ulica i broj"')+'<div class="r2">'+f("gr","Grad",'autocomplete="address-level2"')+f("zp","Poštanski broj",'inputmode="numeric" autocomplete="postal-code" placeholder="11000"')+'</div>'+
-  '<label for="dr2">Država</label><input id="dr2" value="Srbija" required autocomplete="country-name"><label for="nt">Napomena (opciono)</label><textarea id="nt" rows="3"></textarea></div>'+
+  '<label for="dr2">Država</label><input id="dr2" value="Srbija" required autocomplete="country-name">'+cb("sv","Sačuvaj ove podatke za sledeći put","Čuva se samo na ovom uređaju.")+'<label for="nt">Napomena (opciono)</label><textarea id="nt" rows="3"></textarea></div>'+
   '<div class="box">'+st(3,"Plaćanje")+'<div class="pay"><span class="pi">'+ico('cash')+'</span><div><b>Pouzećem (gotovinom kuriru)</b><small>Plati gotovinom kuriru pri preuzimanju paketa.</small></div><span class="tg">jedina opcija</span></div></div></form>'+
   '<aside class="box" id="sum">'+sum()+'</aside></div></div>';
+  var sv=custLoad();
+  if(sv){["fn","ln","em","tl","ad","gr","zp","dr2"].forEach(function(k){var el=$("#"+k);if(el&&typeof sv[k]==="string"&&sv[k])el.value=sv[k].slice(0,200)});$("#sv").checked=true;var m=$("#sum");if(m)m.innerHTML=sum()}
 }
+document.addEventListener("change",function(e){if(e.target.id==="sv"&&!e.target.checked)custSave(null)});
 document.addEventListener("input",function(e){if(e.target.id==="dr2"){var m=$("#sum");if(m&&co.length)m.innerHTML=sum()}});
 document.addEventListener("submit",function(e){
   if(e.target.id!=="f")return;e.preventDefault();sync();
@@ -677,10 +694,10 @@ document.addEventListener("submit",function(e){
   var sp=shipOf(co.length,t,!inRS());
   last={n:$("#fn").value.trim(),names:names,total:t,sh:sp};
   if(!LIVE)(S.orders=S.orders||[]).unshift({n:$("#fn").value.trim()+" "+$("#ln").value.trim(),tl:$("#tl").value,em:$("#em").value,ad:$("#ad").value+", "+$("#zp").value+" "+$("#gr").value,names:names,total:t,t:new Date().toLocaleString("sr-RS")});
-  var ids=co.slice(),bt=document.querySelector('button[form="f"]'),v=function(i){return $("#"+i).value.trim()};
+  var ids=co.slice(),bt=document.querySelector('button[form="f"]'),v=function(i){return $("#"+i).value.trim()},keep=$("#sv").checked?{fn:v("fn"),ln:v("ln"),em:v("em"),tl:v("tl"),ad:v("ad"),gr:v("gr"),zp:v("zp"),dr2:v("dr2")}:null;
   if(bt){bt.disabled=true;bt.textContent="Šaljem..."}
-  post("order",{ime:v("fn"),prezime:v("ln"),email:v("em"),telefon:v("tl"),adresa:v("ad"),grad:v("gr"),postanski_broj:v("zp"),drzava:v("dr2"),napomena:v("nt"),artikli:ids.map(function(i){var p=get(i);return p.name+" ("+p.size+") "+fmt(p.price)}).join("\n"),fajlovi:ids.map(function(i){return get(i).file}).join("|"),dostava:sp.txt,ukupno:fmt(sp.tot),vreme:new Date().toLocaleString("sr-RS")})
-  .then(function(){ids.forEach(function(i){S.sold.push(i);(S.st=S.st||{})[i]=Date.now()});S.cart=S.cart.filter(function(i){return ids.indexOf(i)<0});co=[];save();go("gotovo")})
+  post("order",{ime:v("fn"),prezime:v("ln"),email:v("em"),telefon:v("tl"),adresa:v("ad"),grad:v("gr"),postanski_broj:v("zp"),drzava:v("dr2"),napomena:v("nt"),novosti:$("#nw").checked?"Da":"Ne",artikli:ids.map(function(i){var p=get(i);return p.name+" ("+p.size+") "+fmt(p.price)}).join("\n"),fajlovi:ids.map(function(i){return get(i).file}).join("|"),dostava:sp.txt,ukupno:fmt(sp.tot),vreme:new Date().toLocaleString("sr-RS")})
+  .then(function(){custSave(keep);ids.forEach(function(i){S.sold.push(i);(S.st=S.st||{})[i]=Date.now()});S.cart=S.cart.filter(function(i){return ids.indexOf(i)<0});co=[];save();go("gotovo")})
   .catch(function(er){if(bt){bt.disabled=false;bt.textContent="Pokušaj ponovo"}
     if(er&&er.status===409){((er.body&&er.body.items)||[]).forEach(function(fn){SS.push(hid(fn))});var fe=document.getElementById("f");if(fe)fe.dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}));return}
     $("#sum").insertAdjacentHTML("afterbegin",'<div class="err">Slanje nije uspelo. Proveri internet pa pokušaj ponovo, a ako se ponovi, javi nam se preko strane Kontakt.</div>')});
@@ -919,7 +936,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=19";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=20";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();

@@ -20,7 +20,7 @@ const FORMS = {
   porudzbina: {
     title: "Nova porudžbina",
     req: ["ime", "prezime", "email", "telefon", "adresa", "grad", "postanski_broj", "artikli", "fajlovi"],
-    all: ["ime", "prezime", "email", "telefon", "adresa", "grad", "postanski_broj", "drzava", "napomena", "artikli", "dostava", "ukupno", "vreme", "fajlovi"],
+    all: ["ime", "prezime", "email", "telefon", "adresa", "grad", "postanski_broj", "drzava", "napomena", "novosti", "artikli", "dostava", "ukupno", "vreme", "fajlovi"],
   },
   prijava: { title: "Prijava za novi drop", req: ["email"], all: ["email", "vreme"] },
   zelja: {
@@ -33,7 +33,7 @@ const FORMS = {
 const LABELS = {
   ime: "Ime", prezime: "Prezime", email: "Mejl", telefon: "Telefon", adresa: "Adresa", grad: "Grad",
   postanski_broj: "Poštanski broj", drzava: "Država", napomena: "Napomena", artikli: "Proizvodi", dostava: "Dostava",
-  ukupno: "Ukupno", vreme: "Vreme", poruka: "Poruka", sta_trazi: "Šta traži", velicina: "Veličina", budzet: "Budžet (din.)",
+  novosti: "Novosti i ponude mejlom", ukupno: "Ukupno", vreme: "Vreme", poruka: "Poruka", sta_trazi: "Šta traži", velicina: "Veličina", budzet: "Budžet (din.)",
 };
 const LONG = { poruka: 3000, napomena: 3000, artikli: 3000, sta_trazi: 1000, fajlovi: 1500 };
 
@@ -178,6 +178,7 @@ export async function onRequestPost({ request, env, waitUntil }) {
 
   const d = {};
   for (const k of def.all) d[k] = clean(body.data && body.data[k], LONG[k] || 300);
+  if ("novosti" in d) d.novosti = d.novosti === "Da" ? "Da" : "Ne";
   for (const k of def.req) if (!d[k]) return json({ error: "missing", field: k }, 400);
   if (d.email && !isEmail(d.email)) return json({ error: "email" }, 400);
 
