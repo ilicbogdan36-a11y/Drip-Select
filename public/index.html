@@ -646,7 +646,7 @@ function np(n){var a=n%10,b=n%100;return n===1?"artikal":(a>=2&&a<=4&&(b<10||b>=
 function inRS(){var e=document.getElementById("dr2");return !e||/^(srbija|serbia|rs|republika srbija|republic of serbia|србија)$/.test(e.value.trim().toLowerCase())}
 function shipOf(n,t,ab){var f=+CFG.FREE||0,fr=!ab&&f>0&&n>=f,pr=fr||ab?0:(+CFG.SHIP||0);return{fr:fr,ab:!!ab,pr:pr,tot:t+pr,txt:ab?"Dogovaramo posebno":(fr?"Besplatno":(pr>0?fmt(pr):"Dogovaramo pri potvrdi"))}}
 function shipBox(n,more,ab){var f=+CFG.FREE||0,k,bar="",fr=n>=f,l=f-n;if(!(f>0))return "";
-  if(ab)return '<div class="fsh"><span class="fshi">'+ico('truck')+'</span><div class="fsht"><b>Dostava van Srbije</b><small>Dostavu van Srbije plaća kupac. Cenu ti javljamo pre slanja. Besplatna dostava važi samo u Srbiji.</small></div></div>';
+  if(ab)return '<div class="fsh"><span class="fshi">'+ico('truck')+'</span><div class="fsht"><b>Dostava van Srbije</b><small>Dostavu van Srbije plaća kupac, a plaćanje je unapred. Cenu dostave i podatke za uplatu ti javljamo posle porudžbine. Besplatna dostava važi samo u Srbiji.</small></div></div>';
   for(k=0;k<f;k++)bar+='<i'+(k<n?' class="on"':'')+'></i>';
   return '<div class="fsh'+(fr?' ok':'')+'"><span class="fshi">'+ico(fr?'check':'truck')+'</span><div class="fsht"><b>'+(fr?'Dostava u Srbiji je besplatna':'Besplatna dostava u Srbiji na '+f+' '+np(f))+'</b>'+(fr?'':'<small>Dodaj još '+l+' '+np(l)+' i dostava je besplatna</small>')+'<span class="fshb" aria-hidden="true">'+bar+'</span>'+(more&&!fr?'<button type="button" class="btn ghost sm" data-more="'+more+'">Dodaj još artikala</button>':'')+'</div></div>'}
 /* Instagram: nalog se upisuje u CFG.IG; dok je prazan, ništa se ne prikazuje.
@@ -669,22 +669,24 @@ var CK="dscust";
 function custLoad(){try{var o=JSON.parse(localStorage.getItem(CK)||"null");return o&&typeof o==="object"?o:null}catch(e){return null}}
 function custSave(o){try{if(o)localStorage.setItem(CK,JSON.stringify(o));else localStorage.removeItem(CK)}catch(e){}}
 function cb(id,t,sub){return '<label class="cb" for="'+id+'"><input type="checkbox" id="'+id+'"><span>'+t+(sub?'<small>'+sub+'</small>':'')+'</span></label>'}
+function payHtml(ab){return '<span class="pi">'+ico('cash')+'</span>'+(ab?'<div><b>Uplata unapred</b><small>Za porudžbine van Srbije plaćanje je unapred. Posle porudžbine ti javljamo cenu dostave i podatke za uplatu, a paket šaljemo kad uplata stigne.</small></div><span class="tg">van Srbije</span>':'<div><b>Pouzećem (gotovinom kuriru)</b><small>Plati gotovinom kuriru pri preuzimanju paketa.</small></div><span class="tg">jedina opcija</span>')}
+function payUp(){var ab=!inRS(),p=$("#pay"),k=$("#kin");if(p)p.innerHTML=payHtml(ab);if(k)k.textContent=ab?"Popunite podatke i naručite.":"Plaćanje pouzećem: popunite podatke i naručite."}
 function kasa(){
   if(!co.length)co=S.cart.slice();
   if(!co.length)return goR("/");
   var f=function(id,l,x){return '<div><label for="'+id+'">'+l+' *</label><input id="'+id+'" required '+(x||'')+'></div>'},
       st=function(k,t){return '<h3><span class="sn">'+k+'</span>'+t+'</h3>'};
-  app.innerHTML='<div class="w n"><div class="crumbs"><a href="/">Početna</a> / <a href="/" data-cart>Korpa</a> / <b>Kasa</b></div><h1 style="font-size:40px;margin:0 0 6px">Kasa</h1><p class="cond" style="font-size:14px">Plaćanje pouzećem: popunite podatke i naručite. Pitanja? Piši nam na <a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a>.</p>'+(igOn()?'<p class="igl">'+ico('ig')+'Najbrže nas stigneš na Instagramu '+igLink()+'</p>':'')+
+  app.innerHTML='<div class="w n"><div class="crumbs"><a href="/">Početna</a> / <a href="/" data-cart>Korpa</a> / <b>Kasa</b></div><h1 style="font-size:40px;margin:0 0 6px">Kasa</h1><p class="cond" style="font-size:14px"><span id="kin">Plaćanje pouzećem: popunite podatke i naručite.</span> Pitanja? Piši nam na <a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a>.</p>'+(igOn()?'<p class="igl">'+ico('ig')+'Najbrže nas stigneš na Instagramu '+igLink()+'</p>':'')+
   '<div class="ck" style="margin-top:22px"><form id="f"><div class="box">'+st(1,"Kontakt podaci")+'<div class="r2">'+f("fn","Ime",'autocomplete="given-name"')+f("ln","Prezime",'autocomplete="family-name"')+f("em","Email",'type="email" autocomplete="email" placeholder="ime@email.com"')+f("tl","Telefon",'type="tel" autocomplete="tel" placeholder="064 123 4567"')+'</div>'+cb("nw","Pošalji mi novosti i ponude mejlom")+'</div>'+
   '<div class="box">'+st(2,"Adresa za isporuku")+f("ad","Adresa",'autocomplete="street-address" placeholder="Ulica i broj"')+'<div class="r2">'+f("gr","Grad",'autocomplete="address-level2"')+f("zp","Poštanski broj",'inputmode="numeric" autocomplete="postal-code" placeholder="11000"')+'</div>'+
   '<label for="dr2">Država</label><input id="dr2" value="Srbija" required autocomplete="country-name">'+cb("sv","Sačuvaj ove podatke za sledeći put","Čuva se samo na ovom uređaju.")+'<label for="nt">Napomena (opciono)</label><textarea id="nt" rows="3"></textarea></div>'+
-  '<div class="box">'+st(3,"Plaćanje")+'<div class="pay"><span class="pi">'+ico('cash')+'</span><div><b>Pouzećem (gotovinom kuriru)</b><small>Plati gotovinom kuriru pri preuzimanju paketa.</small></div><span class="tg">jedina opcija</span></div></div></form>'+
+  '<div class="box">'+st(3,"Plaćanje")+'<div class="pay" id="pay">'+payHtml(false)+'</div></div></form>'+
   '<aside class="box" id="sum">'+sum()+'</aside></div></div>';
   var sv=custLoad();
-  if(sv){["fn","ln","em","tl","ad","gr","zp","dr2"].forEach(function(k){var el=$("#"+k);if(el&&typeof sv[k]==="string"&&sv[k])el.value=sv[k].slice(0,200)});$("#sv").checked=true;var m=$("#sum");if(m)m.innerHTML=sum()}
+  if(sv){["fn","ln","em","tl","ad","gr","zp","dr2"].forEach(function(k){var el=$("#"+k);if(el&&typeof sv[k]==="string"&&sv[k])el.value=sv[k].slice(0,200)});$("#sv").checked=true;var m=$("#sum");if(m)m.innerHTML=sum();payUp()}
 }
 document.addEventListener("change",function(e){if(e.target.id==="sv"&&!e.target.checked)custSave(null)});
-document.addEventListener("input",function(e){if(e.target.id==="dr2"){var m=$("#sum");if(m&&co.length)m.innerHTML=sum()}});
+document.addEventListener("input",function(e){if(e.target.id==="dr2"){var m=$("#sum");if(m&&co.length)m.innerHTML=sum();payUp()}});
 document.addEventListener("submit",function(e){
   if(e.target.id!=="f")return;e.preventDefault();sync();
   var bad=co.filter(sold);
@@ -696,7 +698,7 @@ document.addEventListener("submit",function(e){
   if(!LIVE)(S.orders=S.orders||[]).unshift({n:$("#fn").value.trim()+" "+$("#ln").value.trim(),tl:$("#tl").value,em:$("#em").value,ad:$("#ad").value+", "+$("#zp").value+" "+$("#gr").value,names:names,total:t,t:new Date().toLocaleString("sr-RS")});
   var ids=co.slice(),bt=document.querySelector('button[form="f"]'),v=function(i){return $("#"+i).value.trim()},keep=$("#sv").checked?{fn:v("fn"),ln:v("ln"),em:v("em"),tl:v("tl"),ad:v("ad"),gr:v("gr"),zp:v("zp"),dr2:v("dr2")}:null;
   if(bt){bt.disabled=true;bt.textContent="Šaljem..."}
-  post("order",{ime:v("fn"),prezime:v("ln"),email:v("em"),telefon:v("tl"),adresa:v("ad"),grad:v("gr"),postanski_broj:v("zp"),drzava:v("dr2"),napomena:v("nt"),novosti:$("#nw").checked?"Da":"Ne",artikli:ids.map(function(i){var p=get(i);return p.name+" ("+p.size+") "+fmt(p.price)}).join("\n"),fajlovi:ids.map(function(i){return get(i).file}).join("|"),dostava:sp.txt,ukupno:fmt(sp.tot),vreme:new Date().toLocaleString("sr-RS")})
+  post("order",{ime:v("fn"),prezime:v("ln"),email:v("em"),telefon:v("tl"),adresa:v("ad"),grad:v("gr"),postanski_broj:v("zp"),drzava:v("dr2"),napomena:v("nt"),novosti:$("#nw").checked?"Da":"Ne",artikli:ids.map(function(i){var p=get(i);return p.name+" ("+p.size+") "+fmt(p.price)}).join("\n"),fajlovi:ids.map(function(i){return get(i).file}).join("|"),dostava:sp.txt,placanje:sp.ab?"Unapred (van Srbije)":"Pouzećem",ukupno:fmt(sp.tot),vreme:new Date().toLocaleString("sr-RS")})
   .then(function(){custSave(keep);ids.forEach(function(i){S.sold.push(i);(S.st=S.st||{})[i]=Date.now()});S.cart=S.cart.filter(function(i){return ids.indexOf(i)<0});co=[];save();go("gotovo")})
   .catch(function(er){if(bt){bt.disabled=false;bt.textContent="Pokušaj ponovo"}
     if(er&&er.status===409){((er.body&&er.body.items)||[]).forEach(function(fn){SS.push(hid(fn))});var fe=document.getElementById("f");if(fe)fe.dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}));return}
@@ -704,7 +706,7 @@ document.addEventListener("submit",function(e){
 });
 function done(){
   if(!last)return goR("/");
-  app.innerHTML='<div class="w"><div class="done"><div class="ic">'+ico('ok')+'</div><h1>Hvala na porudžbini!</h1><p>Hvala, '+esc(last.n)+'! Javljamo se na telefon radi potvrde, a zatim dogovaramo dostavu.</p><p><b style="color:var(--tx)">'+last.names.map(esc).join("<br>")+'</b><br>Cena artikala (plaćanje pouzećem): '+fmt(last.total)+(last.sh&&last.sh.fr?'<br>Dostava: besplatna':(last.sh&&last.sh.pr>0?'<br>Dostava: '+fmt(last.sh.pr)+'<br>Ukupno: '+fmt(last.sh.tot):''))+'</p>'+igBox("Status porudžbine i pitanja","Piši nam u poruke na Instagramu, tamo odgovaramo najbrže.")+'<a class="btn" href="/proizvodi" style="margin-top:20px">Vrati se na proizvode</a></div></div>';confetti();
+  app.innerHTML='<div class="w"><div class="done"><div class="ic">'+ico('ok')+'</div><h1>Hvala na porudžbini!</h1><p>Hvala, '+esc(last.n)+(last.sh&&last.sh.ab?'! Javljamo ti se radi cene dostave i podataka za uplatu. Paket šaljemo kad uplata stigne.':'! Javljamo se na telefon radi potvrde, a zatim dogovaramo dostavu.')+'</p><p><b style="color:var(--tx)">'+last.names.map(esc).join("<br>")+'</b><br>'+(last.sh&&last.sh.ab?'Cena artikala: '+fmt(last.total)+'<br>Dostava: dogovaramo posebno':'Cena artikala (plaćanje pouzećem): '+fmt(last.total))+(last.sh&&last.sh.fr?'<br>Dostava: besplatna':(last.sh&&last.sh.pr>0?'<br>Dostava: '+fmt(last.sh.pr)+'<br>Ukupno: '+fmt(last.sh.tot):''))+'</p>'+igBox("Status porudžbine i pitanja","Piši nam u poruke na Instagramu, tamo odgovaramo najbrže.")+'<a class="btn" href="/proizvodi" style="margin-top:20px">Vrati se na proizvode</a></div></div>';confetti();
 }
 function admin(){
   var f=function(id,l,x){return '<div><label for="'+id+'">'+l+'</label><input id="'+id+'" required '+(x||'')+'></div>'};
@@ -734,7 +736,7 @@ function about(){
 function faq(){
   var q=[["Kako da naručim?","Otvori artikal i klikni „Naruči odmah“ ili ga dodaj u korpu. Na kasi upišeš kontakt i adresu, a mi te pozovemo radi potvrde."],
   ["Da li su svi proizvodi originalni?","Da. Prodajemo isključivo originalne proizvode."],
-  ["Kako se plaća?","Pouzećem, gotovinom kuriru pri preuzimanju paketa. Unapred ne plaćaš ništa."],
+  ["Kako se plaća?","U Srbiji pouzećem, gotovinom kuriru pri preuzimanju paketa. Unapred ne plaćaš ništa. Za porudžbine van Srbije plaćanje je unapred: posle porudžbine ti javljamo cenu dostave i podatke za uplatu."],
   ["Mogu li da vratim proizvod?","Možeš, u roku od 14 dana, bez navođenja razloga. Proizvod mora da bude u stanju u kom je stigao."],
   ["Kako ocenjujete stanje?","Skalom od 1 do 10. Novo sa etiketom je 10/10, a sve manje opisujemo iskreno, sa slikama mana."]
   ];if(igOn())q.splice(1,0,["Kako da proverim status porudžbine?","Pošalji nam poruku na Instagramu, tamo odgovaramo najbrže. "+igLink()]);
@@ -936,7 +938,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=20";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=22";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();

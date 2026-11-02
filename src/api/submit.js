@@ -20,7 +20,7 @@ const FORMS = {
   porudzbina: {
     title: "Nova porudžbina",
     req: ["ime", "prezime", "email", "telefon", "adresa", "grad", "postanski_broj", "artikli", "fajlovi"],
-    all: ["ime", "prezime", "email", "telefon", "adresa", "grad", "postanski_broj", "drzava", "napomena", "novosti", "artikli", "dostava", "ukupno", "vreme", "fajlovi"],
+    all: ["ime", "prezime", "email", "telefon", "adresa", "grad", "postanski_broj", "drzava", "napomena", "novosti", "artikli", "dostava", "placanje", "ukupno", "vreme", "fajlovi"],
   },
   prijava: { title: "Prijava za novi drop", req: ["email"], all: ["email", "vreme"] },
   zelja: {
@@ -32,7 +32,7 @@ const FORMS = {
 };
 const LABELS = {
   ime: "Ime", prezime: "Prezime", email: "Mejl", telefon: "Telefon", adresa: "Adresa", grad: "Grad",
-  postanski_broj: "Poštanski broj", drzava: "Država", napomena: "Napomena", artikli: "Proizvodi", dostava: "Dostava",
+  postanski_broj: "Poštanski broj", drzava: "Država", napomena: "Napomena", artikli: "Proizvodi", dostava: "Dostava", placanje: "Plaćanje",
   novosti: "Novosti i ponude mejlom", ukupno: "Ukupno", vreme: "Vreme", poruka: "Poruka", sta_trazi: "Šta traži", velicina: "Veličina", budzet: "Budžet (din.)",
 };
 const LONG = { poruka: 3000, napomena: 3000, artikli: 3000, sta_trazi: 1000, fajlovi: 1500 };
