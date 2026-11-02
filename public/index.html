@@ -406,7 +406,7 @@ header img,#fl,.hero img{aspect-ratio:640/398}
 <script>
 var LOGO="/logo.webp";
 /* === PODEŠAVANJE: nalepi svoje linkove ovde (vidi uputstvo) === */
-var CFG={GH:{owner:"ilicbogdan36-a11y",repo:"Drip-Select",branch:"main",folder:"content/proizvodi"},API:"/api",MAIL:"info@dripselect.rs",FREE:2,SHIP:0,IG:""};
+var CFG={GH:{owner:"ilicbogdan36-a11y",repo:"Drip-Select",branch:"main",folder:"content/proizvodi"},API:"/api",MAIL:"info@dripselect.rs",FREE:2,SHIP:0,IGDEMO:1,IG:"dripselect"};
 /* FREE = broj artikala za besplatnu dostavu (0 = isključeno); SHIP = cena dostave ispod toga u din. (0 = dogovara se pri potvrdi); IG = Instagram nalog bez @ (prazno = Instagram se nigde ne prikazuje) */
 var P=[
  {id:1,brand:"The North Face",cat:"Jakne",size:"L",color:"Crna",hex:"#15171c",name:"Vintage TNF 700 Nuptse Down Jacket Black",cond:"9.5/10 (Top stanje)",price:18900,imgs:6,g:"#2a303b,#14161b"},
@@ -639,11 +639,13 @@ function shipBox(n,more,ab){var f=+CFG.FREE||0,k,bar="",fr=n>=f,l=f-n;if(!(f>0))
   if(ab)return '<div class="fsh"><span class="fshi">'+ico('truck')+'</span><div class="fsht"><b>Dostava van Srbije</b><small>Dostavu van Srbije plaća kupac. Cenu ti javljamo pre slanja. Besplatna dostava važi samo u Srbiji.</small></div></div>';
   for(k=0;k<f;k++)bar+='<i'+(k<n?' class="on"':'')+'></i>';
   return '<div class="fsh'+(fr?' ok':'')+'"><span class="fshi">'+ico(fr?'check':'truck')+'</span><div class="fsht"><b>'+(fr?'Dostava u Srbiji je besplatna':'Besplatna dostava u Srbiji na '+f+' '+np(f))+'</b>'+(fr?'':'<small>Dodaj još '+l+' '+np(l)+' i dostava je besplatna</small>')+'<span class="fshb" aria-hidden="true">'+bar+'</span>'+(more&&!fr?'<button type="button" class="btn ghost sm" data-more="'+more+'">Dodaj još artikala</button>':'')+'</div></div>'}
-/* Instagram: nalog se upisuje u CFG.IG; dok je prazan, ništa se ne prikazuje */
+/* Instagram: nalog se upisuje u CFG.IG; dok je prazan, ništa se ne prikazuje.
+   IGDEMO:1 = probni prikaz: sve se vidi, ali linkovi nikud ne vode. Kad se upiše pravi nalog, IGDEMO ide na 0. */
 function igOn(){return /^[A-Za-z0-9._]{1,30}$/.test(CFG.IG||"")}
 function igUrl(){return "https://www.instagram.com/"+CFG.IG+"/"}
-function igLink(cls){return '<a class="'+(cls||'ml')+'" href="'+igUrl()+'" target="_blank" rel="noopener">@'+CFG.IG+'</a>'}
-function igBox(t,sub){if(!igOn())return "";return '<a class="igc" href="'+igUrl()+'" target="_blank" rel="noopener" aria-label="Instagram @'+CFG.IG+'"><span class="igi">'+ico('ig')+'</span><span class="igt"><b>'+t+'</b><small>'+sub+'</small><span class="igh">@'+CFG.IG+'</span></span><span class="btn">Otvori Instagram</span></a>'}
+function igAt(){return CFG.IGDEMO?'href="#" data-igdemo="1"':'href="'+igUrl()+'" target="_blank" rel="noopener"'}
+function igLink(cls){return '<a class="'+(cls||'ml')+'" '+igAt()+'>@'+CFG.IG+'</a>'}
+function igBox(t,sub){if(!igOn())return "";return '<a class="igc" '+igAt()+' aria-label="Instagram @'+CFG.IG+'"><span class="igi">'+ico('ig')+'</span><span class="igt"><b>'+t+'</b><small>'+sub+'</small><span class="igh">@'+CFG.IG+'</span></span><span class="btn">Otvori Instagram</span></a>'}
 function shipProd(id){var n=S.cart.filter(function(x){return x!==+id&&!sold(x)}).length+1;return '<div id="shp">'+shipBox(n,"")+'</div>'}
 function sum(){
   var t=0,h='';
@@ -842,6 +844,7 @@ function cart(){
 function openCart(){sync();cart();$("#dv").classList.add("on")}
 function closeCart(){$("#dv").classList.remove("on")}
 
+document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("[data-igdemo]");if(a){e.preventDefault();e.stopPropagation()}},true);
 document.addEventListener("click",function(e){
   var t=e.target,b;
   if(b=t.closest("[data-add]")){sync();var i=+b.getAttribute("data-add");if(!sold(i)&&S.cart.indexOf(i)<0){S.cart.push(i);save()}head();if(sold(i))route();else openCart();return}
@@ -908,7 +911,7 @@ function route(){
   else if(pg==="po-zelji"){wish();scrollTo(0,0)}
   else{home();var el=document.getElementById(pg==="proizvodi"?"proizvodi":h);if(el)el.scrollIntoView();else scrollTo(0,0)}
 }
-var cy_=$("#cy");if(cy_)cy_.textContent=new Date().getFullYear();var fm_=$("#fm");if(fm_){fm_.href="mailto:"+CFG.MAIL;fm_.textContent=CFG.MAIL}var fg_=$("#fig");if(fg_&&igOn()){fg_.href=igUrl();fg_.innerHTML=ico("ig")+"@"+CFG.IG;fg_.setAttribute("aria-label","Instagram @"+CFG.IG);fg_.hidden=false}$("#hl").src=LOGO;$("#fl").src=LOGO;initBg();if(LIVE)$("#reset").style.display="none";
+var cy_=$("#cy");if(cy_)cy_.textContent=new Date().getFullYear();var fm_=$("#fm");if(fm_){fm_.href="mailto:"+CFG.MAIL;fm_.textContent=CFG.MAIL}var fg_=$("#fig");if(fg_&&igOn()){if(CFG.IGDEMO){fg_.href="#";fg_.removeAttribute("target");fg_.setAttribute("data-igdemo","1")}else fg_.href=igUrl();fg_.innerHTML=ico("ig")+"@"+CFG.IG;fg_.setAttribute("aria-label","Instagram @"+CFG.IG);fg_.hidden=false}$("#hl").src=LOGO;$("#fl").src=LOGO;initBg();if(LIVE)$("#reset").style.display="none";
 function hh(){var e=document.querySelector("header");if(e)document.documentElement.style.setProperty("--hh",e.offsetHeight+"px")}
 hh();addEventListener("resize",hh);addEventListener("orientationchange",hh);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(hh);if(window.ResizeObserver){var ho=document.querySelector("header");if(ho)new ResizeObserver(hh).observe(ho)}
 // jezik: srpski je podrazumevan; engleski prevod (i18n.js) se učitava tek kad ga neko izabere
