@@ -22,7 +22,8 @@
     "Cena": "Price", "Naruči": "Order", "Dodaj u korpu": "Add to cart", "Rasprodato": "Sold out",
     "Nema rezultata.": "No results.", "Poništi filtere": "Clear filters",
     "Izdvajamo": "Featured", "Najbolje u kolekciji": "Best in the collection",
-    "Novi drop uskoro": "New drop coming soon", "Dostava je besplatna": "Delivery is free", "Besplatno": "Free", "Dodaj još artikala": "Add more items",
+    "Novi drop uskoro": "New drop coming soon", "Dostava u Srbiji je besplatna": "Delivery in Serbia is free", "Dostava van Srbije": "Delivery outside Serbia", "Dogovaramo posebno": "Arranged separately",
+    "Cenu i način dostave dogovaramo posebno. Besplatna dostava važi samo u Srbiji.": "We arrange the price and method of delivery separately. Free delivery applies to Serbia only.", "Besplatno": "Free", "Dodaj još artikala": "Add more items",
     "Jedan mejl po dropu": "One email per drop", "Odjava u svakom mejlu": "Unsubscribe in every email",
     "Svi proizvodi su rasprodati. Upiši mejl i javljamo ti čim izađe novi drop.": "Everything is sold out. Enter your email and we'll let you know as soon as the new drop is out.",
     "tvoj@mejl.rs": "your@email.com", "Mejl": "Email", "Obavesti me": "Notify me",
@@ -101,7 +102,7 @@
 
   // ---- šabloni sa vrednostima unutra
   var PAT = [
-    [/^Besplatna dostava na (\d+) (?:artikal|artikla|artikala)$/, function (m, n) { return "Free delivery on " + n + (n === "1" ? " item" : " items"); }],
+    [/^Besplatna dostava u Srbiji na (\d+) (?:artikal|artikla|artikala)$/, function (m, n) { return "Free delivery in Serbia on " + n + (n === "1" ? " item" : " items"); }],
     [/^Dodaj još (\d+) (?:artikal|artikla|artikala) i dostava je besplatna$/, function (m, n) { return "Add " + n + " more " + (n === "1" ? "item" : "items") + " for free delivery"; }],
     [/^Dostava: (.+)$/, function (m, p) { return "Delivery: " + (p === "besplatna" ? "free" : p); }],
     [/^Ukupno: (.+)$/, function (m, p) { return "Total: " + p; }],

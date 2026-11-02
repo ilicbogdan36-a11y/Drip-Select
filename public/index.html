@@ -573,17 +573,19 @@ function prod(id){hzOff(true);
 }
 /* besplatna dostava: pravilo je u CFG (FREE artikala), poruka se prikazuje na stranici proizvoda, u korpi i u kasi */
 function np(n){var a=n%10,b=n%100;return n===1?"artikal":(a>=2&&a<=4&&(b<10||b>=20)?"artikla":"artikala")}
-function shipOf(n,t){var f=+CFG.FREE||0,fr=f>0&&n>=f,pr=fr?0:(+CFG.SHIP||0);return{fr:fr,pr:pr,tot:t+pr,txt:fr?"Besplatno":(pr>0?fmt(pr):"Dogovaramo pri potvrdi")}}
-function shipBox(n,more){var f=+CFG.FREE||0,k,bar="",fr=n>=f,l=f-n;if(!(f>0))return "";
+function inRS(){var e=document.getElementById("dr2");return !e||/^(srbija|serbia|rs|republika srbija|republic of serbia|србија)$/.test(e.value.trim().toLowerCase())}
+function shipOf(n,t,ab){var f=+CFG.FREE||0,fr=!ab&&f>0&&n>=f,pr=fr||ab?0:(+CFG.SHIP||0);return{fr:fr,ab:!!ab,pr:pr,tot:t+pr,txt:ab?"Dogovaramo posebno":(fr?"Besplatno":(pr>0?fmt(pr):"Dogovaramo pri potvrdi"))}}
+function shipBox(n,more,ab){var f=+CFG.FREE||0,k,bar="",fr=n>=f,l=f-n;if(!(f>0))return "";
+  if(ab)return '<div class="fsh"><span class="fshi">'+ico('truck')+'</span><div class="fsht"><b>Dostava van Srbije</b><small>Cenu i način dostave dogovaramo posebno. Besplatna dostava važi samo u Srbiji.</small></div></div>';
   for(k=0;k<f;k++)bar+='<i'+(k<n?' class="on"':'')+'></i>';
-  return '<div class="fsh'+(fr?' ok':'')+'"><span class="fshi">'+ico(fr?'check':'truck')+'</span><div class="fsht"><b>'+(fr?'Dostava je besplatna':'Besplatna dostava na '+f+' '+np(f))+'</b>'+(fr?'':'<small>Dodaj još '+l+' '+np(l)+' i dostava je besplatna</small>')+'<span class="fshb" aria-hidden="true">'+bar+'</span>'+(more&&!fr?'<button type="button" class="btn ghost sm" data-more="'+more+'">Dodaj još artikala</button>':'')+'</div></div>'}
+  return '<div class="fsh'+(fr?' ok':'')+'"><span class="fshi">'+ico(fr?'check':'truck')+'</span><div class="fsht"><b>'+(fr?'Dostava u Srbiji je besplatna':'Besplatna dostava u Srbiji na '+f+' '+np(f))+'</b>'+(fr?'':'<small>Dodaj još '+l+' '+np(l)+' i dostava je besplatna</small>')+'<span class="fshb" aria-hidden="true">'+bar+'</span>'+(more&&!fr?'<button type="button" class="btn ghost sm" data-more="'+more+'">Dodaj još artikala</button>':'')+'</div></div>'}
 function shipProd(id){var n=S.cart.filter(function(x){return x!==+id&&!sold(x)}).length+1;return '<div id="shp">'+shipBox(n,"")+'</div>'}
 function sum(){
   var t=0,h='';
   co.forEach(function(i){var p=get(i);t+=p.price;h+='<div class="li"><span class="mini">'+tile(p,0)+'</span><div class="lt"><span class="ln">'+esc(p.name)+'</span><small class="lm">'+(p.size?'<span class="sz">'+esc(p.size)+'</span>':'')+(p.color?'<span class="cl"><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</span>':'')+'</small></div><b>'+fmt(p.price)+'</b></div>'});
   if(!co.length)return '<h3>Tvoja narudžbina</h3><p class="cond">Nema proizvoda u narudžbini.</p><a class="btn full" href="/proizvodi">Nazad na proizvode</a>';
-  var sp=shipOf(co.length,t);
-  return '<h3>Tvoja narudžbina</h3>'+h+shipBox(co.length,"kasa")+'<div class="tr"><span>Dostava</span><b class="'+(sp.fr?'fr':'')+'">'+sp.txt+'</b></div><div class="tr t"><span>Ukupno</span><b>'+fmt(sp.tot)+'</b></div>'+
+  var ab=!inRS(),sp=shipOf(co.length,t,ab);
+  return '<h3>Tvoja narudžbina</h3>'+h+shipBox(co.length,"kasa",ab)+'<div class="tr"><span>Dostava</span><b class="'+(sp.fr?'fr':'')+'">'+sp.txt+'</b></div><div class="tr t"><span>Ukupno</span><b>'+fmt(sp.tot)+'</b></div>'+
   '<button class="btn full" type="submit" form="f">Naruči - '+fmt(sp.tot)+'</button><p class="fine">Klikom na „Naruči“ prihvataš opšte uslove.</p>';
 }
 function kasa(){
@@ -594,17 +596,18 @@ function kasa(){
   app.innerHTML='<div class="w n"><div class="crumbs"><a href="/">Početna</a> / <a href="/" data-cart>Korpa</a> / <b>Kasa</b></div><h1 style="font-size:40px;margin:0 0 6px">Kasa</h1><p class="cond" style="font-size:14px">Plaćanje pouzećem: popunite podatke i naručite. Pitanja? Piši nam na <a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a>.</p>'+
   '<div class="ck" style="margin-top:22px"><form id="f"><div class="box">'+st(1,"Kontakt podaci")+'<div class="r2">'+f("fn","Ime",'autocomplete="given-name"')+f("ln","Prezime",'autocomplete="family-name"')+f("em","Email",'type="email" autocomplete="email" placeholder="ime@email.com"')+f("tl","Telefon",'type="tel" autocomplete="tel" placeholder="064 123 4567"')+'</div></div>'+
   '<div class="box">'+st(2,"Adresa za isporuku")+f("ad","Adresa",'autocomplete="street-address" placeholder="Ulica i broj"')+'<div class="r2">'+f("gr","Grad",'autocomplete="address-level2"')+f("zp","Poštanski broj",'inputmode="numeric" autocomplete="postal-code" placeholder="11000"')+'</div>'+
-  '<label for="dr2">Država</label><input id="dr2" value="Srbija"><label for="nt">Napomena (opciono)</label><textarea id="nt" rows="3"></textarea></div>'+
+  '<label for="dr2">Država</label><input id="dr2" value="Srbija" required autocomplete="country-name"><label for="nt">Napomena (opciono)</label><textarea id="nt" rows="3"></textarea></div>'+
   '<div class="box">'+st(3,"Plaćanje")+'<div class="pay"><span class="pi">'+ico('cash')+'</span><div><b>Pouzećem (gotovinom kuriru)</b><small>Plati gotovinom kuriru pri preuzimanju paketa.</small></div><span class="tg">jedina opcija</span></div></div></form>'+
   '<aside class="box" id="sum">'+sum()+'</aside></div></div>';
 }
+document.addEventListener("input",function(e){if(e.target.id==="dr2"){var m=$("#sum");if(m&&co.length)m.innerHTML=sum()}});
 document.addEventListener("submit",function(e){
   if(e.target.id!=="f")return;e.preventDefault();sync();
   var bad=co.filter(sold);
   if(bad.length){var n=bad.map(function(i){return get(i).name}).join(", ");co=co.filter(function(i){return !sold(i)});head();
     $("#sum").innerHTML='<div class="err">Nažalost, više nije na stanju: '+esc(n)+'.</div>'+sum();return}
   var t=0,names=co.map(function(i){t+=get(i).price;return get(i).name});
-  var sp=shipOf(co.length,t);
+  var sp=shipOf(co.length,t,!inRS());
   last={n:$("#fn").value.trim(),names:names,total:t,sh:sp};
   if(!LIVE)(S.orders=S.orders||[]).unshift({n:$("#fn").value.trim()+" "+$("#ln").value.trim(),tl:$("#tl").value,em:$("#em").value,ad:$("#ad").value+", "+$("#zp").value+" "+$("#gr").value,names:names,total:t,t:new Date().toLocaleString("sr-RS")});
   var ids=co.slice(),bt=document.querySelector('button[form="f"]'),v=function(i){return $("#"+i).value.trim()};
@@ -839,7 +842,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=11";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=12";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();
