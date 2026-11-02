@@ -576,7 +576,7 @@ function np(n){var a=n%10,b=n%100;return n===1?"artikal":(a>=2&&a<=4&&(b<10||b>=
 function inRS(){var e=document.getElementById("dr2");return !e||/^(srbija|serbia|rs|republika srbija|republic of serbia|србија)$/.test(e.value.trim().toLowerCase())}
 function shipOf(n,t,ab){var f=+CFG.FREE||0,fr=!ab&&f>0&&n>=f,pr=fr||ab?0:(+CFG.SHIP||0);return{fr:fr,ab:!!ab,pr:pr,tot:t+pr,txt:ab?"Dogovaramo posebno":(fr?"Besplatno":(pr>0?fmt(pr):"Dogovaramo pri potvrdi"))}}
 function shipBox(n,more,ab){var f=+CFG.FREE||0,k,bar="",fr=n>=f,l=f-n;if(!(f>0))return "";
-  if(ab)return '<div class="fsh"><span class="fshi">'+ico('truck')+'</span><div class="fsht"><b>Dostava van Srbije</b><small>Cenu i način dostave dogovaramo posebno. Besplatna dostava važi samo u Srbiji.</small></div></div>';
+  if(ab)return '<div class="fsh"><span class="fshi">'+ico('truck')+'</span><div class="fsht"><b>Dostava van Srbije</b><small>Dostavu van Srbije plaća kupac. Cenu ti javljamo pre slanja. Besplatna dostava važi samo u Srbiji.</small></div></div>';
   for(k=0;k<f;k++)bar+='<i'+(k<n?' class="on"':'')+'></i>';
   return '<div class="fsh'+(fr?' ok':'')+'"><span class="fshi">'+ico(fr?'check':'truck')+'</span><div class="fsht"><b>'+(fr?'Dostava u Srbiji je besplatna':'Besplatna dostava u Srbiji na '+f+' '+np(f))+'</b>'+(fr?'':'<small>Dodaj još '+l+' '+np(l)+' i dostava je besplatna</small>')+'<span class="fshb" aria-hidden="true">'+bar+'</span>'+(more&&!fr?'<button type="button" class="btn ghost sm" data-more="'+more+'">Dodaj još artikala</button>':'')+'</div></div>'}
 function shipProd(id){var n=S.cart.filter(function(x){return x!==+id&&!sold(x)}).length+1;return '<div id="shp">'+shipBox(n,"")+'</div>'}
@@ -842,7 +842,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=12";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=13";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();
