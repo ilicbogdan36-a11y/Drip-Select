@@ -71,7 +71,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 .info h3{margin:0;font-size:15px;line-height:1.3}
 .cond{color:var(--mut);font-size:12px;margin:0}
 .buy{margin-top:auto;padding-top:12px;border-top:1px solid var(--ln)}
-.buy small{display:block;color:var(--mut);font-size:10px;text-transform:uppercase}
+.buy small{display:block;color:var(--mut);font-size:11px;text-transform:uppercase}
 .price{font:700 18px "Space Grotesk",sans-serif}
 .acts{display:flex;gap:8px;margin-top:10px}.acts .btn{flex:1;padding:11px 8px}
 .crumbs{font-size:12px;color:var(--mut);margin:22px 0}.crumbs a:hover{color:var(--tx)}.crumbs b{color:var(--tx);font-weight:600}
@@ -168,7 +168,7 @@ label{display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;c
 input,textarea{width:100%;background:#0a0c12;border:1px solid var(--ln);color:var(--tx);border-radius:8px;padding:11px 12px;font:inherit;font-size:14px}
 input:focus,textarea:focus{border-color:var(--ac)}
 .pay{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--ln);border-radius:10px;font-size:13px}
-.pay small{display:block;color:var(--mut)}.pay .tg{margin-left:auto;font-size:10px;padding:3px 9px;border:1px solid #1d3a63;border-radius:99px;color:#6fb1ff;white-space:nowrap}
+.pay small{display:block;color:var(--mut)}.pay .tg{margin-left:auto;font-size:11px;padding:3px 9px;border:1px solid #1d3a63;border-radius:99px;color:#6fb1ff;white-space:nowrap}
 .li{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--ln);font-size:13px;align-items:center}
 .li .mini{position:relative;width:46px;height:52px;border-radius:6px;overflow:hidden;flex:none}
 .li small{display:block;color:var(--mut)}.li b{margin-left:auto;color:#6fb1ff;white-space:nowrap}
@@ -281,7 +281,7 @@ nav{align-items:center}nav a{display:inline-flex;align-items:center;line-height:
 .dfm{display:flex;align-items:center;gap:6px;max-width:480px;margin:0 auto;padding:6px;border-radius:16px;background:#07090e;border:1px solid #232a3a;box-shadow:inset 0 1px 0 #ffffff08;transition:border-color .2s,box-shadow .2s;text-align:left}
 .dfm:focus-within{border-color:var(--ac);box-shadow:0 0 0 4px #1a8cff22,0 0 30px #1a8cff33}
 .dfm>svg{flex:none;width:19px;height:19px;margin-left:12px;color:var(--mut)}
-.drop .dfm input{flex:1;min-width:0;width:auto;background:none;border:0;border-radius:0;box-shadow:none;outline:none;padding:13px 6px;font-size:15px}
+.drop .dfm input{flex:1;min-width:0;width:auto;background:none;border:0;border-radius:0;box-shadow:none;outline:none;padding:13px 6px;font-size:16px}
 .drop .dfm .btn{flex:none;white-space:nowrap;padding:14px 22px;border-radius:12px;box-shadow:0 0 22px #1a8cff55}
 .dpt{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;list-style:none;margin:22px 0 0;padding:0}
 .dpt li{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#aab3c7}
@@ -322,14 +322,53 @@ img.tile{mix-blend-mode:multiply}
 .tr>b{font-weight:600;color:var(--tx)}
 .tr>b.fr{color:var(--ok)}
 .tr.t+.btn.full{margin-top:14px}
+
+/* telefon/tablet: kompaktno zaglavlje sa menijem, veće mete za dodir, bez zumiranja polja na iPhone-u */
+small{font-size:11.5px}
+.mb{display:none}
+@media(max-width:960px){
+ header{flex-wrap:nowrap;padding:6px 4vw;gap:8px}
+ header img{height:38px}
+ .hr{margin-left:auto;gap:8px}
+ .mb{display:inline-flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;flex:none;width:38px;height:34px;padding:0;border:1px solid #3a4255;border-radius:10px;background:none;cursor:pointer}
+ .mb i{display:block;width:16px;height:2px;border-radius:2px;background:var(--tx);transition:transform .25s,opacity .2s}
+ header.open .mb{border-color:var(--ac)}
+ header.open .mb i:nth-child(1){transform:translateY(6px) rotate(45deg)}
+ header.open .mb i:nth-child(2){opacity:0}
+ header.open .mb i:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+ header nav{display:none;position:absolute;left:0;right:0;top:100%;order:0;width:auto;flex-direction:column;flex-wrap:nowrap;align-items:stretch;justify-content:flex-start;gap:0;overflow:visible;white-space:normal;padding:4px 5vw 18px;background:rgba(7,8,12,.98);border-bottom:1px solid var(--ln);box-shadow:0 22px 34px #000b}
+ header.open nav{display:flex}
+ header nav a{padding:15px 4px;border-bottom:1px solid var(--ln);font-size:16px}
+ header nav a.hl{margin-top:16px;padding:14px;justify-content:center;text-align:center;border:1px solid var(--ac);box-shadow:0 0 0 3px #1a8cff22,0 0 20px #1a8cff55}
+}
+@media(max-width:370px){
+ .ct{display:none}
+ header{gap:6px}
+ .hr{gap:6px}
+ .lg button{min-width:38px;padding:0 8px}
+ .ck .r2{grid-template-columns:1fr}
+}
+@media(pointer:coarse){
+ input,textarea,select{font-size:16px}
+ .lg,.ib,.mb{height:40px}
+ .mb{width:40px}
+ .chip{min-height:38px}
+ .x{width:40px;height:40px}
+ a.ml{padding:11px 2px}
+ .fc a,.fc span{padding:11px 0}
+ nav a{padding-top:12px;padding-bottom:12px}
+ .rm{padding:12px 8px}
+ .back{padding:11px 0;margin:12px 0 4px}
+ .crumbs a{padding:12px 3px}
+}
 </style>
 </head>
 <body>
 <canvas id="bg" aria-hidden="true"></canvas>
 <header>
   <a href="/" aria-label="Drip Select početna"><img id="hl" alt="Drip Select"></a>
-  <nav><a href="/proizvodi">Proizvodi</a><a href="/o-nama">O nama</a><a href="/pitanja">Česta pitanja</a><a href="/kontakt">Kontakt</a><a class="hl" href="/po-zelji">Naruči po želji</a></nav>
-  <div class="hr"><div class="lg" role="group" aria-label="Jezik / Language"><button type="button" data-lang="sr" class="on" aria-pressed="true">SR</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div><button class="ib" data-cart type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Korpa <b id="cc">0</b></button></div>
+  <nav id="nv"><a href="/proizvodi">Proizvodi</a><a href="/o-nama">O nama</a><a href="/pitanja">Česta pitanja</a><a href="/kontakt">Kontakt</a><a class="hl" href="/po-zelji">Naruči po želji</a></nav>
+  <div class="hr"><div class="lg" role="group" aria-label="Jezik / Language"><button type="button" data-lang="sr" class="on" aria-pressed="true">SR</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div><button class="ib" data-cart type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span class="ct">Korpa</span> <b id="cc">0</b></button><button class="mb" type="button" aria-label="Meni" aria-expanded="false" aria-controls="nv"><i></i><i></i><i></i></button></div>
 </header>
 <main id="app"></main>
 <footer id="dostava">
@@ -810,6 +849,14 @@ document.addEventListener("keydown",function(e){var l=$("#lb"),o=l.classList.con
   if(b&&t===b&&(e.key==="Enter"||e.key===" ")){e.preventDefault();lb()}});
 document.getElementById("reset").addEventListener("click",function(){S={sold:[3],cart:[],orders:[],req:[],mail:[]};P=JSON.parse(DEF);co=[];save();head();route()});
 
+
+(function(){var h=document.querySelector("header"),b=h&&h.querySelector(".mb");if(!b)return;
+  function set(o){h.classList.toggle("open",o);b.setAttribute("aria-expanded",o?"true":"false")}
+  b.addEventListener("click",function(e){e.stopPropagation();set(!h.classList.contains("open"))});
+  document.addEventListener("click",function(e){if(!h.classList.contains("open"))return;if(!h.contains(e.target)||e.target.closest("a"))set(false)});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&h.classList.contains("open")){set(false);b.focus()}});
+  window.addEventListener("popstate",function(){set(false)});
+  window.addEventListener("resize",function(){if(innerWidth>960)set(false)})})();
 function pathSlug(){var m=location.pathname.match(/^\/proizvod\/([^\/]+)\/?$/);return m?m[1]:null}
 function route(){
   LK=cu();
@@ -842,7 +889,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=13";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=16";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();
