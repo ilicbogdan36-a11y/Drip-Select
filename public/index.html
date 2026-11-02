@@ -363,6 +363,24 @@ small{font-size:11.5px}
  .crumbs a{padding:12px 3px}
 }
 header img,#fl,.hero img{aspect-ratio:640/398}
+
+/* Instagram */
+.fig{display:flex;align-items:center;gap:8px}
+.fig[hidden]{display:none}
+.fig svg{width:16px;height:16px;flex:none}
+.igl{display:block;margin:10px 0 0;font-size:14px;color:var(--mut)}
+.igl svg{width:16px;height:16px;vertical-align:-3px;margin-right:7px;color:#6fb1ff}
+.igc{display:flex;align-items:center;gap:14px;margin:18px 0 0;padding:14px 16px;border:1px solid #1a8cff55;border-radius:14px;background:linear-gradient(120deg,#0b2447c0,#0a1226c0);box-shadow:0 0 0 3px #1a8cff14,0 0 26px #1a8cff30;transition:border-color .2s,box-shadow .2s}
+.igc:hover{border-color:var(--ac);box-shadow:0 0 0 3px #1a8cff30,0 0 30px #1a8cff55}
+.igc .igi{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#1a8cff22;color:#6fb1ff}
+.igc .igi svg{width:22px;height:22px}
+.igc .igt{flex:1;min-width:0;text-align:left}
+.igc b{display:block;font:700 15px "Space Grotesk",sans-serif;line-height:1.3}
+.igc small{display:block;margin-top:2px;color:var(--mut);font-size:12.5px;line-height:1.4}
+.igc .igh{display:block;margin-top:3px;font-size:13px;font-weight:600;color:#6fb1ff;word-break:break-all}
+.igc .btn{flex:none;padding:11px 15px;font-size:11px;white-space:nowrap}
+.done .igc{max-width:520px;margin:22px auto 0}
+@media(max-width:520px){.igc{flex-wrap:wrap}.igc .igt{flex-basis:calc(100% - 60px)}.igc .btn{width:100%}}
 </style>
 </head>
 <body>
@@ -378,7 +396,7 @@ header img,#fl,.hero img{aspect-ratio:640/398}
     <div class="fc fb1"><img id="fl" src="/logo.webp" alt="Drip Select" loading="lazy"><p>Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.</p></div>
     <div class="fc"><h4>Prodavnica</h4><a href="/proizvodi">Proizvodi</a><a href="/po-zelji">Naruči po želji</a></div>
     <div class="fc"><h4>Informacije</h4><a href="/o-nama">O nama</a><a href="/pitanja">Česta pitanja</a><a href="/kontakt">Kontakt</a></div>
-    <div class="fc"><h4>Kontakt</h4><a id="fm" class="ml"></a><span>Odgovaramo u roku od 24 sata</span></div>
+    <div class="fc"><h4>Kontakt</h4><a id="fig" class="fig" target="_blank" rel="noopener" hidden></a><a id="fm" class="ml"></a><span>Odgovaramo u roku od 24 sata</span></div>
   </div>
   <div class="fbar"><span>© <span id="cy"></span> Drip Select</span><span>Plaćanje pouzećem • 100% originali</span><button id="reset" type="button">Resetuj demo</button></div>
 </footer>
@@ -388,8 +406,8 @@ header img,#fl,.hero img{aspect-ratio:640/398}
 <script>
 var LOGO="/logo.webp";
 /* === PODEŠAVANJE: nalepi svoje linkove ovde (vidi uputstvo) === */
-var CFG={GH:{owner:"ilicbogdan36-a11y",repo:"Drip-Select",branch:"main",folder:"content/proizvodi"},API:"/api",MAIL:"info@dripselect.rs",FREE:2,SHIP:0};
-/* FREE = broj artikala za besplatnu dostavu (0 = isključeno); SHIP = cena dostave ispod toga u din. (0 = dogovara se pri potvrdi) */
+var CFG={GH:{owner:"ilicbogdan36-a11y",repo:"Drip-Select",branch:"main",folder:"content/proizvodi"},API:"/api",MAIL:"info@dripselect.rs",FREE:2,SHIP:0,IG:""};
+/* FREE = broj artikala za besplatnu dostavu (0 = isključeno); SHIP = cena dostave ispod toga u din. (0 = dogovara se pri potvrdi); IG = Instagram nalog bez @ (prazno = Instagram se nigde ne prikazuje) */
 var P=[
  {id:1,brand:"The North Face",cat:"Jakne",size:"L",color:"Crna",hex:"#15171c",name:"Vintage TNF 700 Nuptse Down Jacket Black",cond:"9.5/10 (Top stanje)",price:18900,imgs:6,g:"#2a303b,#14161b"},
  {id:2,brand:"Jordan",cat:"Duksevi",size:"M",color:"Siva",hex:"#8a8f98",name:"Air Jordan Flight Heritage Oversize Hoodie",cond:"10/10 (Novo sa etiketom)",price:6490,imgs:5,g:"#3b2a26,#16120f"},
@@ -402,7 +420,7 @@ var DEF=JSON.stringify(P),SH=580,S={sold:[3],cart:[]},co=[],last=null,ph=0,app=d
 function $(s){return document.querySelector(s)}
 function get(i){return P.filter(function(p){return p.id==i})[0]}
 function sold(i){return S.sold.indexOf(+i)>-1||SS.indexOf(+i)>-1}
-var ICP={truck:'<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',cash:'<rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',back:'<path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>',ok:'<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',mail:'<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',send:'<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>',flame:'<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',check:'<path d="M20 6 9 17l-5-5"/>',chl:'<path d="m15 18-6-6 6-6"/>',chr:'<path d="m9 18 6-6-6-6"/>',plus:'<path d="M5 12h14"/><path d="M12 5v14"/>',minus:'<path d="M5 12h14"/>',x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',zin:'<circle cx="11" cy="11" r="7.5"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/>'};
+var ICP={truck:'<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',cash:'<rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',back:'<path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>',ok:'<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',mail:'<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',send:'<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>',flame:'<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',check:'<path d="M20 6 9 17l-5-5"/>',chl:'<path d="m15 18-6-6 6-6"/>',chr:'<path d="m9 18 6-6-6-6"/>',plus:'<path d="M5 12h14"/><path d="M12 5v14"/>',minus:'<path d="M5 12h14"/>',x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',ig:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/>',zin:'<circle cx="11" cy="11" r="7.5"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/>'};
 function ico(n){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICP[n]+'</svg>'}
 function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,".")+" din."}
 // stara cena: prikazuje se samo kad je upisana i veća od cene (sniženje od bar 1%)
@@ -620,6 +638,11 @@ function shipBox(n,more,ab){var f=+CFG.FREE||0,k,bar="",fr=n>=f,l=f-n;if(!(f>0))
   if(ab)return '<div class="fsh"><span class="fshi">'+ico('truck')+'</span><div class="fsht"><b>Dostava van Srbije</b><small>Dostavu van Srbije plaća kupac. Cenu ti javljamo pre slanja. Besplatna dostava važi samo u Srbiji.</small></div></div>';
   for(k=0;k<f;k++)bar+='<i'+(k<n?' class="on"':'')+'></i>';
   return '<div class="fsh'+(fr?' ok':'')+'"><span class="fshi">'+ico(fr?'check':'truck')+'</span><div class="fsht"><b>'+(fr?'Dostava u Srbiji je besplatna':'Besplatna dostava u Srbiji na '+f+' '+np(f))+'</b>'+(fr?'':'<small>Dodaj još '+l+' '+np(l)+' i dostava je besplatna</small>')+'<span class="fshb" aria-hidden="true">'+bar+'</span>'+(more&&!fr?'<button type="button" class="btn ghost sm" data-more="'+more+'">Dodaj još artikala</button>':'')+'</div></div>'}
+/* Instagram: nalog se upisuje u CFG.IG; dok je prazan, ništa se ne prikazuje */
+function igOn(){return /^[A-Za-z0-9._]{1,30}$/.test(CFG.IG||"")}
+function igUrl(){return "https://www.instagram.com/"+CFG.IG+"/"}
+function igLink(cls){return '<a class="'+(cls||'ml')+'" href="'+igUrl()+'" target="_blank" rel="noopener">@'+CFG.IG+'</a>'}
+function igBox(t,sub){if(!igOn())return "";return '<a class="igc" href="'+igUrl()+'" target="_blank" rel="noopener" aria-label="Instagram @'+CFG.IG+'"><span class="igi">'+ico('ig')+'</span><span class="igt"><b>'+t+'</b><small>'+sub+'</small><span class="igh">@'+CFG.IG+'</span></span><span class="btn">Otvori Instagram</span></a>'}
 function shipProd(id){var n=S.cart.filter(function(x){return x!==+id&&!sold(x)}).length+1;return '<div id="shp">'+shipBox(n,"")+'</div>'}
 function sum(){
   var t=0,h='';
@@ -634,7 +657,7 @@ function kasa(){
   if(!co.length)return goR("/");
   var f=function(id,l,x){return '<div><label for="'+id+'">'+l+' *</label><input id="'+id+'" required '+(x||'')+'></div>'},
       st=function(k,t){return '<h3><span class="sn">'+k+'</span>'+t+'</h3>'};
-  app.innerHTML='<div class="w n"><div class="crumbs"><a href="/">Početna</a> / <a href="/" data-cart>Korpa</a> / <b>Kasa</b></div><h1 style="font-size:40px;margin:0 0 6px">Kasa</h1><p class="cond" style="font-size:14px">Plaćanje pouzećem: popunite podatke i naručite. Pitanja? Piši nam na <a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a>.</p>'+
+  app.innerHTML='<div class="w n"><div class="crumbs"><a href="/">Početna</a> / <a href="/" data-cart>Korpa</a> / <b>Kasa</b></div><h1 style="font-size:40px;margin:0 0 6px">Kasa</h1><p class="cond" style="font-size:14px">Plaćanje pouzećem: popunite podatke i naručite. Pitanja? Piši nam na <a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a>.</p>'+(igOn()?'<p class="igl">'+ico('ig')+'Najbrže nas stigneš na Instagramu '+igLink()+'</p>':'')+
   '<div class="ck" style="margin-top:22px"><form id="f"><div class="box">'+st(1,"Kontakt podaci")+'<div class="r2">'+f("fn","Ime",'autocomplete="given-name"')+f("ln","Prezime",'autocomplete="family-name"')+f("em","Email",'type="email" autocomplete="email" placeholder="ime@email.com"')+f("tl","Telefon",'type="tel" autocomplete="tel" placeholder="064 123 4567"')+'</div></div>'+
   '<div class="box">'+st(2,"Adresa za isporuku")+f("ad","Adresa",'autocomplete="street-address" placeholder="Ulica i broj"')+'<div class="r2">'+f("gr","Grad",'autocomplete="address-level2"')+f("zp","Poštanski broj",'inputmode="numeric" autocomplete="postal-code" placeholder="11000"')+'</div>'+
   '<label for="dr2">Država</label><input id="dr2" value="Srbija" required autocomplete="country-name"><label for="nt">Napomena (opciono)</label><textarea id="nt" rows="3"></textarea></div>'+
@@ -661,7 +684,7 @@ document.addEventListener("submit",function(e){
 });
 function done(){
   if(!last)return goR("/");
-  app.innerHTML='<div class="w"><div class="done"><div class="ic">'+ico('ok')+'</div><h1>Hvala na porudžbini!</h1><p>Hvala, '+esc(last.n)+'! Javljamo se na telefon radi potvrde, a zatim dogovaramo dostavu.</p><p><b style="color:var(--tx)">'+last.names.map(esc).join("<br>")+'</b><br>Cena artikala (plaćanje pouzećem): '+fmt(last.total)+(last.sh&&last.sh.fr?'<br>Dostava: besplatna':(last.sh&&last.sh.pr>0?'<br>Dostava: '+fmt(last.sh.pr)+'<br>Ukupno: '+fmt(last.sh.tot):''))+'</p><a class="btn" href="/proizvodi">Vrati se na proizvode</a></div></div>';confetti();
+  app.innerHTML='<div class="w"><div class="done"><div class="ic">'+ico('ok')+'</div><h1>Hvala na porudžbini!</h1><p>Hvala, '+esc(last.n)+'! Javljamo se na telefon radi potvrde, a zatim dogovaramo dostavu.</p><p><b style="color:var(--tx)">'+last.names.map(esc).join("<br>")+'</b><br>Cena artikala (plaćanje pouzećem): '+fmt(last.total)+(last.sh&&last.sh.fr?'<br>Dostava: besplatna':(last.sh&&last.sh.pr>0?'<br>Dostava: '+fmt(last.sh.pr)+'<br>Ukupno: '+fmt(last.sh.tot):''))+'</p>'+igBox("Status porudžbine i pitanja","Piši nam u poruke na Instagramu, tamo odgovaramo najbrže.")+'<a class="btn" href="/proizvodi" style="margin-top:20px">Vrati se na proizvode</a></div></div>';confetti();
 }
 function admin(){
   var f=function(id,l,x){return '<div><label for="'+id+'">'+l+'</label><input id="'+id+'" required '+(x||'')+'></div>'};
@@ -694,14 +717,15 @@ function faq(){
   ["Kako se plaća?","Pouzećem, gotovinom kuriru pri preuzimanju paketa. Unapred ne plaćaš ništa."],
   ["Mogu li da vratim proizvod?","Možeš, u roku od 14 dana, bez navođenja razloga. Proizvod mora da bude u stanju u kom je stigao."],
   ["Kako ocenjujete stanje?","Skalom od 1 do 10. Novo sa etiketom je 10/10, a sve manje opisujemo iskreno, sa slikama mana."]
-  ].map(function(x){return '<details><summary>'+x[0]+'</summary><p>'+x[1]+'</p></details>'}).join("");
+  ];if(igOn())q.splice(1,0,["Kako da proverim status porudžbine?","Pošalji nam poruku na Instagramu, tamo odgovaramo najbrže. "+igLink()]);
+  q=q.map(function(x){return '<details><summary>'+x[0]+'</summary><p>'+x[1]+'</p></details>'}).join("");
   app.innerHTML='<div class="w n"><a class="back" href="/">← Nazad na sajt</a><h1 style="font-size:42px;margin:0 0 20px">Česta pitanja</h1><div class="faq">'+q+'</div><p class="cond" style="margin:24px 0 70px">Nisi našao odgovor? <a href="/kontakt" style="color:#6fb1ff">Piši nam</a>.</p></div>';
 }
 function contact(){
   var g=function(id,l,x){return '<div><label for="'+id+'">'+l+'</label>'+(x?'<textarea id="'+id+'" rows="5" required></textarea>':'<input id="'+id+'" required'+(id==="cm"?' type="email"':'')+'>')+'</div>'};
-  app.innerHTML='<div class="w n"><a class="back" href="/">← Nazad na sajt</a><h1 style="font-size:42px;margin:0 0 8px">Imaš pitanje?</h1><p class="lead">Piši nam, odgovaramo u roku od 24 sata.</p>'+
+  app.innerHTML='<div class="w n"><a class="back" href="/">← Nazad na sajt</a><h1 style="font-size:42px;margin:0 0 8px">Imaš pitanje?</h1><p class="lead">Piši nam, odgovaramo u roku od 24 sata.</p>'+igBox("Najbrže nas stigneš na Instagramu","Poruke na Instagramu gledamo prvo, pre mejla.")+
   '<div class="ck" style="margin-top:24px"><div class="box"><form id="cf"><div class="r2">'+g("cn","Ime")+g("cm","Mejl")+'</div>'+g("cp","Poruka",1)+'<button class="btn full" type="submit" style="margin-top:16px">Pošalji poruku</button></form></div>'+
-  '<aside class="box"><h3>Ili nas nađi ovde</h3><div class="li"><div>Mejl<small><a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a></small></div></div><div class="li"><div>Odgovor<small>U roku od 24 sata, svaki dan</small></div></div></aside></div></div>';
+  '<aside class="box"><h3>Ili nas nađi ovde</h3>'+(igOn()?'<div class="li"><div>Instagram<small>'+igLink()+'</small></div></div>':'')+'<div class="li"><div>Mejl<small><a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a></small></div></div><div class="li"><div>Odgovor<small>U roku od 24 sata, svaki dan</small></div></div></aside></div></div>';
 }
 document.addEventListener("submit",function(e){if(e.target.id!=="cf")return;e.preventDefault();var bx=e.target.parentNode;
   post("contact",{ime:$("#cn").value.trim(),email:$("#cm").value.trim(),poruka:$("#cp").value.trim(),vreme:new Date().toLocaleString("sr-RS")}).then(function(){bx.innerHTML='<div class="done" style="padding:30px 0"><div class="ic">'+ico('mail')+'</div><h3>Poruka je poslata</h3><p>Javljamo se u roku od 24 sata.'+(LIVE?'':' (Simulacija: na pravom sajtu ti stiže na mejl.)')+'</p></div>'}).catch(function(){bx.insertAdjacentHTML("beforeend",'<p class="err">Slanje nije uspelo, pokušaj ponovo.</p>')})});
@@ -883,7 +907,7 @@ function route(){
   else if(pg==="po-zelji"){wish();scrollTo(0,0)}
   else{home();var el=document.getElementById(pg==="proizvodi"?"proizvodi":h);if(el)el.scrollIntoView();else scrollTo(0,0)}
 }
-var cy_=$("#cy");if(cy_)cy_.textContent=new Date().getFullYear();var fm_=$("#fm");if(fm_){fm_.href="mailto:"+CFG.MAIL;fm_.textContent=CFG.MAIL}$("#hl").src=LOGO;$("#fl").src=LOGO;initBg();if(LIVE)$("#reset").style.display="none";
+var cy_=$("#cy");if(cy_)cy_.textContent=new Date().getFullYear();var fm_=$("#fm");if(fm_){fm_.href="mailto:"+CFG.MAIL;fm_.textContent=CFG.MAIL}var fg_=$("#fig");if(fg_&&igOn()){fg_.href=igUrl();fg_.innerHTML=ico("ig")+"@"+CFG.IG;fg_.setAttribute("aria-label","Instagram @"+CFG.IG);fg_.hidden=false}$("#hl").src=LOGO;$("#fl").src=LOGO;initBg();if(LIVE)$("#reset").style.display="none";
 function hh(){var e=document.querySelector("header");if(e)document.documentElement.style.setProperty("--hh",e.offsetHeight+"px")}
 hh();addEventListener("resize",hh);addEventListener("orientationchange",hh);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(hh);if(window.ResizeObserver){var ho=document.querySelector("header");if(ho)new ResizeObserver(hh).observe(ho)}
 // jezik: srpski je podrazumevan; engleski prevod (i18n.js) se učitava tek kad ga neko izabere
@@ -891,7 +915,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=17";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=18";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();
