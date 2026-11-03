@@ -1,6 +1,7 @@
 // Cloudflare Worker (src/worker.js):
 //   GET /proizvod/<ime>  -> isti sajt (index.html), ali sa naslovom, opisom i slikom TOG proizvoda u zaglavlju stranice,
 //                           pa pregled linka (Viber, WhatsApp, Facebook, Telegram, Discord...) pokazuje taj proizvod.
+//   GET /sitemap.xml     -> spisak strana i proizvoda NA STANJU za Google (pravi se sam iz proizvoda).
 //   GET /og-img/<ime>    -> slika za pregled: mora da bude mala (WhatsApp/Viber odbacuju slike preko ~300 KB).
 //                           Pokuša se smanjivanje preko Cloudflare Image Transformations; ako nije uključeno,
 //                           a original je mali, šalje se original; inače logo sajta (pregled nikad ne ostane bez slike).
@@ -54,6 +55,8 @@ export function parseProducts(items) {
       color: d.color || "",
       price: parseFloat(d.price) || 0,
       photo: photos[0] || "",
+      photos,
+      desc: String(d.description || d.body || "").replace(/\s+/g, " ").trim().slice(0, 300),
       sold: /^(true|da|yes|1)$/i.test(d.sold || ""),
     });
   }
@@ -74,6 +77,23 @@ export function describe(p) {
   if (p.sold) return "Ovaj proizvod je već prodat.";
   const facts = [p.brand, p.size ? "Vel. " + p.size : "", p.color].filter(Boolean).join(" · ");
   return (facts ? facts + " – " : "") + fmtPrice(p.price);
+}
+
+// ---- strukturirani podaci (JSON-LD) za Google: samo ono što stvarno znamo (naziv, brend, boja, veličina, slike, cena u RSD, na stanju / prodato)
+const ldScript = (o) => '<script type="application/ld+json">' + JSON.stringify(o).replace(/</g, "\\u003c").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029") + "</script>\n"; // "<" se piše kao \u003c da naziv ne može da zatvori script
+export function productLd(p, origin) {
+  const url = origin + "/proizvod/" + p.slug;
+  const abs = (x) => (/^https?:\/\//.test(x) ? x : x.startsWith("//") ? "https:" + x : origin + x);
+  const o = { "@context": "https://schema.org", "@type": "Product", name: p.name, url, sku: p.slug };
+  const facts = [p.brand, p.size ? "Veličina " + p.size : "", p.color].filter(Boolean).join(", ");
+  const desc = p.desc || facts;
+  if (desc) o.description = desc;
+  if (p.photos && p.photos.length) o.image = p.photos.map(abs);
+  if (p.brand) o.brand = { "@type": "Brand", name: p.brand };
+  if (p.color) o.color = p.color;
+  if (p.size) o.size = p.size;
+  if (p.price > 0) o.offers = { "@type": "Offer", url, priceCurrency: "RSD", price: p.price, availability: "https://schema.org/" + (p.sold ? "OutOfStock" : "InStock") };
+  return o;
 }
 
 export function injectProduct(html, p, origin) {
@@ -97,6 +117,7 @@ export function injectProduct(html, p, origin) {
   // dimenzije i tip važe za logo, a ne za sliku proizvoda
   head = head.replace(/<meta\s+property="og:image:(type|width|height)"[^>]*>\s*/g, "");
   head += '<link rel="canonical" href="' + esc(url) + '">\n';
+  head += ldScript(productLd(p, origin));
   return head + html.slice(i);
 }
 
@@ -131,12 +152,30 @@ const slugOf = (url, prefix) => {
   return s;
 };
 
-async function findProduct(env, origin, waitUntil, slug) {
+async function listProducts(env, origin, waitUntil) {
   const r = await loadBody(env, origin, waitUntil);
   if (r.err) return { failed: true };
   let items = [];
   try { items = JSON.parse(r.body).items; } catch (e) { return { failed: true }; }
-  return { product: parseProducts(items).find((p) => p.slug === slug) || null };
+  return { products: parseProducts(items) };
+}
+async function findProduct(env, origin, waitUntil, slug) {
+  const r = await listProducts(env, origin, waitUntil);
+  if (r.failed) return { failed: true };
+  return { product: r.products.find((p) => p.slug === slug) || null };
+}
+
+// ---- /sitemap.xml: glavne strane + proizvodi na stanju (prodati ispadaju sami); kasa, potvrda, admin i API nisu u spisku.
+// Ako GitHub ne radi, ide spisak samo sa glavnim stranama (i kratko se kešira), da Google nikad ne dobije grešku.
+const SITEMAP_PAGES = ["", "proizvodi", "o-nama", "pitanja", "kontakt", "po-zelji"];
+const xesc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[c]));
+export async function sitemap({ request, env, waitUntil }) {
+  const url = new URL(request.url);
+  const r = await listProducts(env, url.origin, waitUntil);
+  const locs = SITEMAP_PAGES.map((k) => url.origin + "/" + k);
+  if (!r.failed) for (const p of r.products) if (!p.sold) locs.push(url.origin + "/proizvod/" + p.slug);
+  const xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + locs.map((l) => "  <url><loc>" + xesc(l) + "</loc></url>").join("\n") + "\n</urlset>\n";
+  return new Response(request.method === "HEAD" ? null : xml, { status: 200, headers: { "content-type": "application/xml; charset=utf-8", "cache-control": r.failed ? "public, max-age=60" : "public, max-age=300" } });
 }
 
 export async function productPage({ request, env, waitUntil }) {

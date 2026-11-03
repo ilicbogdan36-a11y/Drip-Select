@@ -8,7 +8,7 @@
     "binding": "ASSETS",
     // Worker se pokreće samo za ove adrese; sve ostalo servira Cloudflare direktno iz public/
     "run_worker_first": [
-      "/api/*", "/admin/config.yml", "/proizvod/*", "/og-img/*",
+      "/api/*", "/admin/config.yml", "/proizvod/*", "/og-img/*", "/sitemap.xml",
       "/proizvodi", "/kasa", "/gotovo", "/o-nama", "/pitanja", "/kontakt", "/po-zelji",
       "/proizvodi/", "/kasa/", "/gotovo/", "/o-nama/", "/pitanja/", "/kontakt/", "/po-zelji/"
     ]

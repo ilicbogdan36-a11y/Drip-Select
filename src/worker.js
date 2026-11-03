@@ -4,7 +4,7 @@ import * as products from "./api/products.js";
 import * as auth from "./api/auth.js";
 import * as callback from "./api/callback.js";
 import * as status from "./api/status.js";
-import { productPage, ogImage, sitePage, PAGE_TITLES } from "./page.js";
+import { productPage, ogImage, sitePage, sitemap, PAGE_TITLES } from "./page.js";
 import { checkDrop } from "./drop.js";
 
 const ROUTES = { "/api/submit": submit, "/api/products": products, "/api/auth": auth, "/api/callback": callback, "/api/status": status };
@@ -27,6 +27,13 @@ export default {
       if (request.method !== "GET" && request.method !== "HEAD") return json({ error: "method" }, 405);
       try { return await sitePage({ request, env }); }
       catch (e) { console.error("sitePage", e); return env.ASSETS.fetch(new Request(url.origin + "/")); }
+    }
+
+    // Spisak strana za Google
+    if (url.pathname === "/sitemap.xml") {
+      if (request.method !== "GET" && request.method !== "HEAD") return json({ error: "method" }, 405);
+      try { return await sitemap({ request, env, waitUntil: (p) => ctx.waitUntil(p) }); }
+      catch (e) { console.error("sitemap", e); return new Response("", { status: 502 }); }
     }
 
     // Čist link proizvoda i slika za pregled linka (Viber, WhatsApp, Facebook...)
