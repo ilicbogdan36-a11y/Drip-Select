@@ -9,6 +9,6 @@ condition: 9
 image: /images/products/dwdddddd.webp
 image2: /images/products/26051011_56214957_1000.webp
 focus: dole
-sold: false
+sold: true
 ---
 Gas
