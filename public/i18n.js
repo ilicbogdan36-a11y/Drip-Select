@@ -35,6 +35,9 @@
     "tvoj@mejl.rs": "your@email.com", "Mejl": "Email", "Obavesti me": "Notify me",
     "Hvala! Javljamo ti se čim izađe novi drop.": "Thanks! We'll let you know as soon as the new drop is out.",
     "Slanje nije uspelo, pokušaj ponovo.": "Sending failed, please try again.",
+    "Pokušaj ponovo za sekund.": "Please try again in a second.",
+    "Previše pokušaja za kratko vreme. Sačekaj nekoliko minuta pa pokušaj ponovo.": "Too many attempts in a short time. Please wait a few minutes and try again.",
+    "Proveri unete podatke (ime, telefon i adresu) pa pokušaj ponovo.": "Please check the details you entered (name, phone and address) and try again.",
     "Učitavanje...": "Loading...",
     // proizvod
     "← Nazad na proizvode": "← Back to products",

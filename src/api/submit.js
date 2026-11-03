@@ -2,7 +2,10 @@
 // Prima porudžbine i ostale forme sa sajta, šalje mejl vlasniku (Resend) i, za porudžbinu,
 // odmah "rezerviše" proizvod (sold: true u GitHub fajlu) tako da ga niko drugi ne može poručiti.
 //
-// Telo (JSON): { form: "porudzbina"|"prijava"|"zelja"|"kontakt", data: {...}, files: [{filename, content(base64)}], bot: "" }
+// Telo (JSON): { form: "porudzbina"|"prijava"|"zelja"|"kontakt", data: {...}, files: [{filename, content(base64)}], bot: "", t: ms }
+//   bot = skriveno polje koje čovek ne vidi (botovi ga popune), t = koliko je ms prošlo od prikaza forme.
+// Posle uspešne porudžbine kupac dobija mejl potvrde (reply_to = info@dripselect.rs, može da se promeni sa MAIL_REPLY).
+// Zaštita: honeypot, minimalno vreme popunjavanja, ograničenje po IP adresi (RL_ORDERS / RL_FORMS u 10 min), provera podataka.
 //
 // Promenljive (Cloudflare > Workers > drip-select > Settings > Variables and Secrets):
 //   GITHUB_TOKEN (secret)  fine-grained token, samo ovaj repo, Contents: Read and write
@@ -15,6 +18,11 @@ import { addSubscriber } from "../drop.js";
 const MAX_BODY = 4000000;   // znakova; slike stižu već smanjene iz pregledača
 const MAX_FILE = 1000000;   // znakova base64 po slici
 const FILE_RE = /^[^\/\\|]+\.md$/;
+const MIN_FILL_MS = 1200;          // brže od ovoga forma nije popunjena rukom
+const RL_WINDOW = 600;             // sekundi
+const RL_ORDERS = 5, RL_FORMS = 12; // pokušaja po IP adresi u prozoru: porudžbine / sve ostale forme
+const CONFIRM_MAX = 3;             // mejlova potvrde po adresi kupca na sat (sprečava da neko tuđu adresu zaspe mejlovima)
+const REPLY_DEFAULT = "info@dripselect.rs";
 
 const FORMS = {
   porudzbina: {
@@ -42,6 +50,48 @@ const json = (o, status = 200) =>
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const clean = (v, max) => String(v ?? "").replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "").trim().slice(0, max);
 const isEmail = (s) => s.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s);
+const lim = (v, def) => (+v > 0 ? +v : def);
+
+// ---------- zaštita od botova i zloupotrebe ----------
+async function sha(s) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].slice(0, 8).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+// Brojač pokušaja u vremenskom prozoru, bez dodatne infrastrukture: memorija ovog Worker-a + Cache API (deli se između
+// instanci u istom data centru; na workers.dev adresi ne radi, tada ostaje samo memorija). Nije savršeno, ali zaustavlja
+// jednostavno zasipanje. U ključu je samo skraćeni hash, a zapis sam nestaje posle prozora.
+const memHits = new Map();
+async function hit(key, windowSec) {
+  const now = Date.now();
+  let m = memHits.get(key);
+  if (!m || m.exp <= now) {
+    if (memHits.size > 5000) for (const [k, v] of memHits) if (v.exp <= now) memHits.delete(k);
+    m = { c: 0, exp: now + windowSec * 1000 };
+    memHits.set(key, m);
+  }
+  m.c++;
+  let c = m.c;
+  try {
+    if (typeof caches !== "undefined") {
+      const req = new Request("https://rl.dripselect.internal/" + encodeURIComponent(key));
+      const got = await caches.default.match(req);
+      let o = got ? await got.json().catch(() => null) : null;
+      if (!o || o.exp <= now) o = { c: 0, exp: now + windowSec * 1000 };
+      o.c++;
+      await caches.default.put(req, new Response(JSON.stringify(o), { headers: { "cache-control": "max-age=" + Math.max(1, Math.ceil((o.exp - now) / 1000)) } }));
+      c = Math.max(c, o.c);
+    }
+  } catch (e) { console.error("rate", e); }
+  return c;
+}
+// Vraća ime polja sa očigledno lošim podacima (linkovi u imenu/adresi, previše linkova u tekstu, nemoguć telefon) ili "".
+const LINK_RE = /https?:\/\/|www\./gi;
+function badData(d) {
+  for (const k of ["ime", "prezime", "adresa", "grad"]) if (d[k] && /https?:\/\/|www\./i.test(d[k])) return k;
+  for (const k of ["napomena", "poruka", "sta_trazi"]) if (d[k] && (d[k].match(LINK_RE) || []).length > 2) return k;
+  if (d.telefon) { const n = d.telefon.replace(/\D/g, "").length; if (n < 6 || n > 16) return "telefon"; }
+  return "";
+}
 
 // ---------- GitHub (sold: true u frontmatter-u) ----------
 const b64decode = (b64) => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\s/g, "")), (c) => c.charCodeAt(0)));
@@ -132,8 +182,8 @@ function buildMail(def, d, atts, extra = "") {
   if (d.ukupno) subject += ` (${d.ukupno})`;
   return { subject: subject.replace(/\s+/g, " ").slice(0, 150), html, text };
 }
-async function sendMail(env, mail, replyTo, attachments) {
-  const to = String(env.MAIL_TO || "").split(",").map((s) => s.trim()).filter(Boolean);
+async function sendMail(env, mail, replyTo, attachments, toOne) {
+  const to = toOne ? [toOne] : String(env.MAIL_TO || "").split(",").map((s) => s.trim()).filter(Boolean);
   if (!env.RESEND_API_KEY || !to.length) throw new Error("mejl nije podešen (RESEND_API_KEY / MAIL_TO)");
   const body = { from: env.MAIL_FROM || "Drip Select <onboarding@resend.dev>", to, subject: mail.subject, html: mail.html, text: mail.text };
   if (replyTo) body.reply_to = replyTo;
@@ -144,6 +194,41 @@ async function sendMail(env, mail, replyTo, attachments) {
     body: JSON.stringify(body),
   });
   if (!r.ok) throw new Error(`resend ${r.status} ${(await r.text()).slice(0, 300)}`);
+}
+
+// Potvrda porudžbine za kupca. Tekst prati ono što kupac vidi na strani "Hvala na porudžbini", bez novih obećanja.
+function buildCustomerMail(d, env) {
+  const site = String(env.SITE_URL || "https://dripselect.rs").replace(/\/+$/, "");
+  const contact = env.MAIL_REPLY || REPLY_DEFAULT;
+  const abroad = /^Unapred/i.test(d.placanje);
+  const addr = [d.adresa, [d.postanski_broj, d.grad].filter(Boolean).join(" "), d.drzava].filter(Boolean).join(", ");
+  const next = abroad
+    ? "Javljamo ti se radi cene dostave i podataka za uplatu. Paket šaljemo kad uplata stigne."
+    : "Javljamo se na telefon radi potvrde, a zatim dogovaramo dostavu. Plaćanje je pouzećem, gotovinom kuriru pri preuzimanju.";
+  const rows = [["Proizvodi", d.artikli], ["Dostava", d.dostava], ["Ukupno", d.ukupno], ["Plaćanje", d.placanje], ["Adresa", addr], ["Telefon", d.telefon], ["Napomena", d.napomena]].filter(([, v]) => v);
+  const hello = d.ime ? `Zdravo, ${d.ime}.` : "Zdravo.";
+  const trs = rows.map(([k, v]) =>
+    `<tr><td style="padding:7px 18px 7px 0;font:14px Arial,sans-serif;color:#8b93a7;vertical-align:top;white-space:nowrap">${k}</td><td style="padding:7px 0;font:15px Arial,sans-serif;color:#f4f6fa">${esc(v).replace(/\n/g, "<br>")}</td></tr>`).join("");
+  const html = `<!doctype html><html><body style="margin:0;padding:0;background:#07080c" bgcolor="#07080c">` +
+    `<div style="display:none;max-height:0;overflow:hidden;opacity:0">Primili smo tvoju porudžbinu.</div>` +
+    `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#07080c"><tr><td align="center" style="padding:28px 14px">` +
+    `<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px" bgcolor="#0f121a"><tr><td style="padding:28px 20px 6px">` +
+    `<div style="font:700 13px Arial,sans-serif;letter-spacing:3px;color:#6fb1ff">DRIP SELECT</div>` +
+    `<h1 style="margin:10px 0 6px;font:700 26px Arial,sans-serif;color:#f4f6fa">Hvala na porudžbini!</h1>` +
+    `<p style="margin:0 0 6px;font:15px/1.5 Arial,sans-serif;color:#cbd5e6">${esc(hello)} Primili smo tvoju porudžbinu.</p>` +
+    `<p style="margin:0 0 22px;font:15px/1.5 Arial,sans-serif;color:#8b93a7">${next}</p>` +
+    `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 22px">${trs}</table>` +
+    `<p style="margin:0 0 26px;font:14px/1.5 Arial,sans-serif;color:#8b93a7">Ako je neki podatak pogrešan (telefon ili adresa), odgovori na ovaj mejl i ispravićemo ga.</p>` +
+    `<p style="margin:0;padding:18px 0 26px;border-top:1px solid #1f2430;font:12px/1.6 Arial,sans-serif;color:#6b7387">Ovo je automatska potvrda porudžbine na <a href="${esc(site)}" style="color:#8b93a7">dripselect.rs</a>. Pitanja: ${esc(contact)}.</p>` +
+    `</td></tr></table></td></tr></table></body></html>`;
+  const text = `Hvala na porudžbini!\n\n${hello} Primili smo tvoju porudžbinu.\n${next}\n\n` + rows.map(([k, v]) => `${k}: ${v}`).join("\n") +
+    `\n\nAko je neki podatak pogrešan (telefon ili adresa), odgovori na ovaj mejl i ispravićemo ga.\n\nOvo je automatska potvrda porudžbine na ${site}. Pitanja: ${contact}.`;
+  return { subject: "Primili smo tvoju porudžbinu | Drip Select", html, text };
+}
+async function confirmCustomer(env, d) {
+  const n = await hit("c:" + (await sha(d.email.toLowerCase())), 3600);
+  if (n > CONFIRM_MAX) { console.warn("potvrda: previše porudžbina sa iste adrese, mejl nije poslat"); return; }
+  await sendMail(env, buildCustomerMail(d, env), env.MAIL_REPLY || REPLY_DEFAULT, [], d.email);
 }
 
 // Posle upisa u GitHub obriši keš liste proizvoda, da SOLD OUT bude vidljiv odmah (najbolji pokušaj)
@@ -175,12 +260,24 @@ export async function onRequestPost({ request, env, waitUntil }) {
   if (body.bot) return json({ ok: true }); // honeypot: botovi ne dobijaju grešku
   const def = FORMS[body.form];
   if (!def) return json({ error: "form" }, 400);
+  // vreme od prikaza forme: mora da postoji (pravi sajt ga uvek šalje), a prebrzo znači bot ili automatsko slanje
+  if (typeof body.t !== "number" || !Number.isFinite(body.t) || body.t < 0) return json({ error: "form" }, 400);
+  if (body.t < lim(env.MIN_FILL_MS, MIN_FILL_MS)) return json({ error: "fast" }, 429);
+  // ograničenje po IP adresi (cf-connecting-ip postavlja Cloudflare, klijent ga ne može lažirati)
+  const ip = request.headers.get("cf-connecting-ip");
+  if (ip) {
+    const isOrder = body.form === "porudzbina";
+    const n = await hit((isOrder ? "o:" : "f:") + (await sha(ip)), RL_WINDOW);
+    if (n > (isOrder ? lim(env.RL_ORDERS, RL_ORDERS) : lim(env.RL_FORMS, RL_FORMS))) return json({ error: "rate" }, 429);
+  }
 
   const d = {};
   for (const k of def.all) d[k] = clean(body.data && body.data[k], LONG[k] || 300);
   if ("novosti" in d) d.novosti = d.novosti === "Da" ? "Da" : "Ne";
   for (const k of def.req) if (!d[k]) return json({ error: "missing", field: k }, 400);
   if (d.email && !isEmail(d.email)) return json({ error: "email" }, 400);
+  const bad = badData(d);
+  if (bad) return json({ error: "invalid", field: bad }, 400);
 
   const atts = [];
   if (body.form === "zelja" && Array.isArray(body.files)) {
@@ -223,6 +320,11 @@ export async function onRequestPost({ request, env, waitUntil }) {
     console.error("mail", e);
     if (reserved.length) { await rollback(cfg, reserved); purge(request, waitUntil); } // mejl nije otišao: vrati proizvode u prodaju
     return json({ error: "mail" }, 502);
+  }
+  // potvrda za kupca: njen neuspeh ne sme da pokvari porudžbinu koja je već primljena
+  if (body.form === "porudzbina" && d.email) {
+    const task = confirmCustomer(env, d).catch((e) => console.error("mejl kupcu", e));
+    if (waitUntil) waitUntil(task); else await task;
   }
   return json({ ok: true });
 }
