@@ -9,6 +9,6 @@ condition: 9.5
 image: /images/products/np000hc00411_967_1124px.jpg
 focus: sredina
 featured: false
-sold: true
+sold: false
 ---
 U Odličnom Stanju
