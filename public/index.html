@@ -391,6 +391,65 @@ header img,#fl,.hero img{aspect-ratio:640/398}
 .igc .btn{flex:none;padding:11px 15px;font-size:11px;white-space:nowrap}
 .done .igc{max-width:520px;margin:22px auto 0}
 @media(max-width:520px){.igc{flex-wrap:wrap}.igc .igt{flex-basis:calc(100% - 60px)}.igc .btn{width:100%}}
+
+/* ===== Uvodna animacija početne (CFG.INTRO / ?intro=1): kap pada, talas, logo izranja, jakne bez pozadine uleću sa strana ===== */
+.hx{position:relative;overflow-x:clip}
+.hx-lw{position:relative;display:inline-block;isolation:isolate}
+.hx h1,.hx .hero-p,.hx .btn{position:relative;z-index:1}
+.hx-logo{position:relative;z-index:1;display:block}
+.hx-fx{position:absolute;inset:0;pointer-events:none;z-index:0}
+.hx-fx i,.hx-fx b{position:absolute;left:50%;top:50%}
+.hx-drop{width:16px;height:23px;margin:-12px 0 0 -8px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:radial-gradient(circle at 35% 30%,#d4eaff,#1a8cff 55%,#0a5fc4);box-shadow:0 0 20px 2px rgba(26,140,255,.8);opacity:0}
+.hx-ring{width:110px;height:110px;margin:-55px 0 0 -55px;border-radius:50%;border:2px solid rgba(111,177,255,.95);opacity:0}
+.hx-ring.b{border-width:1px;border-color:rgba(26,140,255,.8)}
+.hx-glow{width:560px;height:340px;max-width:150vw;margin:-170px 0 0 -280px;background:radial-gradient(closest-side,rgba(26,140,255,.55),rgba(26,140,255,0));opacity:0}
+.hx-sp{position:absolute;left:50%;top:50%;width:0;height:0;filter:url(#hxg)}
+.hx-sp b{width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:#1a8cff;opacity:0}
+.hx-sp b.m{width:84px;height:84px;margin:-42px 0 0 -42px}
+/* proizvodi bez pozadine: ispod dugmeta (telefon/tablet), a na širokom ekranu levo i desno od naslova */
+.hx-row{display:flex;justify-content:center;align-items:flex-end;gap:6px;margin:34px auto 0;max-width:560px}
+.hs{position:relative;display:block;width:clamp(120px,40vw,230px);aspect-ratio:4/5;z-index:0;transform:rotate(var(--rt,0deg));translate:calc(var(--mx,0)*var(--k,1)*14px) calc(var(--my,0)*var(--k,1)*8px);transition:transform .45s cubic-bezier(.2,.8,.2,1),translate .3s ease-out}
+.hs.l{--rt:-11deg;--k:.8}
+.hs.r{--rt:9deg;--k:1.3}
+.hs::before{content:"";position:absolute;inset:-6% -14%;border-radius:50%;background:radial-gradient(closest-side,rgba(26,140,255,.5),rgba(26,140,255,0));z-index:-1}
+.hs:hover,.hs:focus-visible{transform:rotate(0deg) scale(1.05)}
+.hsi{display:block;width:100%;height:100%;animation:hxfl 5.5s ease-in-out infinite;animation-delay:calc(var(--i,0)*-1.7s)}
+.hx .hs img{display:block;width:100%;height:100%;aspect-ratio:auto;object-fit:contain;filter:drop-shadow(0 22px 26px rgba(0,0,0,.6)) drop-shadow(0 0 22px rgba(26,140,255,.5))}
+@media(min-width:1280px){
+  .hx-row{display:contents}
+  .hs{position:absolute;top:170px;width:clamp(190px,calc(17vw + (100vw - 1280px)*.12),300px)}
+  .hs.l{left:clamp(24px,5vw,110px)}
+  .hs.r{right:clamp(24px,4vw,100px);top:140px;width:clamp(200px,calc(18vw + (100vw - 1280px)*.2),340px)}
+}
+@keyframes hxfl{50%{transform:translateY(-8px)}}
+@keyframes hxdrop{0%{opacity:0;transform:translateY(-190px) scale(.75,1.5)}14%{opacity:1}96%{opacity:1;transform:translateY(0) scale(1,1.1)}100%{opacity:0;transform:translateY(0) scale(1.5,.5)}}
+@keyframes hxring{0%{opacity:.95;transform:scale(.15)}100%{opacity:0;transform:scale(5.4)}}
+@keyframes hxglow{0%{opacity:0;transform:scale(.4)}30%{opacity:.95}100%{opacity:0;transform:scale(1.25)}}
+@keyframes hxsp{0%{opacity:1;transform:translate(0,0) scale(1.3)}55%{opacity:1;transform:translate(var(--dx),var(--dy)) scale(.95)}100%{opacity:0;transform:translate(calc(var(--dx)*1.18),calc(var(--dy) + 52px)) scale(.2)}}
+@keyframes hxmid{0%{opacity:1;transform:scale(.3)}40%{opacity:1;transform:scale(1.5)}100%{opacity:0;transform:scale(.4)}}
+@keyframes hxlogo{from{opacity:0;transform:translateY(28px) scale(.78);filter:blur(14px)}}
+@keyframes hxup{from{opacity:0;transform:translateY(22px)}}
+@keyframes hxpop{from{opacity:0;transform:scale(.7)}}
+@keyframes hxin{from{opacity:0;transform:translateY(-90px) rotate(0deg) scale(.8)}}
+@keyframes hxflyl{from{opacity:0;transform:translate(-48vw,-40px) rotate(-75deg) scale(.55)}}
+@keyframes hxflyr{from{opacity:0;transform:translate(48vw,-40px) rotate(65deg) scale(.55)}}
+.hx.play .hx-drop{animation:hxdrop .52s cubic-bezier(.55,0,1,.45) both}
+.hx.play .hx-ring{animation:hxring .95s .5s cubic-bezier(.1,.7,.3,1) both}
+.hx.play .hx-ring.b{animation-delay:.6s}
+.hx.play .hx-glow{animation:hxglow 1.5s .5s ease-out both}
+.hx.play .hx-sp b{animation:hxsp .85s .5s cubic-bezier(.2,.7,.3,1) both}
+.hx.play .hx-sp b.m{animation:hxmid .7s .5s ease-out both}
+.hx.play .hx-logo{animation:hxlogo .9s .48s cubic-bezier(.2,.9,.25,1.12) backwards}
+.hx.play h1{animation:hxup .7s .95s cubic-bezier(.2,.8,.2,1) backwards}
+.hx.play .hero-p{animation:hxup .7s 1.08s cubic-bezier(.2,.8,.2,1) backwards}
+.hx.play .btn{animation:hxpop .6s 1.2s cubic-bezier(.34,1.56,.64,1) backwards}
+.hx.play .hs{animation:hxin .9s calc(1.35s + var(--i,0)*.16s) cubic-bezier(.34,1.45,.55,1) backwards}
+@media(min-width:1280px){
+  .hx.play .hs.l{animation:hxflyl 1.15s 1.3s cubic-bezier(.2,.9,.25,1.08) backwards}
+  .hx.play .hs.r{animation:hxflyr 1.15s 1.45s cubic-bezier(.2,.9,.25,1.08) backwards}
+}
+@media(max-width:600px){.hx-row{margin-top:26px}.hx-sp b:nth-child(n+7){display:none}}
+@media(prefers-reduced-motion:reduce){.hs{transition:none}}
 </style>
 </head>
 <body>
@@ -416,7 +475,7 @@ header img,#fl,.hero img{aspect-ratio:640/398}
 <script>
 var LOGO="/logo.webp";
 /* === PODEŠAVANJE: nalepi svoje linkove ovde (vidi uputstvo) === */
-var CFG={GH:{owner:"ilicbogdan36-a11y",repo:"Drip-Select",branch:"main",folder:"content/proizvodi"},API:"/api",MAIL:"info@dripselect.rs",FREE:2,SHIP:0,IGDEMO:1,IG:"dripselect"};
+var CFG={GH:{owner:"ilicbogdan36-a11y",repo:"Drip-Select",branch:"main",folder:"content/proizvodi"},API:"/api",MAIL:"info@dripselect.rs",FREE:2,SHIP:0,INTRO:0,IGDEMO:1,IG:"dripselect"};
 /* FREE = broj artikala za besplatnu dostavu (0 = isključeno); SHIP = cena dostave ispod toga u din. (0 = dogovara se pri potvrdi); IG = Instagram nalog bez @ (prazno = Instagram se nigde ne prikazuje) */
 var P=[
  {id:1,brand:"The North Face",cat:"Jakne",size:"L",color:"Crna",hex:"#15171c",name:"Vintage TNF 700 Nuptse Down Jacket Black",cond:"9.5/10 (Top stanje)",price:18900,imgs:6,g:"#2a303b,#14161b"},
@@ -459,13 +518,33 @@ function head(){var f=P.filter(function(p){return !sold(p.id)}).length,sh=$("#sh
 function featP(){return P.filter(function(p){return p.feat&&!sold(p.id)})[0]||null}
 function featBlock(){var p=featP();if(!p)return "";var sp=[p.brand,p.size?"Vel. "+p.size:"",p.color,p.cond?"Stanje "+p.cond:""].filter(Boolean);
   return '<section class="w"><div class="feat"><a class="fph" href="'+pl(p)+'" aria-label="'+esc(p.name)+'">'+tile(p,0)+'</a><div class="fin"><span class="ftag">Najbolje u kolekciji</span><h2><a href="'+pl(p)+'">'+esc(p.name)+'</a></h2><div class="fm">'+sp.map(function(x){return "<span>"+esc(x)+"</span>"}).join("")+'</div><div class="fpr">'+pw(p)+'</div><div class="fb"><a class="btn" href="'+pl(p)+'">Naruči</a><button class="btn ghost" data-add="'+p.id+'" type="button">Dodaj u korpu</button></div></div></div></section>'}
+/* Uvodna animacija: CFG.INTRO:1 = uključena (jednom po poseti); ?intro=1 uvek pušta (probni prikaz), ?intro=0 isključuje */
+function introMode(){var q=/[?&]intro=([01])/.exec(location.search),v=null;try{if(q)sessionStorage.setItem("dsiprev",q[1]);v=sessionStorage.getItem("dsiprev")}catch(e){}if(v==="0")return 0;if(v==="1")return 2;return +CFG.INTRO?1:0}
+function heroHx(m){
+  var av=P.filter(function(p){return !sold(p.id)&&p.cut}).slice(0,2),n=av.length,seen=false,play,k,sp="",a,d;
+  try{seen=!!sessionStorage.getItem("dsintro")}catch(e){}
+  play=!RM&&(m===2||!seen);
+  var ord=n>=2?[av[1],av[0]]:av,cls=n>=2?["l","r"]:["r"];
+  var items=ord.map(function(p,i){return '<a class="hs '+cls[i]+'" style="--i:'+i+'" href="'+pl(p)+'" aria-label="'+esc(p.name)+'"><span class="hsi"><img src="'+p.cut+'" alt="" decoding="async"></span></a>'}).join("");
+  if(play){for(k=0;k<9;k++){a=(k*40+(k%2?14:-6))*Math.PI/180;d=110+((k*37)%70);sp+='<b style="--dx:'+Math.round(Math.cos(a)*d)+'px;--dy:'+Math.round(Math.sin(a)*d*.62-26)+'px;animation-delay:'+(0.5+(k%3)*.03).toFixed(2)+'s"></b>'}sp+='<b class="m"></b>'}
+  return '<div class="hero hx'+(play?' play':'')+'" id="hx">'+(play?'<svg class="hx-svg" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="hxg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/><feColorMatrix in="b" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9"/></filter></svg>':'')+
+  '<span class="hx-lw">'+(play?'<span class="hx-fx" aria-hidden="true"><i class="hx-glow"></i><i class="hx-ring"></i><i class="hx-ring b"></i><span class="hx-sp">'+sp+'</span><i class="hx-drop"></i></span>':'')+'<img class="hx-logo" src="'+LOGO+'" alt="Drip Select"></span>'+
+  '<h1>Povoljno. Kvalitetno. Na jednom mestu.</h1><p class="hero-p">Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.</p><a class="btn" href="/proizvodi">Pogledaj proizvode</a>'+(items?'<div class="hx-row">'+items+'</div>':'')+'</div>'}
+function hxInit(){
+  var h=$("#hx");if(!h)return;
+  if(h.classList.contains("play")){try{sessionStorage.setItem("dsintro","1")}catch(e){}
+    setTimeout(function(){var f=h.querySelector(".hx-fx"),v=h.querySelector(".hx-svg");if(f)f.remove();if(v)v.remove();h.classList.remove("play")},3400)}
+  if(h.querySelector(".hs")&&!RM&&matchMedia("(hover:hover) and (pointer:fine)").matches){
+    h.addEventListener("pointermove",function(e){if(e.pointerType!=="mouse")return;var r=h.getBoundingClientRect();h.style.setProperty("--mx",((e.clientX-r.left)/r.width*2-1).toFixed(3));h.style.setProperty("--my",((e.clientY-r.top)/r.height*2-1).toFixed(3))});
+    h.addEventListener("pointerleave",function(){h.style.setProperty("--mx",0);h.style.setProperty("--my",0)})}}
 function home(){
-  var av=P.filter(function(p){return !sold(p.id)}).length;
-  var h='<div class="hero"><img src="'+LOGO+'" alt="Drip Select"><h1>Povoljno. Kvalitetno. Na jednom mestu.</h1><p>Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.</p><a class="btn" href="/proizvodi">Pogledaj proizvode</a></div>'+featBlock()+
+  var av=P.filter(function(p){return !sold(p.id)}).length,im=introMode();
+  var h=(im?heroHx(im):'<div class="hero"><img src="'+LOGO+'" alt="Drip Select"><h1>Povoljno. Kvalitetno. Na jednom mestu.</h1><p>Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.</p><a class="btn" href="/proizvodi">Pogledaj proizvode</a></div>')+featBlock()+
   '<section class="w" id="proizvodi"><div class="sh"><div><span>Kolekcija #01</span><h2>Trenutno na stanju</h2></div><span id="cnt"></span></div>';
   h+=av?'<div class="tools"><input id="q" type="search" placeholder="Pretraži proizvode..." aria-label="Pretraga" value="'+esc(F.q)+'"><div id="flt"></div></div><div class="grid" id="grid"></div>':drop();
   app.innerHTML=h+'<a class="cta" href="/po-zelji"><div><b>Ne nalaziš ono što tražiš?</b><span>Pošalji sliku proizvoda koji želiš, a mi ga potražimo za tebe.</span></div><span class="btn">Naruči po želji</span></a></section>';
   if(av)drawGrid(1);
+  if(im)hxInit();
 }
 
 var cur=0;
@@ -846,7 +925,7 @@ function mkSlug(f,u){var s=String(f||"").replace(/\.md$/i,"").replace(/^\d{4}-\d
 function pl(p){return "/proizvod/"+(p.slug||p.id)}
 function pBySlug(s){try{s=decodeURIComponent(s)}catch(e){}return P.filter(function(p){return p.slug===s})[0]||P.filter(function(p){return String(p.id)===s})[0]}
 function readList(a){P=[];SS=[];var used={};a.forEach(function(d){if(!d||!d.title)return;var id=hid(d.file),ph=[d.image,d.image2,d.image3,d.image4,d.image5,d.image6,d.image7].filter(Boolean).map(function(x){return /^(https?:)?\/\//.test(x)||x[0]==="/"?x:"/"+x});
-      P.push({id:id,file:d.file,brand:d.brand||"",cat:d.category||"Odeća",size:d.size||"",color:d.color||"",hex:d.hex||"#4a5160",name:d.title,cond:(/^\d+([.,]\d+)?$/.test(String(d.condition||"").trim())?String(d.condition).trim().replace(",",".")+"/10":(d.condition||"")),desc:d.description||d.body||"",price:parseFloat(d.price)||0,old:parseFloat(d.old_price)||0,feat:/^(true|da|yes|1)$/i.test(String(d.featured||"")),slug:mkSlug(d.file,used),imgs:ph.length||3,g:"#2a303b,#14161b",photos:ph,pos:FP[String(d.focus||"").trim().toLowerCase()]||"50% 50%"});
+      P.push({id:id,file:d.file,brand:d.brand||"",cat:d.category||"Odeća",size:d.size||"",color:d.color||"",hex:d.hex||"#4a5160",name:d.title,cond:(/^\d+([.,]\d+)?$/.test(String(d.condition||"").trim())?String(d.condition).trim().replace(",",".")+"/10":(d.condition||"")),desc:d.description||d.body||"",price:parseFloat(d.price)||0,old:parseFloat(d.old_price)||0,feat:/^(true|da|yes|1)$/i.test(String(d.featured||"")),cut:d.cutout?(/^(https?:)?\/\//.test(d.cutout)||d.cutout[0]==="/"?d.cutout:"/"+d.cutout):"",slug:mkSlug(d.file,used),imgs:ph.length||3,g:"#2a303b,#14161b",photos:ph,pos:FP[String(d.focus||"").trim().toLowerCase()]||"50% 50%"});
       if(/^(true|da|yes|1)$/i.test(d.sold||""))SS.push(id)});if(LIVE){sync();var nw=Date.now();S.sold=S.sold.filter(function(i){return SS.indexOf(i)<0&&S.st&&S.st[i]>nw-20000});save()}}
 function viaApi(){return fetch(CFG.API+"/products").then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(j){return j.items.map(function(x){var d=fm(x.text);d.file=x.file;return d})})}
 function viaGithub(){var G=CFG.GH;
