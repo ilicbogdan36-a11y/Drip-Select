@@ -12,6 +12,9 @@
     "Prodavnica": "Shop", "Informacije": "Information", "Odgovaramo u roku od 24 sata": "We reply within 24 hours",
     // početna
     "Povoljno. Kvalitetno. Na jednom mestu.": "Affordable. Quality. All in one place.",
+    "Povoljno.": "Affordable.",
+    "Kvalitetno.": "Quality.",
+    "Na jednom mestu.": "All in one place.",
     "Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.": "Well-known brands and a carefully chosen selection at affordable prices.",
     "Pogledaj proizvode": "View products",
     "Kolekcija #01": "Collection #01", "Trenutno na stanju": "Currently in stock",

@@ -43,11 +43,6 @@ collections:
       - { label: "Slika 6 (opciono)", name: "image6", widget: "image", required: false }
       - { label: "Slika 7 (opciono)", name: "image7", widget: "image", required: false }
       # opciono: proizvod isečen bez pozadine (PNG/WebP sa providnom pozadinom); prikazuje se levo/desno na početnoj strani kad je uključena animacija
-      - label: "Slika bez pozadine (opciono, za početnu stranu)"
-        name: "cutout"
-        widget: "image"
-        required: false
-        hint: "Proizvod isečen bez pozadine (providna pozadina). Ako je ima, proizvod se prikazuje uz naslov na početnoj strani. Ako je nema, ne prikazuje se tamo."
       # kadriranje: sajt seče slike u fiksan okvir od sredine; ovde pomeraš proizvod unutar okvira
       - label: "Položaj proizvoda na slici"
         name: "focus"

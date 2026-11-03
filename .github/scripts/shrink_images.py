@@ -22,7 +22,7 @@ MAX_SIDE = 1600
 TARGET = 220 * 1024        # cilj za težinu fajla
 LIMIT_WEBP = 260 * 1024    # webp do ove težine (i do 1600 px) se ne dira
 LIMIT_OTHER = 150 * 1024   # png/jpg do ove težine (i do 1600 px) se ne dira
-REF = re.compile(r'^(image\d*|cutout):[ \t]*["\']?(' + re.escape(PREFIX) + r'[^"\'\s]+)["\']?[ \t]*$', re.M)
+REF = re.compile(r'^(image\d*):[ \t]*["\']?(' + re.escape(PREFIX) + r'[^"\'\s]+)["\']?[ \t]*$', re.M)
 
 def disk(url):
     return os.path.join(PUBLIC, url.lstrip("/"))
@@ -77,7 +77,7 @@ def main():
         open(disk(new_url), "wb").write(data)
         for md in set(refs[url]):
             t = open(md, encoding="utf-8").read()
-            t = re.sub(r'(?m)^((?:image\d*|cutout):[ \t]*["\']?)' + re.escape(url) + r'(["\']?[ \t]*)$', lambda m: m.group(1) + new_url + m.group(2), t)
+            t = re.sub(r'(?m)^((?:image\d*):[ \t]*["\']?)' + re.escape(url) + r'(["\']?[ \t]*)$', lambda m: m.group(1) + new_url + m.group(2), t)
             open(md, "w", encoding="utf-8", newline="").write(t)
         still = any(url in open(md, encoding="utf-8").read() for md in mds)
         if not still: os.remove(p)
