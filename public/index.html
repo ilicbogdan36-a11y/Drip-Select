@@ -52,7 +52,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 .hero img{width:min(380px,80vw);height:auto}
 .hero h1{font-size:clamp(28px,6vw,56px);line-height:1.06;margin:6px auto 14px;max-width:900px;text-transform:uppercase;letter-spacing:-1px;text-wrap:balance}
 .hero p{max-width:520px;margin:0 auto 26px;color:var(--mut)}
-.w{max-width:1200px;margin:0 auto;padding:0 5vw}
+:root{--wm:1200px}
+.w{max-width:var(--wm);margin:0 auto;padding:0 5vw}
 .n{max-width:980px}
 .sh{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:1px solid var(--ln);padding-bottom:14px;margin:20px 0 26px;flex-wrap:wrap}
 .sh h2{margin:0;font-size:26px}.sh span{color:var(--mut);font-size:13px}
@@ -76,7 +77,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 .price{font:700 18px "Space Grotesk",sans-serif}
 .acts{display:flex;gap:8px;margin-top:10px}.acts .btn{flex:1;padding:11px 8px}
 .crumbs{font-size:12px;color:var(--mut);margin:22px 0}.crumbs a:hover{color:var(--tx)}.crumbs b{color:var(--tx);font-weight:600}
-.back{display:inline-block;margin:22px 0 16px;font-size:13px;color:var(--mut)}.back:hover{color:var(--tx)}
+.back{display:inline-block;margin:16px 0 10px;padding:6px 0;font-size:13px;color:var(--mut)}.back:hover{color:var(--tx)}
 .pg{display:grid;grid-template-columns:64px minmax(0,1fr) 360px;gap:18px;align-items:start}
 .fs{display:flex;flex-direction:column;gap:8px;position:relative}
 .fs button{position:relative;aspect-ratio:1;border:1px solid var(--ln);border-radius:10px;overflow:hidden;padding:0;cursor:pointer;background:none;opacity:.55}
@@ -100,7 +101,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 .dts i.on{width:18px;background:#fff}
 .zh{position:absolute;right:12px;bottom:12px;z-index:3;width:36px;height:36px;border-radius:50%;background:rgba(8,10,16,.55);border:1px solid #ffffff2e;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;display:grid;place-items:center;pointer-events:none}
 .zh svg{width:17px;height:17px}
-@media(hover:none){.gn{opacity:.92;width:36px;height:36px}.gn svg{width:18px;height:18px}.gn.pv{left:8px}.gn.nx{right:8px}}
+@media(hover:none){.gn{opacity:.92;width:40px;height:40px}.gn svg{width:18px;height:18px}.gn.pv{left:8px}.gn.nx{right:8px}}
 @media(prefers-reduced-motion:reduce){.trk{transition:none}}
 .dts,.zh{transition:opacity .2s}
 .lens{position:absolute;left:0;top:0;width:46px;height:46px;border-radius:50%;pointer-events:none;z-index:4;opacity:0;transform:translate3d(-80px,-80px,0);transition:opacity .25s;border:1.5px solid rgba(255,255,255,.9);box-shadow:0 0 0 1px rgba(26,140,255,.6),0 0 26px rgba(26,140,255,.5),inset 0 0 16px rgba(26,140,255,.22);background:radial-gradient(circle,rgba(26,140,255,.2),rgba(26,140,255,0) 70%)}
@@ -209,7 +210,7 @@ input:focus,textarea:focus{border-color:var(--ac)}
 .pay>div{flex:1;min-width:0}
 @media(max-width:800px){.ck .box{padding:20px 18px}#sum.box{position:static}.pay .tg{display:none}.pay .pi{width:38px;height:38px}.pay .pi svg{width:19px;height:19px}}
 .done{text-align:center;padding:60px 0 90px;max-width:480px;margin:0 auto}.done p{color:var(--mut)}
-footer{padding:52px max(5vw,calc(50% - 600px + 5vw)) 22px;border-top:1px solid var(--ln);color:var(--mut);font-size:14px;background:#000}
+footer{padding:52px max(5vw,calc(50% - var(--wm)/2 + 5vw)) 22px;border-top:1px solid var(--ln);color:var(--mut);font-size:14px;background:#000}
 .fw{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:36px}
 .fc h4{margin:0 0 14px;font:700 12px "Space Grotesk",sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx)}
 .fc a,.fc span{display:block;padding:5px 0}.fc a:hover{color:var(--ac)}.fc p{margin:14px 0 0;max-width:300px;line-height:1.55}
@@ -222,7 +223,7 @@ footer img{height:40px}.ml{color:inherit;text-decoration:underline;text-underlin
 @media(prefers-reduced-motion:reduce){.dr{animation:none}html{scroll-behavior:auto}}
 .dh{display:flex;justify-content:space-between;align-items:center}.dh h3{margin:0;font-size:20px}
 .x{background:none;border:0;color:var(--mut);font-size:28px;line-height:1;cursor:pointer}
-.rm{background:none;border:0;color:var(--mut);font-size:11px;text-decoration:underline;cursor:pointer;padding:0}
+.rm{background:none;border:0;color:var(--mut);font-size:11px;text-decoration:underline;cursor:pointer;padding:6px 4px}
 .lg{display:inline-flex;height:34px;border:1px solid #3a4255;border-radius:10px;overflow:hidden}.lg button{display:inline-flex;align-items:center;justify-content:center;height:100%;background:none;border:0;color:var(--mut);font:700 12px "Space Grotesk",sans-serif;letter-spacing:.5px;padding:0 11px;cursor:pointer;min-width:40px}.lg button.on{background:var(--ac);color:#fff}.lg button:not(.on):hover{color:var(--tx)}
 .ib{display:inline-flex;align-items:center;gap:7px;height:34px;background:none;border:1px solid #3a4255;color:var(--tx);border-radius:10px;padding:0 13px;cursor:pointer;font:600 13px Inter,sans-serif}
 .ib b{background:var(--ac);border-radius:99px;padding:1px 7px;font-size:11px}.ib svg{flex:none}
@@ -233,7 +234,7 @@ footer img{height:40px}.ml{color:inherit;text-decoration:underline;text-underlin
 nav a.hl{padding:5px 14px;border:1px solid var(--ac);border-radius:99px;color:#8cc3ff;background:#0b1830;box-shadow:0 0 0 3px #1a8cff22,0 0 20px #1a8cff66}
 nav a.hl:hover{color:#fff;box-shadow:0 0 0 3px #1a8cff44,0 0 28px #1a8cffaa}
 .feat{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);margin:0 0 56px;border:1px solid var(--ac);border-radius:20px;overflow:hidden;background:linear-gradient(120deg,#0b2447,#0a1226);box-shadow:0 0 0 4px #1a8cff1f,0 0 40px #1a8cff40}
-.fph{position:relative;display:block;aspect-ratio:1/1;background:#0a1226}
+.fph{position:relative;display:block;width:100%;aspect-ratio:1/1;align-self:stretch;background:#0a1226}
 .fin{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:18px;padding:34px 40px}
 .ftag{display:inline-flex;align-items:center;gap:8px;max-width:100%;font:700 13px "Space Grotesk",sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#fff;background:var(--ac);border:1px solid #6fb1ff;border-radius:99px;padding:8px 18px;box-shadow:0 0 0 3px #1a8cff33,0 0 24px #1a8cff88}.ftag::before{content:"";width:19px;height:19px;flex:none;background:linear-gradient(180deg,#fff 35%,#d6ebff);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z'/%3E%3C/svg%3E") center/contain no-repeat}
 .fin h2{font-size:clamp(26px,3vw,38px);line-height:1.1;margin:0}.fin h2 a:hover{color:var(--ac)}
@@ -268,6 +269,12 @@ header.sc{box-shadow:0 10px 34px rgba(0,0,0,.5);border-bottom-color:rgba(26,140,
 #cc.bump{animation:ccb .45s ease}
 @keyframes pgin{from{opacity:0}}
 #app.pgf{animation:pgin .35s ease}
+/* uređaji: veliki monitori (šira kolona), ležeći telefon (zaglavlje ne zauzima ekran), dodir, štampa */
+@media(min-width:1800px){html.wide{--wm:1480px}}
+@media(min-width:2400px){html.wide{--wm:1640px}}
+@media(max-height:500px) and (orientation:landscape) and (pointer:coarse){header{position:relative}html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 16px)}}
+@media(pointer:coarse){a,button,label,[role=button]{-webkit-tap-highlight-color:rgba(26,140,255,.16)}}
+@media print{.rv{opacity:1!important;translate:none!important}header{position:static}}
 @media(hover:hover){nav a:not(.hl){position:relative}nav a:not(.hl)::after{content:"";position:absolute;left:0;right:0;bottom:-5px;height:2px;border-radius:2px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .28s cubic-bezier(.2,.7,.2,1)}nav a:not(.hl):hover::after{transform:scaleX(1)}}
 .tools{display:flex;flex-direction:column;gap:14px;margin-bottom:24px}#q{max-width:420px}
 .fg{display:flex;align-items:center;gap:10px}.fl{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--mut);min-width:64px}
@@ -308,7 +315,7 @@ header.sc{box-shadow:0 10px 34px rgba(0,0,0,.5);border-bottom-color:rgba(26,140,
 @media(max-width:800px){input,textarea{font-size:16px}.fg{flex-direction:column;align-items:flex-start;gap:6px;width:100%}.ch{flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding-bottom:4px}.chip{white-space:nowrap;flex:none}header img{height:44px}}
 @media(max-width:800px){nav{flex-wrap:wrap;overflow:visible;white-space:normal;justify-content:center;gap:4px 16px;padding:6px 0}nav a{padding:6px 0}nav a.hl{padding:7px 14px}}
 .pg>*{min-width:0}@media(max-width:900px){.fs{overflow-x:auto;padding-bottom:4px}.fs button{flex:none}}
-@media(min-width:801px){header{padding-left:max(5vw,calc(50% - 600px + 5vw));padding-right:max(5vw,calc(50% - 600px + 5vw))}}
+@media(min-width:801px){header{padding-left:max(5vw,calc(50% - var(--wm)/2 + 5vw));padding-right:max(5vw,calc(50% - var(--wm)/2 + 5vw))}}
 @media(min-width:961px){header{display:grid;grid-template-columns:1fr auto 1fr;gap:20px}header>a{justify-self:start}.hr{justify-self:end}nav{white-space:nowrap}}
 @media(min-width:801px) and (max-width:960px){header{flex-wrap:wrap}nav{order:3;width:100%;justify-content:center;gap:4px 24px;padding:4px 0 2px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -366,7 +373,7 @@ small{font-size:11.5px}
  input,textarea,select{font-size:16px}
  .lg,.ib,.mb{height:40px}
  .mb{width:40px}
- .chip{min-height:38px}
+ .chip{min-height:40px}
  .x{width:40px;height:40px}
  a.ml{padding:11px 2px}
  .fc a,.fc span{padding:11px 0}
@@ -374,7 +381,7 @@ small{font-size:11.5px}
  nav a{padding-top:12px;padding-bottom:12px}
  .rm{padding:12px 8px}
  .back{padding:11px 0;margin:12px 0 4px}
- .crumbs a{padding:12px 3px}
+ .crumbs a{padding:12px 8px;margin:0 -5px}
 }
 header img,#fl,.hero img{aspect-ratio:640/398}
 
@@ -512,7 +519,7 @@ function isPg(k){return Object.prototype.hasOwnProperty.call(PG,k)}
 var PG={"proizvodi":"Proizvodi","kasa":"Kasa","gotovo":"Hvala na porudžbini","o-nama":"O nama","pitanja":"Česta pitanja","kontakt":"Kontakt","po-zelji":"Naruči po želji"};
 // opcije opisuju kuda ide PROIZVOD u okviru: "dole" spušta proizvod, pa se isečak slike pomera ka vrhu slike (0%)
 var FP={"sredina":"50% 50%","gore-malo":"50% 75%","gore":"50% 100%","dole-malo":"50% 25%","dole":"50% 0%","levo":"100% 50%","desno":"0% 50%"};
-function tile(p,k,lab){if(p.photos&&p.photos[k])return '<img class="tile" alt="" src="'+p.photos[k]+'" style="width:100%;height:100%;object-fit:cover;object-position:'+(p.pos||"50% 50%")+'">';var a=p.g.split(",");return '<div class="tile" style="background:linear-gradient('+(150+k*25)+'deg,'+a[0]+','+a[1]+')">'+(lab?'[ foto '+(k+1)+'/'+p.imgs+' ]':'')+'</div>'}
+function tile(p,k,lab,eager){if(p.photos&&p.photos[k])return '<img class="tile" alt="" decoding="async"'+(eager?' fetchpriority="high"':' loading="lazy"')+' src="'+p.photos[k]+'" style="width:100%;height:100%;object-fit:cover;object-position:'+(p.pos||"50% 50%")+'">';var a=p.g.split(",");return '<div class="tile" style="background:linear-gradient('+(150+k*25)+'deg,'+a[0]+','+a[1]+')">'+(lab?'[ foto '+(k+1)+'/'+p.imgs+' ]':'')+'</div>'}
 var ccLast=-1;
 function head(){var f=P.filter(function(p){return !sold(p.id)}).length,sh=$("#shp"),c=$("#cc"),n=S.cart.length;c.textContent=n;
   if(ccLast>=0&&ccLast!==n&&!RM&&CFG.REVEAL){c.classList.remove("bump");void c.offsetWidth;c.classList.add("bump")}ccLast=n;
@@ -522,7 +529,7 @@ function head(){var f=P.filter(function(p){return !sold(p.id)}).length,sh=$("#sh
 /* istaknut je samo proizvod koji je vlasnik označio i koji nije prodat; nema automatskog biranja (oznaka "Najbolje u kolekciji" je tvrdnja koju bira vlasnik) */
 function featP(){return P.filter(function(p){return p.feat&&!sold(p.id)})[0]||null}
 function featBlock(){var p=featP();if(!p)return "";var sp=[p.brand,p.size?"Vel. "+p.size:"",p.color,p.cond?"Stanje "+p.cond:""].filter(Boolean);
-  return '<section class="w"><div class="feat"><a class="fph" href="'+pl(p)+'" aria-label="'+esc(p.name)+'">'+tile(p,0)+'</a><div class="fin"><span class="ftag">Najbolje u kolekciji</span><h2><a href="'+pl(p)+'">'+esc(p.name)+'</a></h2><div class="fm">'+sp.map(function(x){return "<span>"+esc(x)+"</span>"}).join("")+'</div><div class="fpr">'+pw(p)+'</div><div class="fb"><a class="btn" href="'+pl(p)+'">Naruči</a><button class="btn ghost" data-add="'+p.id+'" type="button">Dodaj u korpu</button></div></div></div></section>'}
+  return '<section class="w"><div class="feat"><a class="fph" href="'+pl(p)+'" aria-label="'+esc(p.name)+'">'+tile(p,0,0,1)+'</a><div class="fin"><span class="ftag">Najbolje u kolekciji</span><h2><a href="'+pl(p)+'">'+esc(p.name)+'</a></h2><div class="fm">'+sp.map(function(x){return "<span>"+esc(x)+"</span>"}).join("")+'</div><div class="fpr">'+pw(p)+'</div><div class="fb"><a class="btn" href="'+pl(p)+'">Naruči</a><button class="btn ghost" data-add="'+p.id+'" type="button">Dodaj u korpu</button></div></div></div></section>'}
 /* Uvodna animacija: CFG.INTRO:1 = uključena (jednom po poseti); ?intro=1 uvek pušta (probni prikaz), ?intro=0 isključuje */
 function introMode(){var q=/[?&]intro=([01])/.exec(location.search),v=null;try{if(q)sessionStorage.setItem("dsiprev",q[1]);v=sessionStorage.getItem("dsiprev")}catch(e){}if(v==="0")return 0;if(v==="1")return 2;return +CFG.INTRO?1:0}
 function heroHx(m){
@@ -707,7 +714,7 @@ function prod(id){hzOff(true);
   var s=sold(id),n=Math.floor(parseFloat(p.cond)||0),mt="",th="",mo="",k;
   for(k=0;k<10;k++)mt+='<i class="'+(k<n?'f':'')+'"></i>';
   for(k=0;k<p.imgs;k++)th+='<button type="button" data-th="'+k+'" class="'+(k==ph?'on':'')+'" aria-label="Slika '+(k+1)+'">'+tile(p,k)+'</button>';
-  var one=p.imgs<2,sl="",dt="";for(k=0;k<p.imgs;k++){sl+='<div class="sl">'+tile(p,k,1)+'</div>';dt+='<i></i>'}
+  var one=p.imgs<2,sl="",dt="";for(k=0;k<p.imgs;k++){sl+='<div class="sl">'+tile(p,k,1,k<2)+'</div>';dt+='<i></i>'}
   similar(p).forEach(function(q){mo+='<a href="'+pl(q)+'"><div class="mt">'+tile(q,0)+'</div><small><span class="mn">'+esc(q.name)+'</span><b>'+fmt(q.price)+'</b>'+(was(q)?' <s class="was">'+fmt(was(q))+'</s>':'')+'</small></a>'});
   var sp=[["Brend",p.brand],["Kategorija",p.cat],["Veličina",p.size],["Boja",p.color],["Stanje",p.cond],["Autentičnost","100% original"]].filter(function(x){return x[1]}).map(function(x){return '<div><small>'+x[0]+'</small>'+(x[0]==="Boja"?'<i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>':'')+esc(x[1])+'</div>'}).join("");
   app.innerHTML='<div class="w"><a class="back" href="/proizvodi">← Nazad na proizvode</a>'+
@@ -1021,6 +1028,7 @@ function route(){
     else if(P.length){rs("/");h=""} /* proizvoda nema: početna */
     else h=lg?"":h}
   document.title=pp?pp.name+" – Drip Select":(pg&&pg!=="proizvodi"?PG[pg]+" – Drip Select":T0);
+  document.documentElement.classList.toggle("wide",!pp&&(!pg||pg==="proizvodi")); /* šira kolona samo za početnu i katalog */
   if(CFG.REVEAL&&!RM&&(pp||(pg&&pg!=="proizvodi"))){app.classList.remove("pgf");void app.offsetWidth;app.classList.add("pgf")}
   if(pp){ph=0;prod(pp.id);scrollTo(0,0)}
   else if(pg==="kasa"){kasa();scrollTo(0,0)}
