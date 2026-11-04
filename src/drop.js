@@ -10,7 +10,7 @@ import { parseProducts } from "./page.js";
 const SEG_NAME = "Drop pretplatnici";
 const STATE_PATH = "state/drop.json";
 const MAX_WAIT_MS = 2 * 3600 * 1000; // ako se lista stalno menja, ipak pošalji najkasnije posle 2 sata
-const MAX_SHOWN = 6;
+const MAX_SHOWN = 2; // u mejlu se vide najviše dva artikla, za ostalo se ide na sajt (mejl ostaje kratak i na telefonu)
 
 const site = (env) => String(env.SITE_URL || "https://dripselect.rs").replace(/\/+$/, "");
 const apiBase = (env) => String(env.RESEND_BASE || "https://api.resend.com").replace(/\/+$/, "");
@@ -86,6 +86,7 @@ async function writeState(g, sha, s, msg) {
 // ---------- mejl ----------
 const esc = (s) => String(s).replace(/[&<>"'{}]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;", "{": "&#123;", "}": "&#125;" }[c]));
 const fmtPrice = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " din.";
+const nProizvod = (n) => `${n} ${n % 10 === 1 && n % 100 !== 11 ? "proizvod" : "proizvoda"}`;
 const facts = (p) => [p.brand, p.size ? "Vel. " + p.size : "", p.color].filter(Boolean).join(" · ");
 
 export function buildDrop(items, env) {
@@ -105,14 +106,18 @@ export function buildDrop(items, env) {
     `<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px" bgcolor="#0f121a"><tr><td style="padding:28px 20px 6px">` +
     `<div style="font:700 13px Arial,sans-serif;letter-spacing:3px;color:#6fb1ff">DRIP SELECT</div>` +
     `<h1 style="margin:10px 0 6px;font:700 26px Arial,sans-serif;color:#f4f6fa">Novi drop je stigao</h1>` +
-    `<p style="margin:0 0 24px;font:15px Arial,sans-serif;color:#8b93a7">Upisao/la si mejl da ti javimo kad izađe nešto novo. Evo šta je dodato.</p>` +
+    `<p style="margin:0 0 24px;font:15px Arial,sans-serif;color:#8b93a7">Upisao/la si mejl da ti javimo kad izađe nešto novo. ${more > 0 ? "Evo nekoliko novih komada." : "Evo šta je dodato."}</p>` +
     `<table role="presentation" width="100%" cellpadding="0" cellspacing="0">${shown.map(card).join("")}</table>` +
-    (more > 0 ? `<p style="margin:0 0 20px;font:14px Arial,sans-serif;color:#8b93a7">Na sajtu ima još ${more} ${more === 1 ? "proizvod" : "proizvoda"}.</p>` : "") +
-    `<p style="margin:0 0 28px"><a href="${S}/proizvodi" style="color:#6fb1ff;font:600 15px Arial,sans-serif">Pogledaj sve proizvode →</a></p>` +
+    (more > 0
+      ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px"><tr><td bgcolor="#141a28" style="background:#141a28;border:1px solid #243255;border-radius:12px;padding:18px">` +
+        `<div style="font:700 17px Arial,sans-serif;color:#f4f6fa">Ovo je samo deo novog dropa</div>` +
+        `<div style="padding-top:6px;font:14px/1.5 Arial,sans-serif;color:#8b93a7">Na sajtu ima još ${nProizvod(more)}. Uđi na sajt i pogledaj sve.</div>` +
+        `<div style="padding-top:14px"><a href="${S}/proizvodi" style="display:inline-block;background:#1a8cff;color:#fff;text-decoration:none;font:700 14px Arial,sans-serif;padding:11px 22px;border-radius:10px">Pogledaj sve proizvode</a></div></td></tr></table>`
+      : `<p style="margin:0 0 28px"><a href="${S}/proizvodi" style="color:#6fb1ff;font:600 15px Arial,sans-serif">Pogledaj sve proizvode →</a></p>`) +
     `<p style="margin:0;padding:18px 0 26px;border-top:1px solid #1f2430;font:12px/1.6 Arial,sans-serif;color:#6b7387">Dobijaš ovaj mejl jer si se prijavio/la za obaveštenja o novom dropu na dripselect.rs. Pitanja: info@dripselect.rs. <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#8b93a7">Odjavi se</a></p>` +
     `</td></tr></table></td></tr></table></body></html>`;
   const text = `Novi drop je stigao\n\n` + shown.map((p) => `${p.name}${facts(p) ? "\n" + facts(p) : ""}\n${fmtPrice(p.price)}\n${S}/proizvod/${p.slug}\n`).join("\n") +
-    (more > 0 ? `\nNa sajtu ima još ${more}.\n` : "") + `\nSvi proizvodi: ${S}/proizvodi\n\nDobijaš ovaj mejl jer si se prijavio/la za obaveštenja o novom dropu. Odjava: {{{RESEND_UNSUBSCRIBE_URL}}}`;
+    (more > 0 ? `\nOvo je samo deo novog dropa. Na sajtu ima još ${nProizvod(more)}, uđi i pogledaj sve.\n` : "") + `\nSvi proizvodi: ${S}/proizvodi\n\nDobijaš ovaj mejl jer si se prijavio/la za obaveštenja o novom dropu. Odjava: {{{RESEND_UNSUBSCRIBE_URL}}}`;
   return { subject, html, text };
 }
 
