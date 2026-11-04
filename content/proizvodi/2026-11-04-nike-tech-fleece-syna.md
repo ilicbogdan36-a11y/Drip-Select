@@ -6,7 +6,7 @@ price: 14990
 old_price: 17000
 size: S
 color: Crna
-condition: 10
+condition: 9
 image: /images/products/1103-2-28-.webp
 image2: /images/products/1103-2-29-.webp
 image3: /images/products/1103-2-30-.webp
