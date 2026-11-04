@@ -41,7 +41,13 @@ collections:
         min: 0
         hint: "Ostavi prazno ako nema sniženja. Upiši samo cenu po kojoj je artikal stvarno bio na prodaji. Mora biti veća od cene iznad, a procenat sniženja se računa sam."
       - { label: "Veličina", name: "size", widget: "select", options: ["S", "M", "L", "XL", "XXL"] }
-      - { label: "Boja", name: "color", widget: "string" }
+      # boja se bira sa spiska (bez kucanja); filter na sajtu nijanse grupiše pod osnovnu boju (Svetlo Plava i Tamno Plava su pod "Plava")
+      - label: "Boja"
+        name: "color"
+        widget: "select"
+        required: true
+        hint: "Izaberi najbližu boju. Za komad u dve boje izaberi dvobojnu opciju (npr. Crno-Bela). Ako boje nema na spisku, javi da je dodamo."
+        options: ["Crna", "Bela", "Siva", "Svetlo Siva", "Tamno Siva", "Plava", "Svetlo Plava", "Tamno Plava", "Teget", "Crvena", "Bordo", "Zelena", "Maslinasta", "Žuta", "Narandžasta", "Roze", "Ljubičasta", "Braon", "Bež", "Krem", "Crno-Bela", "Crno-Siva", "Crno-Crvena", "Crno-Plava", "Crno-Zelena", "Siva-Plava", "Siva-Bela", "Plavo-Bela", "Crveno-Bela", "Zeleno-Bela", "Šareno"]
       - { label: "Stanje (1-10)", name: "condition", widget: "number", value_type: "float", min: 1, max: 10 }
       - { label: "Slika proizvoda (glavna)", name: "image", widget: "image" }
       - { label: "Slika 2 (opciono)", name: "image2", widget: "image", required: false }
