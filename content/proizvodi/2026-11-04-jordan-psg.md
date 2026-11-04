@@ -2,7 +2,7 @@
 title: Jordan PSG
 brand: Jordan
 category: Donji deo
-price: 5999
+price: 5990
 size: M
 color: Crna
 condition: 8
