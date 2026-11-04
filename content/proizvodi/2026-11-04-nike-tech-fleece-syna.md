@@ -1,6 +1,7 @@
 ---
 title: Nike Tech Fleece SYNA
 brand: Nike
+category: Gornji deo
 price: 14990
 old_price: 15990
 size: S
