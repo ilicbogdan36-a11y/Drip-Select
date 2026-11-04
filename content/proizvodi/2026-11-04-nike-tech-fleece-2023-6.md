@@ -1,6 +1,7 @@
 ---
 title: Nike Tech Fleece 2023
 brand: Nike
+category: Gornji deo
 price: 4590
 size: M
 color: Zelena
