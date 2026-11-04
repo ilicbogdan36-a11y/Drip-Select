@@ -11,7 +11,7 @@ image2: /images/products/1103-2-29-.png
 image3: /images/products/1103-2-30-.png
 image4: /images/products/1103-2-31-.png
 image5: /images/products/1103-2-32-.png
-focus: gore-malo
+focus: sredina
 featured: true
 sold: false
 ---
