@@ -1,0 +1,16 @@
+---
+title: Nike Tech Fleece 2023
+brand: Nike
+price: 6490
+size: M
+color: Crvena
+condition: 2
+image: /images/products/1103-2-45-.png
+image2: /images/products/1103-2-46-.png
+image3: /images/products/1103-2-47-.png
+image4: /images/products/1103-2-48-.png
+focus: sredina
+featured: false
+sold: false
+---
+U Dobrom Stanju
