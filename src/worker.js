@@ -6,6 +6,7 @@ import * as callback from "./api/callback.js";
 import * as status from "./api/status.js";
 import { productPage, ogImage, sitePage, sitemap, PAGE_TITLES } from "./page.js";
 import { checkDrop } from "./drop.js";
+import { productImage } from "./image.js";
 
 const ROUTES = { "/api/submit": submit, "/api/products": products, "/api/auth": auth, "/api/callback": callback, "/api/status": status };
 const json = (o, status) => new Response(JSON.stringify(o), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
@@ -43,6 +44,13 @@ export default {
       const waitUntil = (p) => ctx.waitUntil(p);
       try { return await h({ request, env, waitUntil }); }
       catch (e) { console.error("page", e); return env.ASSETS.fetch(new Request(url.origin + "/")); } // nikad prazna stranica: u najgorem slučaju običan sajt
+    }
+
+    // Slika proizvoda koju sajt još nema (admin je tek otpremio, objava u toku): uzima se sa GitHub-a (src/image.js)
+    if (url.pathname.startsWith("/images/products/")) {
+      if (request.method !== "GET" && request.method !== "HEAD") return json({ error: "method" }, 405);
+      try { return await productImage({ request, env, waitUntil: (p) => ctx.waitUntil(p) }); }
+      catch (e) { console.error("image", e); return json({ error: "not_found" }, 404); }
     }
 
     const mod = ROUTES[url.pathname];

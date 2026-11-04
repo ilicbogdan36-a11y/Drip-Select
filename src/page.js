@@ -6,6 +6,7 @@
 //                           Pokuša se smanjivanje preko Cloudflare Image Transformations; ako nije uključeno,
 //                           a original je mali, šalje se original; inače logo sajta (pregled nikad ne ostane bez slike).
 import { loadBody } from "./api/products.js";
+import { productImage } from "./image.js";
 
 const MAX_IMG = 290 * 1024; // iznad ovoga neke mreže ne prikazuju sliku
 const OK_TYPES = /^image\/(jpeg|png|webp)/i;
@@ -227,7 +228,8 @@ export async function ogImage({ request, env, waitUntil }) {
 
   // 2) original, ako je dovoljno mali
   try {
-    const o = src.startsWith(url.origin) ? await env.ASSETS.fetch(new Request(src)) : await fetch(src); // slike sajta iz public/, tuđe adrese običnim fetch-om
+    let o = src.startsWith(url.origin) ? await env.ASSETS.fetch(new Request(src)) : await fetch(src); // slike sajta iz public/, tuđe adrese običnim fetch-om
+    if (!o.ok && src.startsWith(url.origin + "/images/products/")) o = await productImage({ request: new Request(src), env, waitUntil }); // nova slika, objava sajta još traje
     const ty = o.headers.get("content-type") || "";
     if (o.ok && OK_TYPES.test(ty)) {
       const buf = await o.arrayBuffer();
