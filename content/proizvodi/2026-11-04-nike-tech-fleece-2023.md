@@ -5,10 +5,10 @@ price: 7990
 size: S
 color: Tamno Plava
 condition: 9
-image: /images/products/1103-2-.png
-image2: /images/products/1103-2-1-.png
-image3: /images/products/1103-2-2-.png
-image4: /images/products/1103-2-3-.png
+image: /images/products/1103-2-.webp
+image2: /images/products/1103-2-1-.webp
+image3: /images/products/1103-2-2-.webp
+image4: /images/products/1103-2-3-.webp
 focus: sredina
 featured: false
 sold: false
