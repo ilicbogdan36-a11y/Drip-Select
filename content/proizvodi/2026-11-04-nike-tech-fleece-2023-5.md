@@ -5,10 +5,10 @@ price: 6999
 size: S
 color: Plava
 condition: 9
-image: /images/products/1103-2-24-.png
-image2: /images/products/1103-2-25-.png
-image3: /images/products/1103-2-26-.png
-image4: /images/products/1103-2-27-.png
+image: /images/products/1103-2-24-.webp
+image2: /images/products/1103-2-25-.webp
+image3: /images/products/1103-2-26-.webp
+image4: /images/products/1103-2-27-.webp
 focus: sredina
 featured: false
 sold: false
