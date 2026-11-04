@@ -108,6 +108,14 @@
     "Boja, model, stanje, rok...": "Color, model, condition, deadline...",
     "Pošalji zahtev": "Send request", "Zahtev je poslat": "Request sent",
     "Javljamo ti se sa cenom čim nađemo proizvod.": "We'll get back to you with a price as soon as we find the item.",
+    "Rok isporuke": "Delivery time", "Čekanje na paket može da traje i do mesec dana.": "Waiting for your package can take up to a month.",
+    "Za sve informacije piši nam na Instagramu": "For any information, message us on Instagram", "Tamo smo uvek dostupni.": "We're always available there.",
+    "Ako ne možeš preko Instagrama, piši nam na mejl:": "If you can't use Instagram, email us:", "Na mejl odgovor ne stiže tako brzo.": "Replies by email are not as quick.",
+    "Za sve informacije piši nam na mejl:": "For any information, email us:", "Za sve informacije piši nam na mejl.": "For any information, email us.",
+    "Za sve informacije piši nam na Instagramu, tamo smo uvek dostupni.": "For any information, message us on Instagram, we're always available there.",
+    "Koliko traje naručivanje po želji?": "How long does ordering by request take?",
+    "Čekanje na paket može da traje i do mesec dana. Za sve informacije piši nam na Instagramu, tamo smo uvek dostupni.": "Waiting for your package can take up to a month. For any information, message us on Instagram, we're always available there.",
+    "Čekanje na paket može da traje i do mesec dana. Za sve informacije piši nam na mejl.": "Waiting for your package can take up to a month. For any information, email us.",
     // naslov i opis stranice
     "Drip Select – Sve na jednom mestu": "Drip Select – Everything in one place"
   };
