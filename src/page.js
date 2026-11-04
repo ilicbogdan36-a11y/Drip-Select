@@ -54,6 +54,7 @@ export function parseProducts(items) {
       brand: d.brand || "",
       size: d.size || "",
       color: d.color || "",
+      category: /^gornji/i.test(String(d.category || "").trim()) ? "Gornji deo" : /^donji/i.test(String(d.category || "").trim()) ? "Donji deo" : "",
       price: parseFloat(d.price) || 0,
       photo: photos[0] || "",
       photos,
@@ -92,6 +93,7 @@ export function productLd(p, origin) {
   if (p.photos && p.photos.length) o.image = p.photos.map(abs);
   if (p.brand) o.brand = { "@type": "Brand", name: p.brand };
   if (p.color) o.color = p.color;
+  if (p.category) o.category = p.category;
   if (p.size) o.size = p.size;
   if (p.price > 0) o.offers = { "@type": "Offer", url, priceCurrency: "RSD", price: p.price, availability: "https://schema.org/" + (p.sold ? "OutOfStock" : "InStock") };
   return o;

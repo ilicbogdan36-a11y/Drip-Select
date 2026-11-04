@@ -722,7 +722,7 @@ function prod(id){hzOff(true);
   '<div class="gal"><div class="big" id="big" data-zoom role="button" tabindex="0" aria-label="Uvećaj sliku"><div class="trk" id="trk">'+sl+'</div><span class="lens" aria-hidden="true"></span></div><span class="mm" aria-hidden="true"><i></i></span>'+
   (one?'':'<button type="button" class="gn pv" data-g="-1" aria-label="Prethodna">'+ico('chl')+'</button><button type="button" class="gn nx" data-g="1" aria-label="Sledeća">'+ico('chr')+'</button><div class="dts" aria-hidden="true">'+dt+'</div>')+
   '<span class="zh" aria-hidden="true">'+ico('zin')+'</span></div>'+
-  '<aside class="panel"><span class="lbl">'+esc(p.brand)+' · '+esc(p.cat)+'</span><h1>'+esc(p.name)+'</h1>'+pw(p)+
+  '<aside class="panel"><span class="lbl">'+[p.brand,p.cat].filter(Boolean).map(esc).join(' · ')+'</span><h1>'+esc(p.name)+'</h1>'+pw(p)+
   '<div class="last'+(s?' no':'')+'">'+(s?'Ovaj proizvod je već prodat.':'Dostupan je samo jedan primerak.')+'</div>'+
   (p.cond?'<div class="opt">Stanje <b>'+esc(p.cond.split(" ")[0])+'</b></div><div class="meter">'+mt+'</div>':'')+
   '<div class="opt">Veličina <b>'+esc(p.size)+'</b></div><div class="opt">Boja <b><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</b></div>'+
@@ -856,8 +856,12 @@ document.addEventListener("submit",function(e){if(e.target.id!=="wi")return;e.pr
   post("wish",{ime:w("wn"),telefon:w("wt"),email:w("we"),sta_trazi:w("ww"),velicina:w("wz"),budzet:w("wb"),napomena:w("wm"),vreme:new Date().toLocaleString("sr-RS")},fl)
   .then(function(){bx.innerHTML='<div class="done" style="padding:30px 0"><div class="ic">'+ico('send')+'</div><h3>Zahtev je poslat</h3><p>Javljamo ti se sa cenom čim nađemo proizvod.'+(LIVE?'':' (Simulacija: na pravom sajtu ti stiže na mejl.)')+'</p></div>'})
   .catch(function(er){bx.insertAdjacentHTML("beforeend",'<p class="err">'+(errMsg(er)||'Slanje nije uspelo, pokušaj ponovo.')+'</p>')})});
-var F={q:"",b:"",s:"",c:""};
-function uniq(k){var a=[];P.forEach(function(p){if(a.indexOf(p[k])<0)a.push(p[k])});return a.sort()}
+var F={q:"",b:"",s:"",c:"",d:""};
+/* gornji/donji deo: vrednost iz admina svodi se na dve dozvoljene (veličina slova i razmaci ne smeju da naprave treći filter) */
+function catOf(v){v=String(v||"").trim().toLowerCase();return /^gornji/.test(v)?"Gornji deo":/^donji/.test(v)?"Donji deo":""}
+var ORD={cat:["Gornji deo","Donji deo"],size:["XS","S","M","L","XL","XXL","XXXL"]};
+function uniq(k){var a=[];P.forEach(function(p){if(p[k]&&a.indexOf(p[k])<0)a.push(p[k])});var o=ORD[k];
+  return a.sort(function(x,y){if(o){var i=o.indexOf(x),j=o.indexOf(y);if(i>-1||j>-1)return(i<0?99:i)-(j<0?99:j)}return x<y?-1:x>y?1:0})}
 var CN=[["crn","#15171c"],["bel","#f2f2f2"],["siv","#8a8f98"],["teget","#14233f"],["plav","#1a6fe0"],["crven","#d32f2f"],["bordo","#6d1a2a"],["zelen","#2e8b57"],["maslin","#4b5d45"],["zut","#f2c94c"],["narandz","#f2994a"],["roz","#f48fb1"],["ljubic","#7e57c2"],["braon","#6d4c41"],["smed","#6d4c41"],["bez","#d9c8a9"],["krem","#efe6d0"],["zlat","#d4af37"],["srebr","#b8bcc4"],["khaki","#a39d6b"],["haki","#a39d6b"]];
 function mixHex(a,b,t){var p=function(h,i){return parseInt(h.substr(1+i*2,2),16)};return "#"+[0,1,2].map(function(i){return ("0"+Math.round(p(a,i)*(1-t)+p(b,i)*t).toString(16)).slice(-2)}).join("")}
 function oneColor(w){var m=w.match(/^(svetlo|tamno)?(.*)$/),k=m[2],mod=m[1],i,h;for(i=0;i<CN.length;i++)if(k.indexOf(CN[i][0])===0){h=CN[i][1];return mod==="svetlo"?mixHex(h,"#ffffff",.4):mod==="tamno"?mixHex(h,"#000000",.4):h}return null}
@@ -866,11 +870,11 @@ function colorBg(c,hex){if(hex&&String(hex).toLowerCase()!=="#4a5160")return hex
   ps=n.split(/[\s\-\/,+]+/).filter(function(w){return w&&w!=="i"}).map(oneColor).filter(Boolean);
   if(!ps.length)return hex||"#4a5160";
   return ps.length===1?ps[0]:"linear-gradient(135deg,"+ps[0]+" 50%,"+ps[1]+" 50%)"}
-function chips(k,l,v){return '<div class="fg"><span class="fl">'+l+'</span><div class="ch">'+uniq(k).map(function(x){var d=k==="color"?'<i class="dot" style="background:'+colorBg(x,P.filter(function(p){return p.color===x})[0].hex)+'"></i>':'';return '<button type="button" class="chip'+(F[v]===x?' on':'')+'" data-f="'+v+'" data-v="'+esc(x)+'">'+d+esc(x)+'</button>'}).join("")+'</div></div>'}
+function chips(k,l,v){if(!uniq(k).length)return"";return '<div class="fg"><span class="fl">'+l+'</span><div class="ch">'+uniq(k).map(function(x){var d=k==="color"?'<i class="dot" style="background:'+colorBg(x,P.filter(function(p){return p.color===x})[0].hex)+'"></i>':'';return '<button type="button" class="chip'+(F[v]===x?' on':'')+'" data-f="'+v+'" data-v="'+esc(x)+'">'+d+esc(x)+'</button>'}).join("")+'</div></div>'}
 function drawGrid(an){
   var q=F.q.trim().toLowerCase(),h="";
-  var list=P.filter(function(p){return(!q||(p.name+" "+p.brand+" "+p.color+" "+p.cat).toLowerCase().indexOf(q)>-1)&&(!F.b||p.brand===F.b)&&(!F.s||p.size===F.s)&&(!F.c||p.color===F.c)}).sort(function(a,b){return sold(a.id)-sold(b.id)});
-  $("#flt").innerHTML=chips("brand","Brend","b")+chips("size","Veličina","s")+chips("color","Boja","c");
+  var list=P.filter(function(p){return(!q||(p.name+" "+p.brand+" "+p.color+" "+p.cat).toLowerCase().indexOf(q)>-1)&&(!F.d||p.cat===F.d)&&(!F.b||p.brand===F.b)&&(!F.s||p.size===F.s)&&(!F.c||p.color===F.c)}).sort(function(a,b){return sold(a.id)-sold(b.id)});
+  $("#flt").innerHTML=chips("cat","Kategorija","d")+chips("brand","Brend","b")+chips("size","Veličina","s")+chips("color","Boja","c");
   $("#cnt").textContent=list.length+" / "+P.length+" proizvoda";
   list.forEach(function(p,i){var s=sold(p.id);
     h+='<article class="card'+(s?' sold':'')+'" style="--i:'+i+'"><a class="ph" href="'+pl(p)+'">'+tile(p,0)+'<div class="tags"><span class="tag">'+esc(p.brand)+'</span><span class="tag sz">VEL: '+esc(p.size)+'</span></div>'+(s?'<div class="stamp">SOLD OUT</div>':offb(p))+'</a>'+
@@ -940,7 +944,7 @@ function mkSlug(f,u){var s=String(f||"").replace(/\.md$/i,"").replace(/^\d{4}-\d
 function pl(p){return "/proizvod/"+(p.slug||p.id)}
 function pBySlug(s){try{s=decodeURIComponent(s)}catch(e){}return P.filter(function(p){return p.slug===s})[0]||P.filter(function(p){return String(p.id)===s})[0]}
 function readList(a){P=[];SS=[];var used={};a.forEach(function(d){if(!d||!d.title)return;var id=hid(d.file),ph=[d.image,d.image2,d.image3,d.image4,d.image5,d.image6,d.image7].filter(Boolean).map(function(x){return /^(https?:)?\/\//.test(x)||x[0]==="/"?x:"/"+x});
-      P.push({id:id,file:d.file,brand:d.brand||"",cat:d.category||"Odeća",size:d.size||"",color:d.color||"",hex:d.hex||"#4a5160",name:d.title,cond:(/^\d+([.,]\d+)?$/.test(String(d.condition||"").trim())?String(d.condition).trim().replace(",",".")+"/10":(d.condition||"")),desc:d.description||d.body||"",price:parseFloat(d.price)||0,old:parseFloat(d.old_price)||0,feat:/^(true|da|yes|1)$/i.test(String(d.featured||"")),slug:mkSlug(d.file,used),imgs:ph.length||3,g:"#2a303b,#14161b",photos:ph,pos:FP[String(d.focus||"").trim().toLowerCase()]||"50% 50%"});
+      P.push({id:id,file:d.file,brand:d.brand||"",cat:catOf(d.category),size:d.size||"",color:d.color||"",hex:d.hex||"#4a5160",name:d.title,cond:(/^\d+([.,]\d+)?$/.test(String(d.condition||"").trim())?String(d.condition).trim().replace(",",".")+"/10":(d.condition||"")),desc:d.description||d.body||"",price:parseFloat(d.price)||0,old:parseFloat(d.old_price)||0,feat:/^(true|da|yes|1)$/i.test(String(d.featured||"")),slug:mkSlug(d.file,used),imgs:ph.length||3,g:"#2a303b,#14161b",photos:ph,pos:FP[String(d.focus||"").trim().toLowerCase()]||"50% 50%"});
       if(/^(true|da|yes|1)$/i.test(d.sold||""))SS.push(id)});if(LIVE){sync();var nw=Date.now();S.sold=S.sold.filter(function(i){return SS.indexOf(i)<0&&S.st&&S.st[i]>nw-20000});save()}}
 function viaApi(){return fetch(CFG.API+"/products").then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(j){return j.items.map(function(x){var d=fm(x.text);d.file=x.file;return d})})}
 function viaGithub(){var G=CFG.GH;
@@ -973,7 +977,7 @@ document.addEventListener("click",function(e){
   if(b=t.closest("[data-sold]")){sync();var i1=+b.getAttribute("data-sold"),x1=S.sold.indexOf(i1);if(x1>-1)S.sold.splice(x1,1);else S.sold.push(i1);save();head();return admin()}
   if(b=t.closest("[data-del]")){var d1=+b.getAttribute("data-del"),ne=function(i){return i!==d1};P=P.filter(function(p){return ne(p.id)});S.sold=S.sold.filter(ne);S.cart=S.cart.filter(ne);co=co.filter(ne);save();head();return admin()}
   if(b=t.closest("[data-f]")){var k1=b.getAttribute("data-f"),v1=b.getAttribute("data-v");F[k1]=F[k1]===v1?"":v1;return drawGrid(0)}
-  if(t.closest("[data-fx]")){F={q:"",b:"",s:"",c:""};var qi=$("#q");if(qi)qi.value="";return drawGrid(0)}
+  if(t.closest("[data-fx]")){F={q:"",b:"",s:"",c:"",d:""};var qi=$("#q");if(qi)qi.value="";return drawGrid(0)}
   if(b=t.closest("[data-rm]")){S.cart=S.cart.filter(function(i){return i!=b.getAttribute("data-rm")});save();head();return cart()}
   if(t.closest("[data-tokasa]")){co=S.cart.slice();closeCart();return go("kasa")}
   if(t.closest("[data-cart]")){e.preventDefault();return openCart()}
@@ -1048,7 +1052,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=24";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=25";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();

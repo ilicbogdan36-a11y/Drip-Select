@@ -24,6 +24,14 @@ collections:
     fields:
       - { label: "Naziv artikla", name: "title", widget: "string" }
       - { label: "Brend", name: "brand", widget: "select", options: ["Nike", "Jordan", "The North Face", "Napapijri", "Hugo", "Boss", "Hugo Boss", "Tommy Hilfiger", "Ralph Lauren", "New Balance", "Ostalo"] }
+      # gornji/donji deo: koristi se za filter na sajtu i prikazuje se na stranici proizvoda
+      - label: "Gornji ili donji deo"
+        name: "category"
+        widget: "select"
+        default: "Gornji deo"
+        required: false
+        hint: "Gornji deo: duks, majica, jakna, dres, košulja. Donji deo: pantalone, šorc, donji deo trenerke."
+        options: ["Gornji deo", "Donji deo"]
       - { label: "Cena (RSD)", name: "price", widget: "number" }
       # opciono: kad je upisana, sajt prikaže precrtanu staru cenu i procenat sniženja
       - label: "Stara cena (RSD) - samo ako je zaista bilo sniženje"

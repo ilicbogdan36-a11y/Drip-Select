@@ -49,7 +49,7 @@
     "Povrat 14 dana": "14-day returns", "Bez pitanja": "No questions asked",
     "Opis": "Description", "Detalji proizvoda": "Product details", "Slični proizvodi": "Similar products",
     "Trenutno nema drugih proizvoda.": "No other products right now.",
-    "Kategorija": "Category", "Autentičnost": "Authenticity",
+    "Kategorija": "Category", "Gornji deo": "Tops", "Donji deo": "Bottoms", "Autentičnost": "Authenticity",
     "Uvećaj sliku": "Enlarge image", "Umanji": "Zoom out", "Uvećaj": "Zoom in", "Prilagodi ekranu": "Fit to screen", "Galerija": "Gallery", "Prethodna": "Previous", "Sledeća": "Next", "Zatvori": "Close",
     "Stara cena": "Old price",
     "Odeća": "Clothing", "Jakne": "Jackets", "Duksevi": "Hoodies", "Obuća": "Footwear", "Majice": "T-shirts",
