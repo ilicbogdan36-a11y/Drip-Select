@@ -77,7 +77,7 @@ function setMeta(head, attr, name, content) {
 
 export function describe(p) {
   if (p.sold) return "Ovaj proizvod je već prodat.";
-  const facts = [p.brand, p.size ? "Vel. " + p.size : "", p.color].filter(Boolean).join(" · ");
+  const facts = [p.brand, p.category, p.size ? "Vel. " + p.size : "", p.color].filter(Boolean).join(" · ");
   return (facts ? facts + " – " : "") + fmtPrice(p.price);
 }
 

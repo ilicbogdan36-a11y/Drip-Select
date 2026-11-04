@@ -65,9 +65,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 .ic{width:72px;height:72px;margin:0 auto 16px;display:grid;place-items:center;border-radius:50%;background:#0b1830;border:1px solid #1d3a63;color:#6fb1ff;box-shadow:0 0 0 5px #1a8cff14,0 0 30px #1a8cff40}.ic svg{width:34px;height:34px}
 .ok svg{width:18px;height:18px;vertical-align:-3px;margin-right:6px;color:var(--ok)}
 .card.sold .tile{filter:grayscale(1) blur(3px) brightness(.5)}
-.tags{position:absolute;top:12px;left:12px;display:flex;gap:6px;z-index:2}
+.tags{position:absolute;top:12px;left:12px;display:flex;flex-wrap:wrap;gap:6px;max-width:calc(100% - 84px);z-index:2}
 .tag{font-size:11px;padding:4px 9px;border-radius:6px;background:#000c;border:1px solid #ffffff1f}
 .tag.sz{color:#6fb1ff;border-color:#1d3a63;background:#0b1830}
+.tag.cg{text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
 .stamp{position:absolute;z-index:2;inset:0;margin:auto;width:max-content;height:max-content;color:var(--red);border:2px solid var(--red);background:#ff453a22;padding:6px 16px;border-radius:6px;font:700 20px "Space Grotesk",sans-serif;letter-spacing:2px;transform:rotate(-6deg)}
 .info{padding:16px;display:flex;flex-direction:column;gap:6px;flex:1}
 .info h3{margin:0;font-size:15px;line-height:1.3}
@@ -528,7 +529,7 @@ function head(){var f=P.filter(function(p){return !sold(p.id)}).length,sh=$("#sh
 // istaknut artikal: označen u adminu, a ako nije (ili je prodat) najnoviji koji je na stanju
 /* istaknut je samo proizvod koji je vlasnik označio i koji nije prodat; nema automatskog biranja (oznaka "Najbolje u kolekciji" je tvrdnja koju bira vlasnik) */
 function featP(){return P.filter(function(p){return p.feat&&!sold(p.id)})[0]||null}
-function featBlock(){var p=featP();if(!p)return "";var sp=[p.brand,p.size?"Vel. "+p.size:"",p.color,p.cond?"Stanje "+p.cond:""].filter(Boolean);
+function featBlock(){var p=featP();if(!p)return "";var sp=[p.brand,p.cat,p.size?"Vel. "+p.size:"",p.color,p.cond?"Stanje "+p.cond:""].filter(Boolean);
   return '<section class="w"><div class="feat"><a class="fph" href="'+pl(p)+'" aria-label="'+esc(p.name)+'">'+tile(p,0,0,1)+'</a><div class="fin"><span class="ftag">Najbolje u kolekciji</span><h2><a href="'+pl(p)+'">'+esc(p.name)+'</a></h2><div class="fm">'+sp.map(function(x){return "<span>"+esc(x)+"</span>"}).join("")+'</div><div class="fpr">'+pw(p)+'</div><div class="fb"><a class="btn" href="'+pl(p)+'">Naruči</a><button class="btn ghost" data-add="'+p.id+'" type="button">Dodaj u korpu</button></div></div></div></section>'}
 /* Uvodna animacija: CFG.INTRO:1 = uključena (jednom po poseti); ?intro=1 uvek pušta (probni prikaz), ?intro=0 isključuje */
 function introMode(){var q=/[?&]intro=([01])/.exec(location.search),v=null;try{if(q)sessionStorage.setItem("dsiprev",q[1]);v=sessionStorage.getItem("dsiprev")}catch(e){}if(v==="0")return 0;if(v==="1")return 2;return +CFG.INTRO?1:0}
@@ -724,7 +725,7 @@ function prod(id){hzOff(true);
   '<span class="zh" aria-hidden="true">'+ico('zin')+'</span></div>'+
   '<aside class="panel"><span class="lbl">'+[p.brand,p.cat].filter(Boolean).map(esc).join(' · ')+'</span><h1>'+esc(p.name)+'</h1>'+pw(p)+
   '<div class="last'+(s?' no':'')+'">'+(s?'Ovaj proizvod je već prodat.':'Dostupan je samo jedan primerak.')+'</div>'+
-  (p.cond?'<div class="opt">Stanje <b>'+esc(p.cond.split(" ")[0])+'</b></div><div class="meter">'+mt+'</div>':'')+
+  (p.cat?'<div class="opt">Kategorija <b>'+esc(p.cat)+'</b></div>':'')+(p.cond?'<div class="opt">Stanje <b>'+esc(p.cond.split(" ")[0])+'</b></div><div class="meter">'+mt+'</div>':'')+
   '<div class="opt">Veličina <b>'+esc(p.size)+'</b></div><div class="opt">Boja <b><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</b></div>'+
   '<div class="bb">'+(s?'<button class="btn full" disabled>Nije na stanju</button>':'<button class="btn ghost" data-add="'+id+'">Dodaj u korpu</button><button class="btn" data-buy="'+id+'">Naruči odmah</button>')+'</div>'+(s?'':shipProd(id))+
   '<div class="row3"><div><b>'+ico('truck')+'</b>Dostava<small>'+(+CFG.SHIP>0?fmt(+CFG.SHIP):'Dogovaramo pri potvrdi')+'</small></div><div><b>'+ico('cash')+'</b>Pouzećem<small>Plaćaš kuriru</small></div><div><b>'+ico('back')+'</b>Povrat 14 dana<small>Bez pitanja</small></div></div></aside></div>'+
@@ -749,7 +750,7 @@ function igBox(t,sub){if(!igOn())return "";return '<a class="igc" '+igAt()+' ari
 function shipProd(id){var n=S.cart.filter(function(x){return x!==+id&&!sold(x)}).length+1;return '<div id="shp">'+shipBox(n,"")+'</div>'}
 function sum(){
   var t=0,h='';
-  co.forEach(function(i){var p=get(i);t+=p.price;h+='<div class="li"><span class="mini">'+tile(p,0)+'</span><div class="lt"><span class="ln">'+esc(p.name)+'</span><small class="lm">'+(p.size?'<span class="sz">'+esc(p.size)+'</span>':'')+(p.color?'<span class="cl"><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</span>':'')+'</small></div><b>'+fmt(p.price)+'</b></div>'});
+  co.forEach(function(i){var p=get(i);t+=p.price;h+='<div class="li"><span class="mini">'+tile(p,0)+'</span><div class="lt"><span class="ln">'+esc(p.name)+'</span><small class="lm">'+(p.cat?'<span class="cl">'+esc(p.cat)+'</span>':'')+(p.size?'<span class="sz">'+esc(p.size)+'</span>':'')+(p.color?'<span class="cl"><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</span>':'')+'</small></div><b>'+fmt(p.price)+'</b></div>'});
   if(!co.length)return '<h3>Tvoja narudžbina</h3><p class="cond">Nema proizvoda u narudžbini.</p><a class="btn full" href="/proizvodi">Nazad na proizvode</a>';
   var ab=!inRS(),sp=shipOf(co.length,t,ab);
   return '<h3>Tvoja narudžbina</h3>'+h+shipBox(co.length,"kasa",ab)+'<div class="tr"><span>Dostava</span><b class="'+(sp.fr?'fr':'')+'">'+sp.txt+'</b></div><div class="tr t"><span>Ukupno</span><b>'+fmt(sp.tot)+'</b></div>'+
@@ -877,7 +878,7 @@ function drawGrid(an){
   $("#flt").innerHTML=chips("cat","Kategorija","d")+chips("brand","Brend","b")+chips("size","Veličina","s")+chips("color","Boja","c");
   $("#cnt").textContent=list.length+" / "+P.length+" proizvoda";
   list.forEach(function(p,i){var s=sold(p.id);
-    h+='<article class="card'+(s?' sold':'')+'" style="--i:'+i+'"><a class="ph" href="'+pl(p)+'">'+tile(p,0)+'<div class="tags"><span class="tag">'+esc(p.brand)+'</span><span class="tag sz">VEL: '+esc(p.size)+'</span></div>'+(s?'<div class="stamp">SOLD OUT</div>':offb(p))+'</a>'+
+    h+='<article class="card'+(s?' sold':'')+'" style="--i:'+i+'"><a class="ph" href="'+pl(p)+'">'+tile(p,0)+'<div class="tags"><span class="tag">'+esc(p.brand)+'</span><span class="tag sz">VEL: '+esc(p.size)+'</span>'+(p.cat?'<span class="tag cg">'+esc(p.cat)+'</span>':'')+'</div>'+(s?'<div class="stamp">SOLD OUT</div>':offb(p))+'</a>'+
     '<div class="info"><h3><a href="'+pl(p)+'">'+esc(p.name)+'</a></h3>'+(p.cond?'<p class="cond">Stanje: '+esc(p.cond)+'</p>':'')+'<div class="buy"><small>Cena</small>'+pw(s?{price:p.price}:p,1)+'<div class="acts">'+(s?'<button class="btn full" disabled>Rasprodato</button>':'<a class="btn" href="'+pl(p)+'">Naruči</a><button class="btn ghost" data-add="'+p.id+'">Dodaj u korpu</button>')+'</div></div></div></article>'});
   $("#grid").className="grid"+(an?"":" na");
   $("#grid").innerHTML=h||'<div class="none">Nema rezultata. <button class="rm" data-fx type="button">Poništi filtere</button></div>';
@@ -954,7 +955,7 @@ function viaGithub(){var G=CFG.GH;
 function loadSheet(){return(CFG.API?viaApi().catch(viaGithub):viaGithub()).then(readList)}
 function cart(){
   var t=0,h='';
-  S.cart.forEach(function(i){var p=get(i);t+=p.price;h+='<div class="li"><span class="mini">'+tile(p,0)+'</span><div>'+esc(p.name)+'<small>'+esc(p.size)+' · '+fmt(p.price)+'</small><button class="rm" data-rm="'+i+'">Ukloni</button></div></div>'});
+  S.cart.forEach(function(i){var p=get(i);t+=p.price;h+='<div class="li"><span class="mini">'+tile(p,0)+'</span><div>'+esc(p.name)+'<small>'+(p.cat?'<span>'+esc(p.cat)+'</span> · ':'')+esc(p.size)+' · '+fmt(p.price)+'</small><button class="rm" data-rm="'+i+'">Ukloni</button></div></div>'});
   $("#dr").innerHTML='<div class="dh"><h3>Korpa ('+S.cart.length+')</h3><button class="x" data-close aria-label="Zatvori">×</button></div>'+
   (S.cart.length?h+shipBox(S.cart.length,"cart")+'<div class="tr t"><span>Subtotal</span><b>'+fmt(t)+'</b></div><button class="btn full" data-tokasa>Na kasu</button>':'<p class="cond" style="margin:24px 0">Korpa je prazna.</p><button class="btn full" data-close>Nastavi kupovinu</button>');
 }
