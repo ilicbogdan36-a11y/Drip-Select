@@ -1,6 +1,7 @@
 // Cloudflare Worker (src/worker.js): POST /api/submit
-// Prima porudžbine i ostale forme sa sajta, šalje mejl vlasniku (Resend) i, za porudžbinu,
-// odmah "rezerviše" proizvod (sold: true u GitHub fajlu) tako da ga niko drugi ne može poručiti.
+// Prima porudžbine i ostale forme sa sajta i šalje mejl vlasniku (Resend).
+// Porudžbina NE označava proizvod kao prodat: mejl vlasniku nosi dugmad Prihvati / Odbij (src/api/odluka.js),
+// a tek prihvatanje upisuje sold: true u GitHub fajl. Dok se ne odluči, na sajtu se ništa ne menja.
 //
 // Telo (JSON): { form: "porudzbina"|"prijava"|"zelja"|"kontakt", data: {...}, files: [{filename, content(base64)}], bot: "", t: ms }
 //   bot = skriveno polje koje čovek ne vidi (botovi ga popune), t = koliko je ms prošlo od prikaza forme.
@@ -14,6 +15,7 @@
 //   opciono: GH_BRANCH (main), GH_FOLDER (content/proizvodi), MAIL_FROM
 
 import { addSubscriber } from "../drop.js";
+import { signDecision, DECISION_DAYS } from "../decision.js";
 
 const MAX_BODY = 4000000;   // znakova; slike stižu već smanjene iz pregledača
 const MAX_FILE = 1000000;   // znakova base64 po slici
@@ -166,16 +168,33 @@ async function reserve(cfg, files) {
   return { done };
 }
 
+// Samo proverava da li su proizvodi još slobodni (ništa ne upisuje): porudžbina ih ne zaključava, to radi tek "Prihvati".
+async function available(cfg, files) {
+  const taken = [];
+  for (const f of files) {
+    const r = await readFile(cfg, f);
+    if (r.missing || readSold(r.text)) taken.push(f);
+  }
+  return taken;
+}
+
 // ---------- Mejl (Resend) ----------
-function buildMail(def, d, atts, extra = "") {
+function buildMail(def, d, atts, extra = "", links = null) {
   const keys = def.all.filter((k) => d[k] && k !== "fajlovi");
   const rows = keys.map((k) =>
     `<tr><td style="padding:6px 16px 6px 0;color:#666;vertical-align:top;white-space:nowrap">${LABELS[k] || k}</td><td style="padding:6px 0">${esc(d[k]).replace(/\n/g, "<br>")}</td></tr>`).join("");
-  const note = def === FORMS.porudzbina ? '<p style="color:#666;font-size:13px">Proizvodi iz ove porudžbine su automatski označeni kao prodati na sajtu.</p>' : "";
+  const btn = (href, bg, label) => `<a href="${esc(href)}" style="display:inline-block;padding:12px 22px;background:${bg};color:#fff;text-decoration:none;font-weight:bold;border-radius:8px">${label}</a>`;
+  const note = def === FORMS.porudzbina && links
+    ? `<p style="margin:18px 0 10px"><b>Odluči o porudžbini.</b> Proizvodi još NISU označeni kao prodati i na sajtu se ništa nije promenilo.</p>` +
+      `<table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="padding-right:10px">${btn(links.accept, "#16a34a", "Prihvati porudžbinu")}</td><td>${btn(links.decline, "#dc2626", "Odbij porudžbinu")}</td></tr></table>` +
+      `<p style="color:#666;font-size:13px">Prihvatanje označava proizvode kao prodate i šalje kupcu potvrdu. Odbijanje ostavlja proizvode u prodaji i šalje kupcu obaveštenje. Linkovi važe ${DECISION_DAYS} dana; ne prosleđuj ovaj mejl, jer ko ima link može da odluči o porudžbini.</p>`
+    : "";
   const att = atts.length ? `<p style="color:#666;font-size:13px">U prilogu: ${atts.length} slika.</p>` : "";
   const ex = extra ? `<p style="color:#666;font-size:13px">${esc(extra)}</p>` : "";
-  const html = `<div style="font-family:Arial,sans-serif;font-size:15px;color:#111"><h2 style="margin:0 0 14px">${def.title}</h2><table style="border-collapse:collapse">${rows}</table>${note}${att}${ex}</div>`;
-  const text = `${def.title}\n\n` + keys.map((k) => `${LABELS[k] || k}: ${d[k]}`).join("\n") + (extra ? `\n\n${extra}` : "");
+  const html = `<div style="font-family:Arial,sans-serif;font-size:15px;color:#111"><h2 style="margin:0 0 14px">${def.title}</h2>${note}<table style="border-collapse:collapse;margin-top:16px">${rows}</table>${att}${ex}</div>`;
+  const text = `${def.title}\n\n` + keys.map((k) => `${LABELS[k] || k}: ${d[k]}`).join("\n") +
+    (def === FORMS.porudzbina && links ? `\n\nProizvodi još NISU označeni kao prodati. Odluči o porudžbini:\nPRIHVATI: ${links.accept}\nODBIJ: ${links.decline}\n(Linkovi važe ${DECISION_DAYS} dana; ne prosleđuj ovaj mejl.)` : "") +
+    (extra ? `\n\n${extra}` : "");
   let subject = def.title;
   if (d.ime) subject += `: ${d.ime}${d.prezime ? " " + d.prezime : ""}`;
   else if (d.email) subject += `: ${d.email}`;
@@ -210,18 +229,18 @@ function buildCustomerMail(d, env) {
   const trs = rows.map(([k, v]) =>
     `<tr><td style="padding:7px 18px 7px 0;font:14px Arial,sans-serif;color:#8b93a7;vertical-align:top;white-space:nowrap">${k}</td><td style="padding:7px 0;font:15px Arial,sans-serif;color:#f4f6fa">${esc(v).replace(/\n/g, "<br>")}</td></tr>`).join("");
   const html = `<!doctype html><html><body style="margin:0;padding:0;background:#07080c" bgcolor="#07080c">` +
-    `<div style="display:none;max-height:0;overflow:hidden;opacity:0">Primili smo tvoju porudžbinu.</div>` +
+    `<div style="display:none;max-height:0;overflow:hidden;opacity:0">Primili smo tvoju porudžbinu i uskoro ćemo je obraditi.</div>` +
     `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#07080c"><tr><td align="center" style="padding:28px 14px">` +
     `<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:100%;max-width:560px" bgcolor="#0f121a"><tr><td style="padding:28px 20px 6px">` +
     `<div style="font:700 13px Arial,sans-serif;letter-spacing:3px;color:#6fb1ff">DRIP SELECT</div>` +
     `<h1 style="margin:10px 0 6px;font:700 26px Arial,sans-serif;color:#f4f6fa">Hvala na porudžbini!</h1>` +
-    `<p style="margin:0 0 6px;font:15px/1.5 Arial,sans-serif;color:#cbd5e6">${esc(hello)} Primili smo tvoju porudžbinu.</p>` +
+    `<p style="margin:0 0 6px;font:15px/1.5 Arial,sans-serif;color:#cbd5e6">${esc(hello)} Primili smo tvoju porudžbinu i uskoro ćemo je obraditi.</p>` +
     `<p style="margin:0 0 22px;font:15px/1.5 Arial,sans-serif;color:#8b93a7">${next}</p>` +
     `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 22px">${trs}</table>` +
     `<p style="margin:0 0 26px;font:14px/1.5 Arial,sans-serif;color:#8b93a7">Ako je neki podatak pogrešan (telefon ili adresa), odgovori na ovaj mejl i ispravićemo ga.</p>` +
     `<p style="margin:0;padding:18px 0 26px;border-top:1px solid #1f2430;font:12px/1.6 Arial,sans-serif;color:#6b7387">Ovo je automatska potvrda porudžbine na <a href="${esc(site)}" style="color:#8b93a7">dripselect.rs</a>. Pitanja: ${esc(contact)}.</p>` +
     `</td></tr></table></td></tr></table></body></html>`;
-  const text = `Hvala na porudžbini!\n\n${hello} Primili smo tvoju porudžbinu.\n${next}\n\n` + rows.map(([k, v]) => `${k}: ${v}`).join("\n") +
+  const text = `Hvala na porudžbini!\n\n${hello} Primili smo tvoju porudžbinu i uskoro ćemo je obraditi.\n${next}\n\n` + rows.map(([k, v]) => `${k}: ${v}`).join("\n") +
     `\n\nAko je neki podatak pogrešan (telefon ili adresa), odgovori na ovaj mejl i ispravićemo ga.\n\nOvo je automatska potvrda porudžbine na ${site}. Pitanja: ${contact}.`;
   return { subject: "Primili smo tvoju porudžbinu | Drip Select", html, text };
 }
@@ -288,18 +307,17 @@ export async function onRequestPost({ request, env, waitUntil }) {
     });
   }
 
-  let cfg = null, reserved = [];
+  let cfg = null, files = [];
   if (body.form === "porudzbina") {
-    const files = d.fajlovi.split("|").map((s) => s.trim()).filter(Boolean);
+    files = [];
+    files = [...new Set(d.fajlovi.split("|").map((s) => s.trim()).filter(Boolean))];
     if (!files.length || files.length > 10 || !files.every((f) => FILE_RE.test(f))) return json({ error: "missing", field: "fajlovi" }, 400);
     cfg = ghCfg(env);
     if (!cfg) return json({ error: "config" }, 500);
-    let res;
-    try { res = await reserve(cfg, [...new Set(files)]); }
-    catch (e) { console.error("reserve", e); return json({ error: "github" }, 502); }
-    if (res.conflict) return json({ error: "sold", items: res.conflict }, 409);
-    reserved = res.done;
-    if (reserved.length) purge(request, waitUntil);
+    let taken;
+    try { taken = await available(cfg, files); }
+    catch (e) { console.error("available", e); return json({ error: "github" }, 502); }
+    if (taken.length) return json({ error: "sold", items: taken }, 409);
   }
 
   // prijava za drop: upiši mejl u listu pretplatnika (Resend); neuspeh ne sme da blokira prijavu, ali vlasnik dobija napomenu u mejlu
@@ -314,12 +332,20 @@ export async function onRequestPost({ request, env, waitUntil }) {
     }
   }
 
+  // dugmad Prihvati / Odbij: potpisani linkovi ka /api/odluka (isti sajt sa kog je porudžbina stigla)
+  let links = null;
+  if (body.form === "porudzbina") {
+    try {
+      const tok = await signDecision(env, { f: files, e: d.email, n: d.ime, a: d.artikli.slice(0, 600), u: d.ukupno, p: d.placanje, d: d.dostava });
+      const base = new URL(request.url).origin + "/api/odluka?t=" + tok;
+      links = { accept: base + "&a=prihvati", decline: base + "&a=odbij" };
+    } catch (e) { console.error("potpis", e); return json({ error: "config" }, 500); }
+  }
   try {
-    await sendMail(env, buildMail(def, d, atts, extra), d.email && isEmail(d.email) ? d.email : null, atts);
+    await sendMail(env, buildMail(def, d, atts, extra, links), d.email && isEmail(d.email) ? d.email : null, atts);
   } catch (e) {
     console.error("mail", e);
-    if (reserved.length) { await rollback(cfg, reserved); purge(request, waitUntil); } // mejl nije otišao: vrati proizvode u prodaju
-    return json({ error: "mail" }, 502);
+    return json({ error: "mail" }, 502); // mejl nije otišao: porudžbina nije primljena, kupac može da pokuša ponovo (ništa nije zaključano)
   }
   // potvrda za kupca: njen neuspeh ne sme da pokvari porudžbinu koja je već primljena
   if (body.form === "porudzbina" && d.email) {
@@ -329,4 +355,5 @@ export async function onRequestPost({ request, env, waitUntil }) {
   return json({ ok: true });
 }
 
+export { ghCfg, readFile, readSold, reserve, sendMail, esc, sha, purge, REPLY_DEFAULT };
 export const onRequest = () => json({ error: "method" }, 405);
