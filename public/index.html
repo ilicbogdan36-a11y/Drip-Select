@@ -488,7 +488,7 @@ header img,#fl,.hero img{aspect-ratio:640/398}
     <div class="fc fb1"><img id="fl" src="/logo.webp" alt="Drip Select" loading="lazy"><p>Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.</p></div>
     <div class="fc"><h4>Prodavnica</h4><a href="/proizvodi">Proizvodi</a><a href="/po-zelji">Naruči po želji</a></div>
     <div class="fc"><h4>Informacije</h4><a href="/o-nama">O nama</a><a href="/pitanja">Česta pitanja</a><a href="/kontakt">Kontakt</a></div>
-    <div class="fc"><h4>Kontakt</h4><a id="fig" class="fig" target="_blank" rel="noopener" hidden></a><a id="fm" class="ml"></a><span>Odgovaramo u roku od 24 sata</span></div>
+    <div class="fc"><h4>Kontakt</h4><a id="fig" class="fig" target="_blank" rel="noopener" hidden></a><a id="fm" class="ml"></a><span id="fr">Odgovaramo što pre</span></div>
   </div>
   <div class="fbar"><span>© <span id="cy"></span> Drip Select</span><span>Plaćanje pouzećem • 100% originali</span><button id="reset" type="button">Resetuj demo</button></div>
 </footer>
@@ -862,12 +862,12 @@ function faq(){
 }
 function contact(){
   var g=function(id,l,x){return '<div><label for="'+id+'">'+l+'</label>'+(x?'<textarea id="'+id+'" rows="5" required></textarea>':'<input id="'+id+'" required'+(id==="cm"?' type="email"':'')+'>')+'</div>'};
-  app.innerHTML='<div class="w n"><a class="back" href="/">← Nazad na sajt</a><h1 style="font-size:42px;margin:0 0 8px">Imaš pitanje?</h1><p class="lead">Piši nam, odgovaramo u roku od 24 sata.</p>'+igBox("Najbrže nas stigneš na Instagramu","Poruke na Instagramu gledamo prvo, pre mejla.")+
+  app.innerHTML='<div class="w n"><a class="back" href="/">← Nazad na sajt</a><h1 style="font-size:42px;margin:0 0 8px">Imaš pitanje?</h1><p class="lead">'+(igOn()?"Piši nam, najbrže odgovaramo na Instagramu.":"Piši nam, odgovaramo što pre.")+'</p>'+igBox("Najbrže nas stigneš na Instagramu","Poruke na Instagramu gledamo prvo i tu odgovaramo najbrže. Mejl stiže sporije.")+
   '<div class="ck" style="margin-top:24px"><div class="box"><form id="cf">'+hp()+'<div class="r2">'+g("cn","Ime")+g("cm","Mejl")+'</div>'+g("cp","Poruka",1)+'<button class="btn full" type="submit" style="margin-top:16px">Pošalji poruku</button></form></div>'+
-  '<aside class="box"><h3>Ili nas nađi ovde</h3>'+(igOn()?'<div class="li"><div>Instagram<small>'+igLink()+'</small></div></div>':'')+'<div class="li"><div>Mejl<small><a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a></small></div></div><div class="li"><div>Odgovor<small>U roku od 24 sata, svaki dan</small></div></div></aside></div></div>';
+  '<aside class="box"><h3>Ili nas nađi ovde</h3>'+(igOn()?'<div class="li"><div>Instagram<small>'+igLink()+'</small></div></div>':'')+'<div class="li"><div>Mejl<small><a class="ml" href="mailto:'+CFG.MAIL+'">'+CFG.MAIL+'</a></small></div></div><div class="li"><div>Odgovor<small>'+(igOn()?'Najbrže na Instagramu, mejl sporije':'Odgovaramo što pre')+'</small></div></div></aside></div></div>';
 }
 document.addEventListener("submit",function(e){if(e.target.id!=="cf")return;e.preventDefault();var bx=e.target.parentNode;
-  post("contact",{ime:$("#cn").value.trim(),email:$("#cm").value.trim(),poruka:$("#cp").value.trim(),vreme:new Date().toLocaleString("sr-RS")}).then(function(){bx.innerHTML='<div class="done" style="padding:30px 0"><div class="ic">'+ico('mail')+'</div><h3>Poruka je poslata</h3><p>Javljamo se u roku od 24 sata.'+(LIVE?'':' (Simulacija: na pravom sajtu ti stiže na mejl.)')+'</p></div>'}).catch(function(er){bx.insertAdjacentHTML("beforeend",'<p class="err">'+(errMsg(er)||'Slanje nije uspelo, pokušaj ponovo.')+'</p>')})});
+  post("contact",{ime:$("#cn").value.trim(),email:$("#cm").value.trim(),poruka:$("#cp").value.trim(),vreme:new Date().toLocaleString("sr-RS")}).then(function(){bx.innerHTML='<div class="done" style="padding:30px 0"><div class="ic">'+ico('mail')+'</div><h3>Poruka je poslata</h3><p>'+(igOn()?'Javljamo se što pre. Najbrži odgovor dobijaš na Instagramu.':'Javljamo se što pre.')+(LIVE?'':' (Simulacija: na pravom sajtu ti stiže na mejl.)')+'</p></div>'}).catch(function(er){bx.insertAdjacentHTML("beforeend",'<p class="err">'+(errMsg(er)||'Slanje nije uspelo, pokušaj ponovo.')+'</p>')})});
 function wish(){
   var g=function(id,l,x,r){return '<div><label for="'+id+'">'+l+(r?'':' (nije obavezno)')+'</label><input id="'+id+'" '+(r?'required ':'')+(x||'')+'></div>'};
   app.innerHTML='<div class="w n"><a class="back" href="/">← Nazad na sajt</a><span class="lbl">Naruči po želji</span><h1 style="font-size:42px;margin:6px 0 10px">Ne nalaziš ono što tražiš?</h1><p class="lead">Pošalji nam sliku duksa, jakne, patika ili bilo kog proizvoda koji želiš, a mi ga potražimo za tebe.</p>'+
@@ -1095,7 +1095,7 @@ function route(){
   else if(pg==="po-zelji"){wish();scrollTo(0,0)}
   else{home();var el=document.getElementById(pg==="proizvodi"?"proizvodi":h);if(el)el.scrollIntoView();else scrollTo(0,0)}
 }
-var cy_=$("#cy");if(cy_)cy_.textContent=new Date().getFullYear();var fm_=$("#fm");if(fm_){fm_.href="mailto:"+CFG.MAIL;fm_.textContent=CFG.MAIL}var fg_=$("#fig");if(fg_&&igOn()){if(CFG.IGDEMO){fg_.href="#";fg_.removeAttribute("target");fg_.setAttribute("data-igdemo","1")}else fg_.href=igUrl();fg_.innerHTML=ico("ig")+"@"+CFG.IG;fg_.setAttribute("aria-label","Instagram @"+CFG.IG);fg_.hidden=false}$("#hl").src=LOGO;$("#fl").src=LOGO;initBg();if(LIVE)$("#reset").style.display="none";
+var cy_=$("#cy");if(cy_)cy_.textContent=new Date().getFullYear();var fm_=$("#fm");if(fm_){fm_.href="mailto:"+CFG.MAIL;fm_.textContent=CFG.MAIL}var fr_=$("#fr");if(fr_&&igOn())fr_.textContent="Najbrži odgovor na Instagramu";var fg_=$("#fig");if(fg_&&igOn()){if(CFG.IGDEMO){fg_.href="#";fg_.removeAttribute("target");fg_.setAttribute("data-igdemo","1")}else fg_.href=igUrl();fg_.innerHTML=ico("ig")+"@"+CFG.IG;fg_.setAttribute("aria-label","Instagram @"+CFG.IG);fg_.hidden=false}$("#hl").src=LOGO;$("#fl").src=LOGO;initBg();if(LIVE)$("#reset").style.display="none";
 function hh(){var e=document.querySelector("header");if(e)document.documentElement.style.setProperty("--hh",e.offsetHeight+"px")}
 hh();addEventListener("resize",hh);addEventListener("orientationchange",hh);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(hh);if(window.ResizeObserver){var ho=document.querySelector("header");if(ho)new ResizeObserver(hh).observe(ho)}
 // brojanje poseta (Cloudflare Web Analytics, bez kolačića): token se upisuje u CFG.WA, prazan = isključeno
@@ -1105,7 +1105,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=27";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=28";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();
