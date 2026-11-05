@@ -5,6 +5,7 @@ category: Donji deo
 price: 6990
 size: S
 color: Plava
+komplet: 2026-11-04-nike-tech-fleece-2023-4
 condition: 9
 image: /images/products/1103-2-24-.webp
 image2: /images/products/1103-2-25-.webp
