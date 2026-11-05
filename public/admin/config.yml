@@ -81,3 +81,18 @@ collections:
       - { label: "Opis", name: "body", widget: "markdown" }
       # sajt ovo sam prebaci na true kad neko poruči; možeš i ručno da vratiš proizvod u prodaju
       - { label: "Prodato (SOLD OUT)", name: "sold", widget: "boolean", default: false, required: false }
+
+  # utisci kupaca: prikazuju se na početnoj strani. Dok nema nijednog, sekcija se ne vidi.
+  - name: "utisci"
+    label: "Utisci kupaca"
+    label_singular: "Utisak"
+    folder: "content/utisci"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    identifier_field: ime
+    summary: "{{ime}}"
+    fields:
+      - { label: "Ime i grad (npr. Marko, Beograd)", name: "ime", widget: "string", hint: "Samo ime ili nadimak i grad. Ne upisuj prezime, telefon ni adresu." }
+      - { label: "Utisak", name: "body", widget: "text", hint: "Prepiši tačno ono što je kupac napisao ili rekao. Ne izmišljaj i ne popravljaj ocenu." }
+      - { label: "Šta je kupio (opciono)", name: "proizvod", widget: "string", required: false, hint: "npr. Nike Tech Fleece 2023" }
+      - { label: "Objavi na sajtu", name: "objavi", widget: "boolean", default: true, hint: "Objavi samo uz dozvolu kupca. Isključi da se utisak sakrije, a ne brišeš ga." }

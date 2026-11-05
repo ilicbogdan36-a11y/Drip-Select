@@ -1,6 +1,7 @@
 // Cloudflare Worker: usmerava /api/* na funkcije; sve ostalo (sajt, /admin, slike) servira Cloudflare iz foldera public/.
 import * as submit from "./api/submit.js";
 import * as products from "./api/products.js";
+import * as utisci from "./api/utisci.js";
 import * as auth from "./api/auth.js";
 import * as callback from "./api/callback.js";
 import * as status from "./api/status.js";
@@ -8,7 +9,7 @@ import { productPage, ogImage, sitePage, sitemap, PAGE_TITLES } from "./page.js"
 import { checkDrop } from "./drop.js";
 import { productImage } from "./image.js";
 
-const ROUTES = { "/api/submit": submit, "/api/products": products, "/api/auth": auth, "/api/callback": callback, "/api/status": status };
+const ROUTES = { "/api/submit": submit, "/api/products": products, "/api/utisci": utisci, "/api/auth": auth, "/api/callback": callback, "/api/status": status };
 const json = (o, status) => new Response(JSON.stringify(o), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 
 export default {

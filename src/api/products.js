@@ -12,13 +12,18 @@ const QUERY = `query($o:String!,$n:String!,$e:String!){repository(owner:$o,name:
 // Učitava listu proizvoda (JSON tekst {"items":[...]}) iz keša ili sa GitHub-a. Koristi je i /api/products i stranica /proizvod/<ime>.
 // Vraća { body } ili { err, status }.
 export async function loadBody(env, origin, waitUntil) {
+  return loadFolder(env, origin, waitUntil, env.GH_FOLDER || "content/proizvodi", "/api/products");
+}
+
+// Isto za bilo koji folder (npr. utisci kupaca): ključ keša je zasebna putanja
+export async function loadFolder(env, origin, waitUntil, folder, cachePath) {
   if (!env.GITHUB_TOKEN || !env.GH_OWNER || !env.GH_REPO) return { err: "config", status: 500 };
 
   const cache = typeof caches !== "undefined" ? caches.default : null;
-  const key = new Request(origin + "/api/products");
+  const key = new Request(origin + cachePath);
   if (cache) { const hit = await cache.match(key); if (hit) return { body: await hit.text() }; }
 
-  const branch = env.GH_BRANCH || "main", folder = env.GH_FOLDER || "content/proizvodi";
+  const branch = env.GH_BRANCH || "main";
   let r;
   try {
     r = await fetch(`${env.GITHUB_API || "https://api.github.com"}/graphql`, {

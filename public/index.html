@@ -127,6 +127,16 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
 .bb{display:flex;gap:10px;margin-top:6px;padding-top:18px;border-top:1px solid var(--ln)}.bb .btn{flex:1;padding-left:10px;padding-right:10px}
 .meter{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;margin:0 0 14px}.meter i{height:6px;border-radius:2px;background:#232938}.meter i.f{background:var(--ac)}
 .w.n>.lbl{display:block;margin:2px 0 0;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#6fb1ff}
+.kit{margin:14px 0;padding:14px;border-radius:14px;border:1px solid #1d3a63;background:#0b1830}.kit .kt{display:block;font:700 15px "Space Grotesk",sans-serif;margin-bottom:10px}
+.kit .kc{display:flex;align-items:center;gap:12px;margin-bottom:12px}.kit .mini{position:relative;width:52px;height:64px;border-radius:8px;overflow:hidden;flex:none;border:1px solid var(--ln);background:var(--studio)}
+.kit .kn{display:flex;flex-direction:column;min-width:0;flex:1}.kit .ln{font-weight:600;font-size:14px}.kit .kn small{color:var(--mut);font-size:12px;line-height:1.4}
+.kit .kp{margin-left:auto;color:#6fb1ff;white-space:nowrap;font-size:15px}.kit .btn{width:100%}.kit .kf{display:block;margin-top:8px;color:#8cc3ff;font-size:12px;text-align:center}
+.shr{margin:10px 0 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}.shr .shb{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;font-size:13px}.shr .shb svg{width:16px;height:16px}
+.shm{display:flex;flex-wrap:wrap;gap:8px}.shm[hidden]{display:none}.shm a,.shm button{font:600 13px Inter,sans-serif;color:var(--tx);background:var(--card);border:1px solid var(--ln);border-radius:99px;padding:8px 14px;cursor:pointer}.shm a:hover,.shm button:hover{border-color:var(--ac)}
+.box.dmini{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:18px 28px;align-items:center;margin:28px 0 70px;padding:22px 24px}.dmini b{display:block;font:700 20px "Space Grotesk",sans-serif;margin-bottom:4px}.dmini .dsub{color:var(--mut);font-size:14px;line-height:1.5}.dmini .dfm{margin:0;max-width:none}.dmini .fine{grid-column:1/-1;margin:-6px 0 0;font-size:12px;color:var(--mut)}
+@media(max-width:800px){.box.dmini{grid-template-columns:1fr;padding:18px 16px;margin:22px 0 56px}}
+.rvs{margin:34px 0 0}.rvs h2{font-size:26px;margin:0 0 16px}.rvg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.rvc{margin:0;display:flex;flex-direction:column;padding:18px;border-radius:14px;background:var(--card);border:1px solid var(--ln)}.rvc p{margin:0 0 12px;font-size:14px;line-height:1.55;white-space:pre-line}.rvc .rvf{display:flex;flex-direction:column;gap:2px;font-size:13px;margin-top:auto}.rvc .rvf b{font-weight:600}.rvc .rvf small{color:var(--mut)}
 .wnote{margin:0 0 14px;padding:14px 16px;border-radius:12px;background:#0b1830;border:1px solid #1d3a63;color:#cfe3ff;font-size:14px;line-height:1.5}.wnote b{display:block;color:#fff;font-size:15px;margin-bottom:2px}
 .wmail{margin:12px 0 22px;font-size:14px;color:var(--mut);line-height:1.5}.wmail small{display:block;margin-top:2px;font-size:13px}.wmail a{color:#6fb1ff}
 .last{margin:14px 0;padding:10px 12px;border-radius:10px;background:#0b1830;border:1px solid #1d3a63;font-size:13px;color:#8cc3ff}
@@ -488,7 +498,7 @@ header img,#fl,.hero img{aspect-ratio:640/398}
 <script>
 var LOGO="/logo.webp";
 /* === PODEŠAVANJE: nalepi svoje linkove ovde (vidi uputstvo) === */
-var CFG={GH:{owner:"ilicbogdan36-a11y",repo:"Drip-Select",branch:"main",folder:"content/proizvodi"},API:"/api",MAIL:"info@dripselect.rs",FREE:2,SHIP:0,REVEAL:1,INTRO:1,IGDEMO:0,IG:"dripselect.rs"};
+var CFG={GH:{owner:"ilicbogdan36-a11y",repo:"Drip-Select",branch:"main",folder:"content/proizvodi"},API:"/api",MAIL:"info@dripselect.rs",FREE:2,SHIP:0,REVEAL:1,INTRO:1,IGDEMO:0,IG:"dripselect.rs",WA:""};
 /* FREE = broj artikala za besplatnu dostavu (0 = isključeno); SHIP = cena dostave ispod toga u din. (0 = dogovara se pri potvrdi); IG = Instagram nalog bez @ (prazno = Instagram se nigde ne prikazuje) */
 var P=[
  {id:1,brand:"The North Face",cat:"Jakne",size:"L",color:"Crna",hex:"#15171c",name:"Vintage TNF 700 Nuptse Down Jacket Black",cond:"9.5/10 (Top stanje)",price:18900,imgs:6,g:"#2a303b,#14161b"},
@@ -502,7 +512,7 @@ var DEF=JSON.stringify(P),SH=580,S={sold:[3],cart:[]},co=[],last=null,ph=0,app=d
 function $(s){return document.querySelector(s)}
 function get(i){return P.filter(function(p){return p.id==i})[0]}
 function sold(i){return S.sold.indexOf(+i)>-1||SS.indexOf(+i)>-1}
-var ICP={truck:'<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',cash:'<rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',back:'<path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>',ok:'<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',mail:'<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',send:'<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>',flame:'<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',check:'<path d="M20 6 9 17l-5-5"/>',chl:'<path d="m15 18-6-6 6-6"/>',chr:'<path d="m9 18 6-6-6-6"/>',plus:'<path d="M5 12h14"/><path d="M12 5v14"/>',minus:'<path d="M5 12h14"/>',x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',ig:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/>',zin:'<circle cx="11" cy="11" r="7.5"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/>'};
+var ICP={share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>',truck:'<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',cash:'<rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',back:'<path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>',ok:'<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',mail:'<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',send:'<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>',flame:'<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',check:'<path d="M20 6 9 17l-5-5"/>',chl:'<path d="m15 18-6-6 6-6"/>',chr:'<path d="m9 18 6-6-6-6"/>',plus:'<path d="M5 12h14"/><path d="M12 5v14"/>',minus:'<path d="M5 12h14"/>',x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',ig:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/>',zin:'<circle cx="11" cy="11" r="7.5"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/>'};
 function ico(n){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICP[n]+'</svg>'}
 function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,".")+" din."}
 // stara cena: prikazuje se samo kad je upisana i veća od cene (sniženje od bar 1%)
@@ -556,7 +566,7 @@ function home(){
   var av=P.filter(function(p){return !sold(p.id)}).length,im=introMode();
   var h=(im?heroHx(im):'<div class="hero"><img src="'+LOGO+'" alt="Drip Select"><h1>Povoljno. Kvalitetno. Na jednom mestu.</h1><p>Poznati brendovi i pažljivo biran izbor po pristupačnim cenama.</p><a class="btn" href="/proizvodi">Pogledaj proizvode</a></div>')+featBlock()+
   '<section class="w" id="proizvodi"><div class="sh"><div><span>Kolekcija #01</span><h2>Trenutno na stanju</h2></div><span id="cnt"></span></div>';
-  h+=av?'<div class="tools"><input id="q" type="search" placeholder="Pretraži proizvode..." aria-label="Pretraga" value="'+esc(F.q)+'"><div id="flt"></div></div><div class="grid" id="grid"></div>':drop();
+  h+=av?'<div class="tools"><input id="q" type="search" placeholder="Pretraži proizvode..." aria-label="Pretraga" value="'+esc(F.q)+'"><div id="flt"></div></div><div class="grid" id="grid"></div><div id="rv2">'+rvHtml()+'</div>'+dropMini():drop();
   app.innerHTML=h+'<a class="cta" href="/po-zelji"><div><b>Ne nalaziš ono što tražiš?</b><span>Pošalji sliku proizvoda koji želiš, a mi ga potražimo za tebe.</span></div><span class="btn">Naruči po želji</span></a></section>';
   if(av)drawGrid(1);
   if(im)hxInit();
@@ -713,6 +723,18 @@ function lbTap(e){var r=$("#lbs").getBoundingClientRect(),cx=e.clientX-r.left-r.
 function similar(p){var lc=function(x){return String(x||"").toLowerCase()};
   function sc(q){return(lc(q.brand)&&lc(q.brand)===lc(p.brand)?4:0)+(lc(q.cat)&&lc(q.cat)===lc(p.cat)?2:0)}
   return P.filter(function(q){return q.id!=p.id&&!sold(q.id)}).sort(function(a,b){return sc(b)-sc(a)||Math.abs(a.price-p.price)-Math.abs(b.price-p.price)}).slice(0,4)}
+/* "Dopuni komplet": gornji deo sa donjim (i obrnuto) istog modela i iste boje, samo ako je i drugi komad na stanju */
+function kitOf(p){if(!p.cat||sold(p.id))return null;var lc=function(x){return String(x||"").trim().toLowerCase()},opp=p.cat==="Gornji deo"?"Donji deo":"Gornji deo";
+  var l=P.filter(function(q){return q.id!==p.id&&q.cat===opp&&!sold(q.id)&&lc(q.brand)===lc(p.brand)&&lc(q.name)===lc(p.name)&&lc(q.color)&&lc(q.color)===lc(p.color)});
+  l.sort(function(a,b){return(lc(b.size)===lc(p.size)?1:0)-(lc(a.size)===lc(p.size)?1:0)||a.price-b.price});return l[0]||null}
+function kitBox(p){var q=kitOf(p);if(!q)return "";var fr=+CFG.FREE>0&&+CFG.FREE<=2;
+  return '<div class="kit"><b class="kt">Dopuni komplet</b><a class="kc" href="'+pl(q)+'"><span class="mini">'+tile(q,0)+'</span><span class="kn"><span class="ln">'+esc(q.name)+'</span><small>'+[q.cat,q.size?"Vel. "+q.size:"",q.color].filter(Boolean).map(esc).join(" · ")+'</small></span><b class="kp">'+fmt(q.price)+'</b></a>'+
+  '<button class="btn" type="button" data-addkit="'+p.id+','+q.id+'">Dodaj oba u korpu</button>'+(fr?'<small class="kf">Uzmi oba i dostava je besplatna.</small>':'')+'</div>'}
+/* deljenje: na telefonu otvara sistemski meni (Instagram, Viber, WhatsApp...), na računaru WhatsApp, Viber i kopiranje linka */
+function shareBox(p){var u=location.origin+pl(p),tx=encodeURIComponent(p.name+" · "+fmt(p.price)+" "+u);
+  return '<div class="shr"><button class="btn ghost shb" type="button" data-share="'+p.id+'">'+ico('share')+'Podeli</button><div class="shm" hidden><a href="https://wa.me/?text='+tx+'" target="_blank" rel="noopener">WhatsApp</a><a href="viber://forward?text='+tx+'">Viber</a><button type="button" data-copy="'+p.id+'">Kopiraj link</button></div></div>'}
+function copyTxt(t){if(navigator.clipboard&&navigator.clipboard.writeText)return navigator.clipboard.writeText(t);
+  return new Promise(function(ok,no){var a=document.createElement("textarea");a.value=t;a.setAttribute("readonly","");a.style.cssText="position:fixed;left:-9999px;top:0";document.body.appendChild(a);a.select();try{document.execCommand("copy")?ok():no()}catch(e){no()}a.remove()})}
 function prod(id){hzOff(true);
   var p=get(id);if(!p)return goR("/");cur=id;
   var s=sold(id),n=Math.floor(parseFloat(p.cond)||0),mt="",th="",mo="",k;
@@ -730,7 +752,7 @@ function prod(id){hzOff(true);
   '<div class="last'+(s?' no':'')+'">'+(s?'Ovaj proizvod je već prodat.':'Dostupan je samo jedan primerak.')+'</div>'+
   (p.cat?'<div class="opt">Kategorija <b>'+esc(p.cat)+'</b></div>':'')+(p.cond?'<div class="opt">Stanje <b>'+esc(p.cond.split(" ")[0])+'</b></div><div class="meter">'+mt+'</div>':'')+
   '<div class="opt">Veličina <b>'+esc(p.size)+'</b></div><div class="opt">Boja <b><i class="dot" style="background:'+colorBg(p.color,p.hex)+'"></i>'+esc(p.color)+'</b></div>'+
-  '<div class="bb">'+(s?'<button class="btn full" disabled>Nije na stanju</button>':'<button class="btn ghost" data-add="'+id+'">Dodaj u korpu</button><button class="btn" data-buy="'+id+'">Naruči odmah</button>')+'</div>'+(s?'':shipProd(id))+
+  '<div class="bb">'+(s?'<button class="btn full" disabled>Nije na stanju</button>':'<button class="btn ghost" data-add="'+id+'">Dodaj u korpu</button><button class="btn" data-buy="'+id+'">Naruči odmah</button>')+'</div>'+(s?'':shareBox(p))+(s?'':shipProd(id))+(s?'':kitBox(p))+
   '<div class="row3"><div><b>'+ico('truck')+'</b>Dostava<small>'+(+CFG.SHIP>0?fmt(+CFG.SHIP):'Dogovaramo pri potvrdi')+'</small></div><div><b>'+ico('cash')+'</b>Pouzećem<small>Plaćaš kuriru</small></div><div><b>'+ico('back')+'</b>Povrat 14 dana<small>Bez pitanja</small></div></div></aside></div>'+
   '<div class="about">'+(p.desc?'<h2>Opis</h2><p class="lead" style="white-space:pre-line;font-size:15px;margin:10px 0 26px">'+esc(p.desc)+'</p>':'')+'<h2>Detalji proizvoda</h2><div class="specs">'+sp+'</div><h2 style="margin-top:34px">Slični proizvodi</h2><div class="more" style="margin-top:14px">'+(mo||'<p class="cond">Trenutno nema drugih proizvoda.</p>')+'</div></div></div>';
   setImg(ph);galInit();hzInit();
@@ -899,13 +921,22 @@ function drawGrid(an){
   $("#grid").className="grid"+(an?"":" na");
   $("#grid").innerHTML=h||'<div class="none">Nema rezultata. <button class="rm" data-fx type="button">Poništi filtere</button></div>';
 }
+function dropMini(){return '<div class="box glow dmini"><div><b>Prvi saznaj za novi drop</b><span class="dsub">Svaki komad je samo jedan. Upiši mejl i javljamo ti čim izađe novi drop. Jedan mejl po dropu.</span></div>'+
+  '<form id="dn2">'+hp()+'<div class="dfm">'+ico('mail')+'<input id="dm2" type="email" required placeholder="tvoj@mejl.rs" aria-label="Mejl" autocomplete="email"><button class="btn" type="submit">Obavesti me</button></div></form>'+
+  '<p class="fine">Mejl koristimo samo za obaveštenje o novom dropu. Odjava je u svakom mejlu.</p></div>'}
+/* utisci kupaca: čitaju se iz admina (Utisci kupaca); dok nema nijednog, sekcija se ne prikazuje */
+var RV=[];
+function rvHtml(){if(!RV.length)return "";return '<section class="rvs"><h2>Utisci kupaca</h2><div class="rvg">'+RV.map(function(r){return '<figure class="rvc"><p>'+esc(r.text)+'</p><div class="rvf"><b>'+esc(r.name)+'</b>'+(r.item?'<small>'+esc(r.item)+'</small>':'')+'</div></figure>'}).join("")+'</div></section>'}
+function loadRv(){if(!CFG.API)return;fetch(CFG.API+"/utisci").then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){
+  RV=(j.items||[]).map(function(x){var d=fm(x.text);return{name:String(d.ime||"").trim(),text:String(d.body||d.tekst||"").trim(),item:String(d.proizvod||"").trim(),on:!/^(false|ne|no|0)$/i.test(String(d.objavi||"true"))}}).filter(function(r){return r.on&&r.name&&r.text}).slice(0,6);
+  var b=$("#rv2");if(b)b.innerHTML=rvHtml()}).catch(function(){})}
 function drop(){var m="",k;for(k=0;k<6;k++)m+='<span>Novi drop uskoro</span><i></i>';
   return '<div class="box glow drop"><div class="dmq" aria-hidden="true"><div class="dmt">'+m+m+'</div></div><div class="dbd"><div class="ic dic">'+ico('flame')+'</div><h2>Novi drop uskoro</h2><p class="lead">Svi proizvodi su rasprodati. Upiši mejl i javljamo ti čim izađe novi drop.</p>'+
   '<form id="dn">'+hp()+'<div class="dfm">'+ico('mail')+'<input id="dm" type="email" required placeholder="tvoj@mejl.rs" aria-label="Mejl" autocomplete="email"><button class="btn" type="submit">Obavesti me</button></div>'+
   '<ul class="dpt"><li>'+ico('check')+'Jedan mejl po dropu</li><li>'+ico('check')+'Odjava u svakom mejlu</li></ul></form>'+
   '<p class="fine">Mejl koristimo samo za obaveštenje o novom dropu. Odjava je u svakom mejlu.</p></div></div>'}
 document.addEventListener("input",function(e){if(e.target.id==="q"){F.q=e.target.value;drawGrid(0)}});
-document.addEventListener("submit",function(e){if(e.target.id!=="dn")return;e.preventDefault();var m=$("#dm").value.trim();S.mail=S.mail||[];
+document.addEventListener("submit",function(e){if(e.target.id!=="dn"&&e.target.id!=="dn2")return;e.preventDefault();var m=e.target.querySelector("input[type=email]").value.trim();S.mail=S.mail||[];
   if(!S.mail.some(function(x){return x.m===m}))S.mail.unshift({m:m,t:new Date().toLocaleString("sr-RS")});save();var fm=e.target;post("drop",{email:m,vreme:new Date().toLocaleString("sr-RS")}).then(function(){fm.innerHTML='<p class="ok">'+ico('check')+'Hvala! Javljamo ti se čim izađe novi drop.</p>'}).catch(function(er){fm.insertAdjacentHTML("beforeend",'<p class="err">'+(errMsg(er)||'Slanje nije uspelo, pokušaj ponovo.')+'</p>')})});
 function confetti(){
   if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
@@ -968,7 +999,7 @@ function viaGithub(){var G=CFG.GH;
   return fetch("https://api.github.com/repos/"+G.owner+"/"+G.repo+"/contents/"+G.folder+"?ref="+encodeURIComponent(G.branch)).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(l){
     var fs=l.filter(function(f){return f.type==="file"&&/\.md$/i.test(f.name)}).sort(function(a,b){return b.name.localeCompare(a.name)});
     return Promise.all(fs.map(function(f){return fetch(f.download_url).then(function(r){return r.text()}).then(function(x){var d=fm(x);d.file=f.name;return d}).catch(function(){return null})}))})}
-function loadSheet(){return(CFG.API?viaApi().catch(viaGithub):viaGithub()).then(readList)}
+function loadSheet(){return(CFG.API?viaApi().catch(viaGithub):viaGithub()).then(readList).then(function(r){loadRv();return r})}
 function cart(){
   var t=0,h='';
   S.cart.forEach(function(i){var p=get(i);t+=p.price;h+='<div class="li"><span class="mini">'+tile(p,0)+'</span><div>'+esc(p.name)+'<small>'+(p.cat?'<span>'+esc(p.cat)+'</span> · ':'')+esc(p.size)+' · '+fmt(p.price)+'</small><button class="rm" data-rm="'+i+'">Ukloni</button></div></div>'});
@@ -982,6 +1013,9 @@ document.addEventListener("click",function(e){var a=e.target.closest&&e.target.c
 document.addEventListener("click",function(e){
   var t=e.target,b;
   if(b=t.closest("[data-add]")){sync();var i=+b.getAttribute("data-add");if(!sold(i)&&S.cart.indexOf(i)<0){S.cart.push(i);save()}head();if(sold(i))route();else openCart();return}
+  if(b=t.closest("[data-addkit]")){sync();b.getAttribute("data-addkit").split(",").forEach(function(x){var n=+x;if(n&&!sold(n)&&S.cart.indexOf(n)<0)S.cart.push(n)});save();head();openCart();return}
+  if(b=t.closest("[data-share]")){var sp=get(+b.getAttribute("data-share"));if(!sp)return;if(navigator.share){navigator.share({title:sp.name,text:sp.name+" · "+fmt(sp.price),url:location.origin+pl(sp)}).catch(function(){});return}var sm=b.parentNode.querySelector(".shm");if(sm)sm.hidden=!sm.hidden;return}
+  if(b=t.closest("[data-copy]")){var cp=get(+b.getAttribute("data-copy"));if(!cp)return;var bb=b;copyTxt(location.origin+pl(cp)).then(function(){bb.textContent="Link je kopiran";setTimeout(function(){bb.textContent="Kopiraj link"},2200)},function(){bb.textContent="Kopiranje nije uspelo";setTimeout(function(){bb.textContent="Kopiraj link"},2200)});return}
   if(b=t.closest("[data-buy]")){sync();var j=+b.getAttribute("data-buy");if(sold(j))return route();co=[j];return go("kasa")}
   if(b=t.closest("[data-more]")){sync();if(b.getAttribute("data-more")==="kasa")co.forEach(function(i){if(!sold(i)&&S.cart.indexOf(i)<0)S.cart.push(i)});save();head();closeCart();return go("proizvodi")}
   if(b=t.closest("[data-g]"))return setImg(ph+ +b.getAttribute("data-g"));
@@ -1064,12 +1098,14 @@ function route(){
 var cy_=$("#cy");if(cy_)cy_.textContent=new Date().getFullYear();var fm_=$("#fm");if(fm_){fm_.href="mailto:"+CFG.MAIL;fm_.textContent=CFG.MAIL}var fg_=$("#fig");if(fg_&&igOn()){if(CFG.IGDEMO){fg_.href="#";fg_.removeAttribute("target");fg_.setAttribute("data-igdemo","1")}else fg_.href=igUrl();fg_.innerHTML=ico("ig")+"@"+CFG.IG;fg_.setAttribute("aria-label","Instagram @"+CFG.IG);fg_.hidden=false}$("#hl").src=LOGO;$("#fl").src=LOGO;initBg();if(LIVE)$("#reset").style.display="none";
 function hh(){var e=document.querySelector("header");if(e)document.documentElement.style.setProperty("--hh",e.offsetHeight+"px")}
 hh();addEventListener("resize",hh);addEventListener("orientationchange",hh);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(hh);if(window.ResizeObserver){var ho=document.querySelector("header");if(ho)new ResizeObserver(hh).observe(ho)}
+// brojanje poseta (Cloudflare Web Analytics, bez kolačića): token se upisuje u CFG.WA, prazan = isključeno
+if(/^[a-f0-9]{32}$/i.test(CFG.WA||"")){var wa=document.createElement("script");wa.defer=true;wa.src="https://static.cloudflareinsights.com/beacon.min.js";wa.setAttribute("data-cf-beacon",JSON.stringify({token:CFG.WA,spa:true}));document.head.appendChild(wa)}
 // jezik: srpski je podrazumevan; engleski prevod (i18n.js) se učitava tek kad ga neko izabere
 var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=26";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=27";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();
