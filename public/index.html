@@ -724,8 +724,16 @@ function similar(p){var lc=function(x){return String(x||"").toLowerCase()};
   function sc(q){return(lc(q.brand)&&lc(q.brand)===lc(p.brand)?4:0)+(lc(q.cat)&&lc(q.cat)===lc(p.cat)?2:0)}
   return P.filter(function(q){return q.id!=p.id&&!sold(q.id)}).sort(function(a,b){return sc(b)-sc(a)||Math.abs(a.price-p.price)-Math.abs(b.price-p.price)}).slice(0,4)}
 /* "Dopuni komplet": gornji deo sa donjim (i obrnuto) istog modela i iste boje, samo ako je i drugi komad na stanju */
-function kitOf(p){if(!p.cat||sold(p.id))return null;var lc=function(x){return String(x||"").trim().toLowerCase()},opp=p.cat==="Gornji deo"?"Donji deo":"Gornji deo";
-  var l=P.filter(function(q){return q.id!==p.id&&q.cat===opp&&!sold(q.id)&&lc(q.brand)===lc(p.brand)&&lc(q.name)===lc(p.name)&&lc(q.color)&&lc(q.color)===lc(p.color)});
+/* komplet: 1) ručni izbor u adminu ("Komplet sa"), 2) komad koji pokazuje na ovaj, 3) automatski: suprotan deo, isti brend, naziv i boja */
+function kitKey(x){return String(x||"").trim().toLowerCase().replace(/\.md$/,"")}
+function kitFind(k){k=kitKey(k);if(!k)return null;for(var i=0;i<P.length;i++)if(kitKey(P[i].file)===k||kitKey(P[i].slug)===k)return P[i];return null}
+function kitOf(p){if(sold(p.id))return null;
+  var m=kitFind(p.kit);if(m&&m.id!==p.id)return sold(m.id)?null:m;
+  var rv=P.filter(function(q){return q.id!==p.id&&q.kit&&kitFind(q.kit)===p});
+  if(rv.length){var f=rv.filter(function(q){return !sold(q.id)});return f[0]||null}
+  if(!p.cat)return null;
+  var lc=function(x){return String(x||"").trim().toLowerCase()},opp=p.cat==="Gornji deo"?"Donji deo":"Gornji deo";
+  var l=P.filter(function(q){return q.id!==p.id&&q.cat===opp&&!sold(q.id)&&!(q.kit&&kitFind(q.kit))&&lc(q.brand)===lc(p.brand)&&lc(q.name)===lc(p.name)&&lc(q.color)&&lc(q.color)===lc(p.color)});
   l.sort(function(a,b){return(lc(b.size)===lc(p.size)?1:0)-(lc(a.size)===lc(p.size)?1:0)||a.price-b.price});return l[0]||null}
 function kitBox(p){var q=kitOf(p);if(!q)return "";var fr=+CFG.FREE>0&&+CFG.FREE<=2;
   return '<div class="kit"><b class="kt">Dopuni komplet</b><a class="kc" href="'+pl(q)+'"><span class="mini">'+tile(q,0)+'</span><span class="kn"><span class="ln">'+esc(q.name)+'</span><small>'+[q.cat,q.size?"Vel. "+q.size:"",q.color].filter(Boolean).map(esc).join(" · ")+'</small></span><b class="kp">'+fmt(q.price)+'</b></a>'+
@@ -992,7 +1000,7 @@ function mkSlug(f,u){var s=String(f||"").replace(/\.md$/i,"").replace(/^\d{4}-\d
 function pl(p){return "/proizvod/"+(p.slug||p.id)}
 function pBySlug(s){try{s=decodeURIComponent(s)}catch(e){}return P.filter(function(p){return p.slug===s})[0]||P.filter(function(p){return String(p.id)===s})[0]}
 function readList(a){P=[];SS=[];var used={};a.forEach(function(d){if(!d||!d.title)return;var id=hid(d.file),ph=[d.image,d.image2,d.image3,d.image4,d.image5,d.image6,d.image7].filter(Boolean).map(function(x){return /^(https?:)?\/\//.test(x)||x[0]==="/"?x:"/"+x});
-      P.push({id:id,file:d.file,brand:d.brand||"",cat:catOf(d.category),size:d.size||"",color:d.color||"",cols:baseCols(d.color),hex:d.hex||"#4a5160",name:d.title,cond:(/^\d+([.,]\d+)?$/.test(String(d.condition||"").trim())?String(d.condition).trim().replace(",",".")+"/10":(d.condition||"")),desc:d.description||d.body||"",price:parseFloat(d.price)||0,old:parseFloat(d.old_price)||0,feat:/^(true|da|yes|1)$/i.test(String(d.featured||"")),slug:mkSlug(d.file,used),imgs:ph.length||3,g:"#2a303b,#14161b",photos:ph,pos:FP[String(d.focus||"").trim().toLowerCase()]||"50% 50%"});
+      P.push({id:id,file:d.file,kit:String(d.komplet||"").trim(),brand:d.brand||"",cat:catOf(d.category),size:d.size||"",color:d.color||"",cols:baseCols(d.color),hex:d.hex||"#4a5160",name:d.title,cond:(/^\d+([.,]\d+)?$/.test(String(d.condition||"").trim())?String(d.condition).trim().replace(",",".")+"/10":(d.condition||"")),desc:d.description||d.body||"",price:parseFloat(d.price)||0,old:parseFloat(d.old_price)||0,feat:/^(true|da|yes|1)$/i.test(String(d.featured||"")),slug:mkSlug(d.file,used),imgs:ph.length||3,g:"#2a303b,#14161b",photos:ph,pos:FP[String(d.focus||"").trim().toLowerCase()]||"50% 50%"});
       if(/^(true|da|yes|1)$/i.test(d.sold||""))SS.push(id)});if(LIVE){sync();var nw=Date.now();S.sold=S.sold.filter(function(i){return SS.indexOf(i)<0&&S.st&&S.st[i]>nw-20000});save()}}
 function viaApi(){return fetch(CFG.API+"/products").then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(j){return j.items.map(function(x){var d=fm(x.text);d.file=x.file;return d})})}
 function viaGithub(){var G=CFG.GH;
