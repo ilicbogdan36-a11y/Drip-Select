@@ -12,6 +12,6 @@ image3: /images/products/1103-2-6-.webp
 image4: /images/products/1103-2-7-.webp
 focus: sredina
 featured: false
-sold: false
+sold: true
 ---
 U Odličnom Stanju
