@@ -2,7 +2,8 @@
 title: Nike Tech Fleece 2023
 brand: Nike
 category: Gornji deo
-price: 7990
+price: 6990
+old_price: 7990
 size: S
 color: Plava
 condition: 9
