@@ -2,7 +2,8 @@
 title: Nike Tech Fleece 2023
 brand: Nike
 category: Donji deo
-price: 6990
+price: 5990
+old_price: 6990
 size: S
 color: Plava
 komplet: 2026-11-04-nike-tech-fleece-2023-4
