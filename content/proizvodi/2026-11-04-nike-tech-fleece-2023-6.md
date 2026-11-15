@@ -12,6 +12,6 @@ image3: /images/products/1103-2-43-.webp
 image4: /images/products/1103-2-44-.webp
 focus: sredina
 featured: false
-sold: false
+sold: true
 ---
 U Okej Stanju
