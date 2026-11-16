@@ -14,6 +14,6 @@ image3: /images/products/1103-2-35-.webp
 image4: /images/products/1103-2-36-.webp
 focus: sredina
 featured: false
-sold: false
+sold: true
 ---
 U Veoma Dobrom Stanju
