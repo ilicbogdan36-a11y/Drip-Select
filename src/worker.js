@@ -6,11 +6,12 @@ import * as odluka from "./api/odluka.js";
 import * as auth from "./api/auth.js";
 import * as callback from "./api/callback.js";
 import * as status from "./api/status.js";
+import * as kod from "./api/kod.js";
 import { productPage, ogImage, sitePage, sitemap, PAGE_TITLES } from "./page.js";
 import { checkDrop } from "./drop.js";
 import { productImage } from "./image.js";
 
-const ROUTES = { "/api/submit": submit, "/api/products": products, "/api/utisci": utisci, "/api/odluka": odluka, "/api/auth": auth, "/api/callback": callback, "/api/status": status };
+const ROUTES = { "/api/submit": submit, "/api/products": products, "/api/utisci": utisci, "/api/odluka": odluka, "/api/auth": auth, "/api/callback": callback, "/api/status": status, "/api/kod": kod };
 const json = (o, status) => new Response(JSON.stringify(o), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 
 export default {

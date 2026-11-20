@@ -16,6 +16,7 @@
 
 import { addSubscriber } from "../drop.js";
 import { signDecision, DECISION_DAYS } from "../decision.js";
+import { priceOf, normKod, zakljucajKod, otkljucajKod, fmtDin } from "../codes.js";
 
 const MAX_BODY = 4000000;   // znakova; slike stižu već smanjene iz pregledača
 const MAX_FILE = 1000000;   // znakova base64 po slici
@@ -30,7 +31,7 @@ const FORMS = {
   porudzbina: {
     title: "Nova porudžbina",
     req: ["ime", "prezime", "email", "telefon", "adresa", "grad", "postanski_broj", "artikli", "fajlovi"],
-    all: ["ime", "prezime", "email", "telefon", "adresa", "grad", "postanski_broj", "drzava", "napomena", "novosti", "artikli", "dostava", "placanje", "ukupno", "vreme", "fajlovi"],
+    all: ["ime", "prezime", "email", "telefon", "adresa", "grad", "postanski_broj", "drzava", "napomena", "novosti", "artikli", "dostava", "placanje", "popust", "ukupno", "kod", "kod_artikal", "vreme", "fajlovi"],
   },
   prijava: { title: "Prijava za novi drop", req: ["email"], all: ["email", "vreme"] },
   zelja: {
@@ -42,7 +43,7 @@ const FORMS = {
 };
 const LABELS = {
   ime: "Ime", prezime: "Prezime", email: "Mejl", telefon: "Telefon", adresa: "Adresa", grad: "Grad",
-  postanski_broj: "Poštanski broj", drzava: "Država", napomena: "Napomena", artikli: "Proizvodi", dostava: "Dostava", placanje: "Plaćanje",
+  postanski_broj: "Poštanski broj", drzava: "Država", napomena: "Napomena", artikli: "Proizvodi", dostava: "Dostava", placanje: "Plaćanje", popust: "Popust", kod: "Kod",
   novosti: "Novosti i ponude mejlom", ukupno: "Ukupno", vreme: "Vreme", poruka: "Poruka", sta_trazi: "Šta traži", velicina: "Veličina", budzet: "Budžet (din.)",
 };
 const LONG = { poruka: 3000, napomena: 3000, artikli: 3000, sta_trazi: 1000, fajlovi: 1500 };
@@ -169,18 +170,19 @@ async function reserve(cfg, files) {
 }
 
 // Samo proverava da li su proizvodi još slobodni (ništa ne upisuje): porudžbina ih ne zaključava, to radi tek "Prihvati".
-async function available(cfg, files) {
+async function available(cfg, files, prices) {
   const taken = [];
   for (const f of files) {
     const r = await readFile(cfg, f);
     if (r.missing || readSold(r.text)) taken.push(f);
+    else if (prices) prices[f] = priceOf(r.text);   // cene za proveru koda dolaze iz fajlova proizvoda, ne iz pregledača
   }
   return taken;
 }
 
 // ---------- Mejl (Resend) ----------
 function buildMail(def, d, atts, extra = "", links = null) {
-  const keys = def.all.filter((k) => d[k] && k !== "fajlovi");
+  const keys = def.all.filter((k) => d[k] && k !== "fajlovi" && k !== "kod_artikal");
   const rows = keys.map((k) =>
     `<tr><td style="padding:6px 16px 6px 0;color:#666;vertical-align:top;white-space:nowrap">${LABELS[k] || k}</td><td style="padding:6px 0">${esc(d[k]).replace(/\n/g, "<br>")}</td></tr>`).join("");
   const btn = (href, bg, label) => `<a href="${esc(href)}" style="display:inline-block;padding:12px 22px;background:${bg};color:#fff;text-decoration:none;font-weight:bold;border-radius:8px">${label}</a>`;
@@ -224,7 +226,7 @@ function buildCustomerMail(d, env) {
   const next = abroad
     ? "Javljamo ti se radi cene dostave i podataka za uplatu. Paket šaljemo kad uplata stigne."
     : "Javljamo se na telefon radi potvrde, a zatim dogovaramo dostavu. Plaćanje je pouzećem, gotovinom kuriru pri preuzimanju.";
-  const rows = [["Proizvodi", d.artikli], ["Dostava", d.dostava], ["Ukupno", d.ukupno], ["Plaćanje", d.placanje], ["Adresa", addr], ["Telefon", d.telefon], ["Napomena", d.napomena]].filter(([, v]) => v);
+  const rows = [["Proizvodi", d.artikli], ["Dostava", d.dostava], ["Popust", d.popust], ["Ukupno", d.ukupno], ["Plaćanje", d.placanje], ["Adresa", addr], ["Telefon", d.telefon], ["Napomena", d.napomena]].filter(([, v]) => v);
   const hello = d.ime ? `Zdravo, ${d.ime}.` : "Zdravo.";
   const trs = rows.map(([k, v]) =>
     `<tr><td style="padding:7px 18px 7px 0;font:14px Arial,sans-serif;color:#8b93a7;vertical-align:top;white-space:nowrap">${k}</td><td style="padding:7px 0;font:15px Arial,sans-serif;color:#f4f6fa">${esc(v).replace(/\n/g, "<br>")}</td></tr>`).join("");
@@ -257,6 +259,13 @@ function purge(request, waitUntil) {
     const p = caches.default.delete(new Request(new URL(request.url).origin + "/api/products"));
     if (waitUntil) waitUntil(p.catch(() => {}));
   } catch (e) { console.error("purge", e); }
+}
+
+// Ime artikla iz reda "Ime (veličina) cena" koji odgovara fajlu (redosled artikala i fajlova je isti)
+function nameOfLine(artikli, files, file) {
+  const lines = String(artikli).split("\n").filter(Boolean), i = files.indexOf(file);
+  const l = i >= 0 ? lines[i] : "";
+  return l ? l.replace(/\s+\([^()]*\)\s*[\d.,]+\s*din\.?$/i, "").trim() : "";
 }
 
 // ---------- Handler ----------
@@ -293,6 +302,7 @@ export async function onRequestPost({ request, env, waitUntil }) {
   const d = {};
   for (const k of def.all) d[k] = clean(body.data && body.data[k], LONG[k] || 300);
   if ("novosti" in d) d.novosti = d.novosti === "Da" ? "Da" : "Ne";
+  if (body.form === "porudzbina") d.popust = "";   // popust postavlja samo server, nikad pregledač
   for (const k of def.req) if (!d[k]) return json({ error: "missing", field: k }, 400);
   if (d.email && !isEmail(d.email)) return json({ error: "email" }, 400);
   const bad = badData(d);
@@ -307,7 +317,7 @@ export async function onRequestPost({ request, env, waitUntil }) {
     });
   }
 
-  let cfg = null, files = [];
+  let cfg = null, files = [], prices = {};
   if (body.form === "porudzbina") {
     files = [];
     files = [...new Set(d.fajlovi.split("|").map((s) => s.trim()).filter(Boolean))];
@@ -315,7 +325,7 @@ export async function onRequestPost({ request, env, waitUntil }) {
     cfg = ghCfg(env);
     if (!cfg) return json({ error: "config" }, 500);
     let taken;
-    try { taken = await available(cfg, files); }
+    try { taken = await available(cfg, files, prices); }
     catch (e) { console.error("available", e); return json({ error: "github" }, 502); }
     if (taken.length) return json({ error: "sold", items: taken }, 409);
   }
@@ -332,19 +342,40 @@ export async function onRequestPost({ request, env, waitUntil }) {
     }
   }
 
+  // kod za popust / točak: proverava se i zaključava na serveru (iznos se računa iz cena u fajlovima proizvoda)
+  let kodUsed = "";
+  if (body.form === "porudzbina" && d.kod) {
+    const kk = normKod(d.kod);
+    if (!kk) return json({ error: "kod", razlog: "nema" }, 409);
+    const items = files.map((f) => ({ file: f, price: prices[f] || 0 }));
+    let r;
+    try { r = await zakljucajKod(env, kk, items, d.kod_artikal, `${d.email} | ${new Date().toISOString()}`, /^Unapred/i.test(d.placanje)); }
+    catch (e) { console.error("kod", e); return json({ error: "github" }, 502); }
+    if (!r.ok) return json({ error: "kod", razlog: r.razlog }, 409);
+    kodUsed = kk;
+    d.kod = kk;
+    const sum = items.reduce((x, it) => x + it.price, 0), ime = r.stavka ? nameOfLine(d.artikli, files, r.stavka.file) : "";
+    d.popust = `${r.opis}${ime ? `: „${ime}“` : ""}${r.iznos ? `, −${fmtDin(r.iznos)}` : ""} (kod ${kk})`;
+    if (r.dostava && !/^Unapred/i.test(d.placanje)) d.dostava = "Besplatno (kod)";
+    if (sum > 0) d.ukupno = fmtDin(sum - (r.iznos || 0));   // iznos izračunat na serveru, ne onaj iz pregledača
+  } else d.kod = "";
+  const release = async () => { if (kodUsed) { try { await otkljucajKod(env, kodUsed); } catch (e) { console.error("otkljucaj", e); } } };
+
   // dugmad Prihvati / Odbij: potpisani linkovi ka /api/odluka (isti sajt sa kog je porudžbina stigla)
   let links = null;
   if (body.form === "porudzbina") {
     try {
-      const tok = await signDecision(env, { f: files, e: d.email, n: d.ime, a: d.artikli.slice(0, 600), u: d.ukupno, p: d.placanje, d: d.dostava });
+      const tok = await signDecision(env, { f: files, e: d.email, n: d.ime, a: d.artikli.slice(0, 600), u: d.ukupno, p: d.placanje, d: d.dostava, ...(kodUsed ? { k: kodUsed, dz: d.popust.slice(0, 300) } : {}) });
       const base = new URL(request.url).origin + "/api/odluka?t=" + tok;
       links = { accept: base + "&a=prihvati", decline: base + "&a=odbij" };
-    } catch (e) { console.error("potpis", e); return json({ error: "config" }, 500); }
+    } catch (e) { console.error("potpis", e); await release(); return json({ error: "config" }, 500); }
   }
+  if (kodUsed) extra = (extra ? extra + "\n" : "") + `Kod ${kodUsed} je zaključan za ovu porudžbinu: Prihvati ga troši, Odbij ga vraća kupcu.`;
   try {
     await sendMail(env, buildMail(def, d, atts, extra, links), d.email && isEmail(d.email) ? d.email : null, atts);
   } catch (e) {
     console.error("mail", e);
+    await release();
     return json({ error: "mail" }, 502); // mejl nije otišao: porudžbina nije primljena, kupac može da pokuša ponovo (ništa nije zaključano)
   }
   // potvrda za kupca: njen neuspeh ne sme da pokvari porudžbinu koja je već primljena
@@ -355,5 +386,5 @@ export async function onRequestPost({ request, env, waitUntil }) {
   return json({ ok: true });
 }
 
-export { ghCfg, readFile, readSold, reserve, sendMail, esc, sha, purge, REPLY_DEFAULT };
+export { ghCfg, readFile, readSold, reserve, sendMail, esc, sha, hit, purge, REPLY_DEFAULT };
 export const onRequest = () => json({ error: "method" }, 405);

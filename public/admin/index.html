@@ -8,5 +8,27 @@
 </head>
 <body>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script>
+    // Polje "Kod" za kolekciju Kodovi: kod se sam nasumično generiše pri pravljenju novog, a postojeći se ne menja (ime fajla je kod).
+    (function () {
+      if (!window.CMS || !window.createClass || !window.h) return;
+      var ABC = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      function gen() { var a = new Uint8Array(8), s = "", i; crypto.getRandomValues(a); for (i = 0; i < 8; i++) s += ABC[a[i] & 31]; return "DRIP-" + s.slice(0, 4) + "-" + s.slice(4); }
+      var Control = createClass({
+        isNew: function () { var e = this.props.entry; return !!(e && e.get && e.get("newRecord")); },
+        componentDidMount: function () { if (!this.props.value && this.isNew()) this.props.onChange(gen()); },
+        isValid: function () { return /^[A-Z0-9][A-Z0-9-]{3,23}$/.test(this.props.value || "") ? true : { error: { message: "Kod: 4 do 24 znaka, samo slova, brojevi i crtica." } }; },
+        render: function () {
+          var p = this.props, nw = this.isNew();
+          return h("div", null,
+            h("input", { type: "text", id: p.forID, className: p.classNameWrapper, value: p.value || "", readOnly: !nw, spellCheck: false, autoCapitalize: "characters",
+              onChange: function (e) { p.onChange(String(e.target.value).toUpperCase().replace(/[^A-Z0-9-]/g, "").slice(0, 24)); } }),
+            nw ? h("button", { type: "button", style: { marginTop: "8px", cursor: "pointer" }, onClick: function () { p.onChange(gen()); } }, "Novi nasumični kod") : null);
+        }
+      });
+      var Preview = createClass({ render: function () { return h("div", null, this.props.value || ""); } });
+      CMS.registerWidget("kod", Control, Preview);
+    })();
+  </script>
 </body>
 </html>

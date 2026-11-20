@@ -107,3 +107,66 @@ collections:
       - { label: "Utisak", name: "body", widget: "text", hint: "Prepiši tačno ono što je kupac napisao ili rekao. Ne izmišljaj i ne popravljaj ocenu." }
       - { label: "Šta je kupio (opciono)", name: "proizvod", widget: "string", required: false, hint: "npr. Nike Tech Fleece 2023" }
       - { label: "Objavi na sajtu", name: "objavi", widget: "boolean", default: true, hint: "Objavi samo uz dozvolu kupca. Isključi da se utisak sakrije, a ne brišeš ga." }
+
+  # kodovi za popust i točak: server sam pravi kod kad prihvatiš porudžbinu (mejl kupcu + stranica "Prihvaćeno"), a ovde ih vidiš.
+  # Za porudžbine sa Instagrama napraviš kod ručno ("Novi Kod"): kod se sam nasumično generiše, izabereš vrstu i sačuvaš, pa ga pošalješ kupcu.
+  # Kod je jednokratan. Status "Zaključan" znači da je kod u porudžbini koja čeka tvoju odluku (Odbij ga vraća, Prihvati ga troši).
+  - name: "kodovi"
+    label: "Kodovi (popust i točak)"
+    label_singular: "Kod"
+    folder: "content/kodovi"
+    extension: "json"
+    format: "json"
+    create: true
+    slug: "{{kod}}"
+    identifier_field: kod
+    summary: "{{kod}}  ·  {{vrsta}}  ·  {{status}}"
+    sortable_fields: ["nastao", "kod", "status"]
+    fields:
+      - { label: "Kod", name: "kod", widget: "kod", hint: "Nasumičan kod se pravi sam. Može i svoj (npr. HVALA-MILAN): 4 do 24 znaka, samo slova, brojevi i crtica. Posle čuvanja se ne menja." }
+      - label: "Vrsta"
+        name: "vrsta"
+        widget: "select"
+        default: "p10"
+        options:
+          - { label: "Popust 5% na jedan artikal", value: "p5" }
+          - { label: "Popust 10% na jedan artikal", value: "p10" }
+          - { label: "Popust 20% na jedan artikal", value: "p20" }
+          - { label: "Besplatna dostava (Srbija)", value: "dostava" }
+          - { label: "Jedan artikal do 20.000 din. besplatno", value: "artikal" }
+          - { label: "Za točak (nagrada se izvlači kad kupac zavrti)", value: "tocak" }
+        hint: "Za točak: radi samo kad je točak uključen u Podešavanjima, inače kupac vidi da točak još nije aktivan."
+      - label: "Status"
+        name: "status"
+        widget: "select"
+        default: "aktivan"
+        options:
+          - { label: "Aktivan", value: "aktivan" }
+          - { label: "Zaključan (čeka odluku o porudžbini)", value: "zakljucan" }
+          - { label: "Iskorišćen / poništen", value: "iskoriscen" }
+        hint: "Postavi na Iskorišćen da kod prestane da važi."
+      - { label: "Napravljen", name: "nastao", widget: "datetime", hint: "Odavde se računa rok važenja. Ne menjaj." }
+      - { label: "Važi (dana)", name: "rok_dana", widget: "number", value_type: "int", default: 30, min: 1, max: 365 }
+      - { label: "Napomena (npr. Instagram @ime)", name: "napomena", widget: "string", required: false }
+      - { label: "Ishod točka (popunjava sistem)", name: "ishod", widget: "string", required: false, hint: "Popunjava sistem kad kupac zavrti. Ne menjaj." }
+      - { label: "Mejl kupca (popunjava sistem)", name: "email", widget: "string", required: false }
+      - { label: "Porudžbina (popunjava sistem)", name: "porudzbina", widget: "string", required: false }
+      - { label: "Zavrteno (popunjava sistem)", name: "zavrteno", widget: "string", required: false }
+      - { label: "Iskorišćeno (popunjava sistem)", name: "iskoristen", widget: "string", required: false }
+
+  # prekidač za točak i pravila za kodove
+  - name: "podesavanja"
+    label: "Podešavanja"
+    files:
+      - name: "tocak"
+        label: "Točak i kodovi"
+        file: "content/podesavanja/tocak.json"
+        fields:
+          - label: "Točak uključen"
+            name: "tocak"
+            widget: "boolean"
+            default: false
+            required: false
+            hint: "Isključeno (preporučeno dok nemaš saglasnost): kupac posle potvrđene porudžbine dobija kod za fiksni popust, 10% (20% za porudžbine od praga ispod). Uključeno: kupac dobija kod za točak, a nagradu izvlači server po šansama (49% ništa, 10% besplatna dostava, 12% popust 5%, 11% popust 10%, 7% popust 20%, 10% zavrti ponovo, 1% artikal do 20.000 din.). PAŽNJA: nasumična nagrada vezana za porudžbinu je nagradna igra u smislu Zakona o igrama na sreću. Pre uključivanja proveri sa Upravom za igre na sreću."
+          - { label: "Prag za popust 20% (RSD)", name: "prag", widget: "number", value_type: "int", default: 15000, min: 1, hint: "Važi kad je točak isključen: porudžbina od ovog iznosa naviše dobija kod za 20%, a manja za 10%." }
+          - { label: "Koliko dana važi kod", name: "rok_dana", widget: "number", value_type: "int", default: 30, min: 1, max: 365 }
