@@ -1,5 +1,10 @@
 {
-  "tocak": false,
-  "prag": 15000,
-  "rok_dana": 30
+  "tocak": true,
+  "w_nista": 49,
+  "w_dostava": 10,
+  "w_p5": 12,
+  "w_p10": 11,
+  "w_p20": 7,
+  "w_ponovo": 10,
+  "w_artikal": 1
 }

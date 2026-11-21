@@ -1,5 +1,6 @@
 // Kodovi za popust i točak. Jedan JSON fajl po kodu u content/kodovi (GitHub je baza, isto kao proizvodi), pa admin (Decap)
-// vidi i menja iste fajlove koje koristi server. Podešavanja (točak uključen/isključen, prag, rok) su u content/podesavanja/tocak.json.
+// vidi i menja iste fajlove koje koristi server. Kodove pravi samo vlasnik, u adminu (Kodovi); server ih nikad ne pravi sam.
+// Podešavanja (točak uključen/isključen i šanse za svaku nagradu) su u content/podesavanja/tocak.json.
 //
 // Kod (JSON): { kod, vrsta, status, nastao, rok_dana, napomena, ishod, email, porudzbina }
 //   vrsta  : p5 | p10 | p20 | dostava | artikal | tocak   (tocak = nagrada se izvlači tek kad kupac zavrti)
@@ -14,10 +15,12 @@ const b64encode = (text) => { let s = ""; for (const b of new TextEncoder().enco
 export const KOD_DIR = "content/kodovi";
 export const SETT_DIR = "content/podesavanja";
 export const SETT_FILE = "tocak.json";
-export const DEFAULTS = { tocak: false, prag: 15000, rok_dana: 30 };
+export const DEFAULT_ROK = 30;   // dana, ako kod nema svoj rok
+export const DEFAULTS = { tocak: true, w: {} };
 export const MAX_ARTIKAL = 20000;
 
-// Nagrade točka i šanse (zbir je 100). "ponovo" ne troši kod.
+// Nagrade točka i početne težine (zbir 100). Vlasnik ih menja u adminu (Podešavanja, polja w_<id>); šansa je težina / zbir težina.
+// "ponovo" ne troši kod.
 export const SANSE = [
   { id: "nista", w: 49, naziv: "Probaj sledeći put" },
   { id: "dostava", w: 10, naziv: "Besplatna dostava" },
@@ -46,16 +49,20 @@ export const normKod = (s) => {
   const k = String(s ?? "").trim().toUpperCase().replace(/\s+/g, "");
   return /^[A-Z0-9][A-Z0-9-]{3,23}$/.test(k) ? k : "";
 };
-const ABC = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 32 znaka, bez I, O, 0, 1
-export function noviKod() {
-  const b = crypto.getRandomValues(new Uint8Array(8));
-  const s = [...b].map((x) => ABC[x & 31]).join("");
-  return `DRIP-${s.slice(0, 4)}-${s.slice(4)}`;
-}
 export const rand01 = () => crypto.getRandomValues(new Uint32Array(1))[0] / 4294967296;
-export function izvuci(rnd = rand01) {
-  let r = rnd() * 100;
-  for (const s of SANSE) { if (r < s.w) return s.id; r -= s.w; }
+// Šanse sa trenutnim težinama iz podešavanja: [{ id, naziv, w, p }], p u procentima (jedna decimala). Težina 0 isključuje nagradu.
+export function sanseFor(sett) {
+  const ws = (sett && sett.w) || {};
+  const list = SANSE.map((s) => ({ id: s.id, naziv: s.naziv, w: Number.isFinite(+ws[s.id]) && ws[s.id] !== "" && ws[s.id] !== null && +ws[s.id] >= 0 ? Math.min(+ws[s.id], 1000) : s.w }));
+  let tot = list.reduce((a, s) => a + s.w, 0);
+  if (!(tot > 0)) { list.forEach((s, i) => { s.w = SANSE[i].w; }); tot = 100; }
+  return list.map((s) => ({ ...s, p: Math.round((s.w / tot) * 1000) / 10 }));
+}
+export function izvuci(rnd = rand01, list = SANSE) {
+  const tot = list.reduce((a, s) => a + s.w, 0);
+  if (!(tot > 0)) return "nista";
+  let r = rnd() * tot;
+  for (const s of list) { if (s.w > 0 && r < s.w) return s.id; r -= s.w; }
   return "nista";
 }
 // cena iz frontmatter-a fajla proizvoda (0 ako je nema)
@@ -69,7 +76,7 @@ export const fmtDin = fmt;
 export function rokDatum(k) {
   const t = Date.parse(k && k.nastao);
   if (!Number.isFinite(t)) return null;
-  const dana = +k.rok_dana > 0 ? +k.rok_dana : DEFAULTS.rok_dana;
+  const dana = +k.rok_dana > 0 ? +k.rok_dana : DEFAULT_ROK;
   return t + dana * 86400000;
 }
 export const datumTxt = (ms) => { const d = new Date(ms); return `${d.getUTCDate()}.${d.getUTCMonth() + 1}.${d.getUTCFullYear()}.`; };
@@ -129,17 +136,20 @@ let settCache = null;
 export async function getSettings(env) {
   const ttl = Number.isFinite(+env.KOD_CFG_TTL) && env.KOD_CFG_TTL !== undefined && env.KOD_CFG_TTL !== "" ? +env.KOD_CFG_TTL : 20000;
   if (settCache && Date.now() - settCache.t < ttl) return settCache.v;
-  let v = { ...DEFAULTS }, ok = false;
+  let v = { ...DEFAULTS, w: {} }, ok = false;
   try {
     const cfg = cfgAt(env, SETT_DIR);
     if (cfg) {
       const r = await gget(cfg, SETT_FILE);
       ok = true;
       const o = r.missing ? null : parse(r.text);
+      if (!r.missing && !o) v.tocak = false;   // fajl postoji, ali je pokvaren: bezbedno isključeno
       if (o) {
-        v.tocak = o.tocak === true || /^(true|da|yes|1)$/i.test(String(o.tocak ?? ""));
-        if (+o.prag > 0) v.prag = +o.prag;
-        if (+o.rok_dana >= 1 && +o.rok_dana <= 365) v.rok_dana = Math.round(+o.rok_dana);
+        if (o.tocak !== undefined && o.tocak !== null && o.tocak !== "") v.tocak = o.tocak === true || /^(true|da|yes|1)$/i.test(String(o.tocak));
+        for (const z of SANSE) {
+          const x = o["w_" + z.id];
+          if (x !== undefined && x !== null && x !== "" && Number.isFinite(+x) && +x >= 0) v.w[z.id] = Math.min(+x, 1000);
+        }
       }
     }
   } catch (e) { console.error("podesavanja", e); }
@@ -164,7 +174,7 @@ export async function nadjiKod(env, kod) {
 }
 
 // Nasumično izvlačenje (samo kod koji je za točak i još nije zavrten). Rezultat se upisuje pre odgovora, pa ga nije moguće ponoviti.
-export async function zavrtiKod(env, kod, rnd = rand01) {
+export async function zavrtiKod(env, kod, sett = DEFAULTS, rnd = rand01) {
   const cfg = cfgAt(env, KOD_DIR);
   if (!cfg) throw new Error("github nije podešen");
   for (let i = 0; i < 3; i++) {
@@ -174,7 +184,7 @@ export async function zavrtiKod(env, kod, rnd = rand01) {
     if (e.data.vrsta !== "tocak") return { ok: false, razlog: st.s === "vazi" ? "nije_za_tocak" : st.s };
     if (st.s === "vazi") return { ok: true, vec: true, id: e.data.ishod, nagrada: javnaNagrada(st.prize), stanje: "vazi", rok: st.rok };
     if (st.s !== "zavrti") return { ok: false, razlog: st.s };
-    const id = izvuci(rnd);
+    const id = izvuci(rnd, sanseFor(sett));
     if (id === "ponovo") return { ok: true, id, stanje: "zavrti", rok: st.rok };
     const next = { ...e.data, ishod: id, status: id === "nista" ? "iskoriscen" : e.data.status || "aktivan", zavrteno: new Date().toISOString() };
     const r = await gput(cfg, e.name, toJson(next), e.sha, `Točak: ${kod} [skip ci]`);
@@ -222,21 +232,3 @@ async function promeni(env, kod, fn, poruka) {
 export const otkljucajKod = (env, kod) => promeni(env, kod, (k) => (k.status === "zakljucan" ? { ...k, status: "aktivan", porudzbina: "" } : null), "Kod vraćen");
 // Prihvaćena porudžbina: kod je potrošen
 export const potrosiKod = (env, kod) => promeni(env, kod, (k) => (k.status === "iskoriscen" ? null : { ...k, status: "iskoriscen", iskoristen: new Date().toISOString() }), "Kod potrošen");
-
-// Novi kod za kupca (posle prihvaćene porudžbine). vrsta: p10 | p20 | tocak
-export async function napraviKod(env, vrsta, sett, napomena, email) {
-  const cfg = cfgAt(env, KOD_DIR);
-  if (!cfg) throw new Error("github nije podešen");
-  const nastao = new Date().toISOString();
-  for (let i = 0; i < 5; i++) {
-    const kod = noviKod();
-    const data = { kod, vrsta, status: "aktivan", nastao, rok_dana: sett.rok_dana, napomena: String(napomena || "").slice(0, 200), ishod: "", email: String(email || "").slice(0, 254), porudzbina: "" };
-    const r = await gput(cfg, kod.toLowerCase() + ".json", toJson(data), undefined, `Novi kod: ${kod} [skip ci]`);
-    if (conflict(r)) continue;   // ime već postoji (praktično nemoguće), pokušaj drugi kod
-    if (!r.ok) throw new Error("github write " + r.status);
-    return { kod, vrsta, rok: rokDatum(data) };
-  }
-  throw new Error("kod: nije uspelo");
-}
-export const vrstaZaPorudzbinu = (sett, ukupno) => (sett.tocak ? "tocak" : ukupno >= sett.prag ? "p20" : "p10");
-export const vrstaOpis = (vrsta) => (vrsta === "tocak" ? "kod za točak" : (PRIZE[vrsta] ? opisNagrade(PRIZE[vrsta]) : ""));

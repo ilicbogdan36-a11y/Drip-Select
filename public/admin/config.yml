@@ -108,8 +108,8 @@ collections:
       - { label: "Šta je kupio (opciono)", name: "proizvod", widget: "string", required: false, hint: "npr. Nike Tech Fleece 2023" }
       - { label: "Objavi na sajtu", name: "objavi", widget: "boolean", default: true, hint: "Objavi samo uz dozvolu kupca. Isključi da se utisak sakrije, a ne brišeš ga." }
 
-  # kodovi za popust i točak: server sam pravi kod kad prihvatiš porudžbinu (mejl kupcu + stranica "Prihvaćeno"), a ovde ih vidiš.
-  # Za porudžbine sa Instagrama napraviš kod ručno ("Novi Kod"): kod se sam nasumično generiše, izabereš vrstu i sačuvaš, pa ga pošalješ kupcu.
+  # kodovi za popust i točak: SAMO ti ih praviš, ovde ("Novi Kod"). Server nikad sam ne pravi kod i ne deli ga kupcu.
+  # Kod se sam nasumično generiše, izabereš vrstu (za točak ili fiksna nagrada) i sačuvaš, pa ga sam pošalješ kupcu (Instagram, poruka, uz paket).
   # Kod je jednokratan. Status "Zaključan" znači da je kod u porudžbini koja čeka tvoju odluku (Odbij ga vraća, Prihvati ga troši).
   - name: "kodovi"
     label: "Kodovi (popust i točak)"
@@ -127,7 +127,7 @@ collections:
       - label: "Vrsta"
         name: "vrsta"
         widget: "select"
-        default: "p10"
+        default: "tocak"
         options:
           - { label: "Popust 5% na jedan artikal", value: "p5" }
           - { label: "Popust 10% na jedan artikal", value: "p10" }
@@ -135,7 +135,7 @@ collections:
           - { label: "Besplatna dostava (Srbija)", value: "dostava" }
           - { label: "Jedan artikal do 20.000 din. besplatno", value: "artikal" }
           - { label: "Za točak (nagrada se izvlači kad kupac zavrti)", value: "tocak" }
-        hint: "Za točak: radi samo kad je točak uključen u Podešavanjima, inače kupac vidi da točak još nije aktivan."
+        hint: "Za točak je preporučeno: nagrada se izvlači nasumično po šansama iz Podešavanja, a može da ispadne i ništa. Ostale vrste su zagarantovana nagrada, pa ih daj samo kome zaista želiš."
       - label: "Status"
         name: "status"
         widget: "select"
@@ -145,7 +145,7 @@ collections:
           - { label: "Zaključan (čeka odluku o porudžbini)", value: "zakljucan" }
           - { label: "Iskorišćen / poništen", value: "iskoriscen" }
         hint: "Postavi na Iskorišćen da kod prestane da važi."
-      - { label: "Napravljen", name: "nastao", widget: "datetime", hint: "Odavde se računa rok važenja. Ne menjaj." }
+      - { label: "Napravljen", name: "nastao", widget: "datetime", hint: "Odavde se računa rok važenja. Ne menjaj. Ako ostane prazno, kod ne ističe.", required: false }
       - { label: "Važi (dana)", name: "rok_dana", widget: "number", value_type: "int", default: 30, min: 1, max: 365 }
       - { label: "Napomena (npr. Instagram @ime)", name: "napomena", widget: "string", required: false }
       - { label: "Ishod točka (popunjava sistem)", name: "ishod", widget: "string", required: false, hint: "Popunjava sistem kad kupac zavrti. Ne menjaj." }
@@ -154,19 +154,24 @@ collections:
       - { label: "Zavrteno (popunjava sistem)", name: "zavrteno", widget: "string", required: false }
       - { label: "Iskorišćeno (popunjava sistem)", name: "iskoristen", widget: "string", required: false }
 
-  # prekidač za točak i pravila za kodove
+  # prekidač za točak i šanse za svaku nagradu
   - name: "podesavanja"
     label: "Podešavanja"
     files:
       - name: "tocak"
-        label: "Točak i kodovi"
+        label: "Točak i šanse"
         file: "content/podesavanja/tocak.json"
         fields:
           - label: "Točak uključen"
             name: "tocak"
             widget: "boolean"
-            default: false
+            default: true
             required: false
-            hint: "Isključeno (preporučeno dok nemaš saglasnost): kupac posle potvrđene porudžbine dobija kod za fiksni popust, 10% (20% za porudžbine od praga ispod). Uključeno: kupac dobija kod za točak, a nagradu izvlači server po šansama (49% ništa, 10% besplatna dostava, 12% popust 5%, 11% popust 10%, 7% popust 20%, 10% zavrti ponovo, 1% artikal do 20.000 din.). PAŽNJA: nasumična nagrada vezana za porudžbinu je nagradna igra u smislu Zakona o igrama na sreću. Pre uključivanja proveri sa Upravom za igre na sreću."
-          - { label: "Prag za popust 20% (RSD)", name: "prag", widget: "number", value_type: "int", default: 15000, min: 1, hint: "Važi kad je točak isključen: porudžbina od ovog iznosa naviše dobija kod za 20%, a manja za 10%." }
-          - { label: "Koliko dana važi kod", name: "rok_dana", widget: "number", value_type: "int", default: 30, min: 1, max: 365 }
+            hint: "Isključi da točak odmah prestane da radi (ko ima kod za točak vidi da još nije aktivan). Kodovi koje ti sam napraviš sa fiksnom nagradom rade i dalje. PAŽNJA: nasumična nagrada vezana za kupovinu može da bude nagradna igra u smislu Zakona o igrama na sreću. Pre nego što daješ kodove proveri sa Upravom za igre na sreću."
+          - { label: "Šansa: ništa (težina)", name: "w_nista", widget: "number", value_type: "float", default: 49, min: 0, max: 1000, required: false, hint: "Svih sedam brojeva su težine, ne moraju da daju 100. Šansa = broj / zbir svih brojeva. Što je veći broj kod 'ništa', to je manje nagrada. 0 skida nagradu sa točka." }
+          - { label: "Šansa: besplatna dostava (težina)", name: "w_dostava", widget: "number", value_type: "float", default: 10, min: 0, max: 1000, required: false }
+          - { label: "Šansa: popust 5% (težina)", name: "w_p5", widget: "number", value_type: "float", default: 12, min: 0, max: 1000, required: false }
+          - { label: "Šansa: popust 10% (težina)", name: "w_p10", widget: "number", value_type: "float", default: 11, min: 0, max: 1000, required: false }
+          - { label: "Šansa: popust 20% (težina)", name: "w_p20", widget: "number", value_type: "float", default: 7, min: 0, max: 1000, required: false }
+          - { label: "Šansa: zavrti ponovo (težina)", name: "w_ponovo", widget: "number", value_type: "float", default: 10, min: 0, max: 1000, required: false, hint: "Ne troši kod, kupac vrti još jednom." }
+          - { label: "Šansa: artikal do 20.000 din. (težina)", name: "w_artikal", widget: "number", value_type: "float", default: 1, min: 0, max: 1000, required: false, hint: "Zlatno polje na točku. Pri 1 od ukupno 100, šansa je 1%. Stavi 0 ako ne želiš da se artikal deli (polje nestaje sa točka)." }

@@ -8,7 +8,7 @@
 
 import { readDecision } from "../decision.js";
 import { ghCfg, readFile, readSold, reserve, sendMail, esc, sha, purge, REPLY_DEFAULT } from "./submit.js";
-import { getSettings, napraviKod, potrosiKod, otkljucajKod, vrstaZaPorudzbinu, priceOf, datumTxt } from "../codes.js";
+import { potrosiKod, otkljucajKod } from "../codes.js";
 
 const INSTAGRAM = "dripselect.rs";   // za mejl kupcu; može da se promeni promenljivom IG_HANDLE
 const HTML_H = { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex, nofollow", "referrer-policy": "no-referrer" };
@@ -50,21 +50,7 @@ const bad = () => page("Link nije važeći", `<h1>Link nije važeći</h1><p>Ovaj
 const expired = () => page("Link je istekao", `<h1>Link je istekao</h1><p>Ova porudžbina je stara, pa se link više ne koristi. Ako komad još treba da se označi kao prodat, uradi to u adminu (Prodato).</p>`, 410);
 
 // ---------- mejlovi kupcu ----------
-// Kod koji kupac dobija uz potvrdu: nk = { kod, vrsta, rok }
-function kodMail(nk, site) {
-  const host = site.replace(/^https?:\/\//, "");
-  const pct = nk.vrsta === "p20" ? 20 : 10;
-  const intro = nk.vrsta === "tocak"
-    ? `Hvala što kupuješ kod nas! Kao zahvalnicu dobijaš kod za naš točak. Otvori ${host}, klikni na okruglo dugme sa točkom u zaglavlju, unesi kod i zavrti.`
-    : `Hvala što kupuješ kod nas! Kao zahvalnicu dobijaš ${pct}% popusta na jedan artikal po tvom izboru. Unesi kod u kasi pri sledećoj porudžbini.`;
-  const rok = nk.rok ? `Kod je jednokratan i važi do ${datumTxt(nk.rok)}` : "Kod je jednokratan";
-  const html = `<p style="margin:0 0 10px;font:15px/1.5 Arial,sans-serif;color:#cbd5e6">${esc(intro)}</p>` +
-    `<div style="margin:0 0 10px;padding:14px 16px;background:#07080c;border:1px dashed #1a8cff;border-radius:10px;text-align:center;font:700 24px 'Courier New',monospace;letter-spacing:3px;color:#fff">${esc(nk.kod)}</div>` +
-    `<p style="margin:0 0 22px;font:13px/1.5 Arial,sans-serif;color:#8b93a7">${esc(rok)}.</p>`;
-  return { html, text: `${intro}\n\nKOD: ${nk.kod}\n${rok}.` };
-}
-
-function customerMail(kind, d, env, nk) {
+function customerMail(kind, d, env) {
   const site = String(env.SITE_URL || "https://dripselect.rs").replace(/\/+$/, "");
   const contact = env.MAIL_REPLY || REPLY_DEFAULT;
   const ig = env.IG_HANDLE || INSTAGRAM;
@@ -83,7 +69,6 @@ function customerMail(kind, d, env, nk) {
       `Ostale komade možeš da pogledaš na ${site.replace(/^https?:\/\//, "")}. Ako imaš pitanje, piši nam na Instagramu (@${ig}) ili na ${contact}.`];
   }
   const rows = [["Proizvodi", d.a], ["Popust", d.dz], ["Ukupno", d.u]].filter(([, v]) => v);
-  const kb = kind === "prihvati" && nk ? kodMail(nk, site) : null;
   const trs = rows.map(([k, v]) => `<tr><td style="padding:7px 18px 7px 0;font:14px Arial,sans-serif;color:#8b93a7;vertical-align:top;white-space:nowrap">${k}</td><td style="padding:7px 0;font:15px Arial,sans-serif;color:#f4f6fa">${esc(v).replace(/\n/g, "<br>")}</td></tr>`).join("");
   const html = `<!doctype html><html><body style="margin:0;padding:0;background:#07080c" bgcolor="#07080c">` +
     `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#07080c"><tr><td align="center" style="padding:28px 14px">` +
@@ -92,10 +77,9 @@ function customerMail(kind, d, env, nk) {
     `<h1 style="margin:10px 0 10px;font:700 24px Arial,sans-serif;color:#f4f6fa">${esc(title)}</h1>` +
     paras.map((p, i) => `<p style="margin:0 0 ${i === paras.length - 1 ? 22 : 8}px;font:15px/1.5 Arial,sans-serif;color:${i ? "#8b93a7" : "#cbd5e6"}">${esc(p)}</p>`).join("") +
     (trs ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 22px">${trs}</table>` : "") +
-    (kb ? kb.html : "") +
     `<p style="margin:0;padding:18px 0 26px;border-top:1px solid #1f2430;font:12px/1.6 Arial,sans-serif;color:#6b7387">Ovo je automatska poruka sa <a href="${esc(site)}" style="color:#8b93a7">dripselect.rs</a>. Pitanja: ${esc(contact)}.</p>` +
     `</td></tr></table></td></tr></table></body></html>`;
-  const text = `${title}\n\n${paras.join("\n")}\n\n` + rows.map(([k, v]) => `${k}: ${v}`).join("\n") + (kb ? `\n\n${kb.text}` : "") + `\n\nOvo je automatska poruka sa ${site}. Pitanja: ${contact}.`;
+  const text = `${title}\n\n${paras.join("\n")}\n\n` + rows.map(([k, v]) => `${k}: ${v}`).join("\n") + `\n\nOvo je automatska poruka sa ${site}. Pitanja: ${contact}.`;
   return { subject, html, text };
 }
 
@@ -144,9 +128,9 @@ export async function onRequestPost({ request, env, waitUntil }) {
   const done = await getDecided(t);
   if (done) return page("Već odlučeno", `<h1>Već odlučeno</h1><p>Za ovu porudžbinu je već ${done === "prihvati" ? "<b>prihvaćena</b>" : "<b>odbijena</b>"}. Ništa nije promenjeno.</p>${itemsBox(d)}`);
 
-  const mailCustomer = async (nk) => {
+  const mailCustomer = async () => {
     if (!d.e) return false;
-    try { await sendMail(env, customerMail(a, d, env, nk), env.MAIL_REPLY || REPLY_DEFAULT, [], d.e); return true; }
+    try { await sendMail(env, customerMail(a, d, env), env.MAIL_REPLY || REPLY_DEFAULT, [], d.e); return true; }
     catch (e) { console.error("mejl kupcu (odluka)", e); return false; }
   };
 
@@ -159,19 +143,10 @@ export async function onRequestPost({ request, env, waitUntil }) {
     if (res.conflict) return page("Komad nije slobodan", `<h1>Komad nije slobodan</h1>${itemsBox(d)}<div class="w">Neki od komada je već označen kao prodat (druga porudžbina, ili si ovu već prihvatio). Ništa nije promenjeno.</div><a class="b l" href="?t=${encodeURIComponent(t)}&a=odbij">Odbij ovu porudžbinu</a>`, 409);
     if (res.done.length) purge(request, waitUntil);
     await setDecided(t, "prihvati");
-    // kod iskorišćen u ovoj porudžbini se troši; kupac dobija NOV kod (nasumični kod za točak, a kad je točak isključen popust 10%, odnosno 20% od praga)
+    // kod iskorišćen u ovoj porudžbini se troši (kodove pravi samo vlasnik, u adminu: Kodovi)
     if (d.k) { try { await potrosiKod(env, d.k); } catch (e) { console.error("kod potrošen", e); } }
-    let nk = null;
-    try {
-      const sett = await getSettings(env);
-      const total = (res.done || []).reduce((x, f) => x + priceOf(f.orig), 0);
-      nk = await napraviKod(env, vrstaZaPorudzbinu(sett, total), sett, "porudžbina", d.e);
-    } catch (e) { console.error("novi kod", e); }
-    const sent = await mailCustomer(nk);
-    const kodBox = nk
-      ? `<div class="it">Kod za kupca: <b style="letter-spacing:2px">${esc(nk.kod)}</b>\n${nk.vrsta === "tocak" ? "Za točak (nasumična nagrada)" : nk.vrsta === "p20" ? "Popust 20% na jedan artikal" : "Popust 10% na jedan artikal"}${nk.rok ? "\nVaži do " + esc(datumTxt(nk.rok)) : ""}</div><p class="m">${sent ? "Kupac ga je dobio u mejlu potvrde." : "Mejl nije poslat, pošalji mu kod sam."}</p>`
-      : `<div class="w">Kod za sledeću porudžbinu nije napravljen (GitHub nije odgovorio). Napravi ga ručno u adminu (Kodovi).</div>`;
-    return page("Prihvaćeno", `<h1>Prihvaćeno</h1><div class="ok">Proizvodi su označeni kao prodati na sajtu.</div>${itemsBox(d)}<p>${sent ? "Kupac je dobio mejl potvrde." : "<b>Mejl kupcu nije poslat.</b> Javi mu se sam na telefon ili mejl."}</p>${kodBox}`);
+    const sent = await mailCustomer();
+    return page("Prihvaćeno", `<h1>Prihvaćeno</h1><div class="ok">Proizvodi su označeni kao prodati na sajtu.</div>${itemsBox(d)}<p>${sent ? "Kupac je dobio mejl potvrde." : "<b>Mejl kupcu nije poslat.</b> Javi mu se sam na telefon ili mejl."}</p>${d.k ? `<p class="m">Iskorišćen kod: ${esc(d.k)}</p>` : ""}`);
   }
 
   const sent = await mailCustomer();
