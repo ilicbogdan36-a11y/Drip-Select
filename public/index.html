@@ -364,8 +364,8 @@ img.tile{mix-blend-mode:multiply}
 .wb:hover{background:var(--ac);color:#fff;box-shadow:0 0 14px #1a8cff66}
 .wb.sp svg{animation:wsp 9s linear infinite}
 @keyframes wsp{to{transform:rotate(360deg)}}
-.wv{position:fixed;inset:0;z-index:60;background:#000c;display:none;align-items:center;justify-content:center;padding:16px;overflow:auto}.wv.on{display:flex}
-.wc{position:relative;width:min(440px,100%);max-height:100%;overflow:auto;background:radial-gradient(120% 55% at 50% 34%,#0f1d36 0,#0b101b 58%,#090c14 100%);border:1px solid #ffffff17;box-shadow:0 30px 90px #000c;border-radius:18px;padding:24px 20px 20px;animation:wpop .22s ease-out}
+.wv{position:fixed;inset:0;z-index:60;background:#000c;display:none;align-items:center;justify-content:center;padding:16px;overflow-y:auto;overflow-x:hidden}.wv.on{display:flex}
+.wc{position:relative;width:min(440px,100%);max-height:100%;overflow-y:auto;overflow-x:hidden;background:radial-gradient(120% 55% at 50% 34%,#0f1d36 0,#0b101b 58%,#090c14 100%);border:1px solid #ffffff17;box-shadow:0 30px 90px #000c;border-radius:18px;padding:24px 20px 20px;animation:wpop .22s ease-out}
 @keyframes wpop{from{transform:scale(.96);opacity:0}}
 .wc h3{margin:0 0 6px;font-size:22px;padding-right:34px}
 .wc .x{position:absolute;top:12px;right:14px}
@@ -375,24 +375,19 @@ img.tile{mix-blend-mode:multiply}
 .wmsg{min-height:0;margin:10px 0 0;font-size:13px;color:#ffb3ad}.wmsg:empty{display:none}
 .ww{position:relative;width:min(320px,80vw);aspect-ratio:1;margin:20px auto 8px;-webkit-tap-highlight-color:transparent}
 .wl{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
-.wst{border-radius:50%;box-shadow:0 0 70px #1a8cff2e,0 22px 44px #000b}
+.wwi{position:absolute;inset:0;border-radius:50%;overflow:hidden;isolation:isolate;box-shadow:0 0 70px #1a8cff2e,0 22px 44px #000b}   /* odseca okretanje, da se ne pojavi traka za skrolovanje */
 .wg{transition:transform 5.2s cubic-bezier(.12,.7,.08,1);will-change:transform}
 .wbu circle{animation:wbi 3.2s ease-in-out infinite alternate}.wbu circle:nth-child(even){animation-delay:-1.6s}
 .ww.sp .wbu circle{animation:wbc .5s steps(1) infinite}.ww.sp .wbu circle:nth-child(even){animation-delay:-.25s}
 @keyframes wbi{from{opacity:.5}to{opacity:1}}
 @keyframes wbc{0%{opacity:1}50%{opacity:.2}}
-.wo{opacity:0}.wo.on{animation:whit 1.1s ease-in-out 2 forwards}
+.wo{opacity:0}.wo.on{animation:whit 1.1s ease-in-out 2 forwards}.wo.on.g{fill:#ffd45a}
 @keyframes whit{0%{opacity:0}40%{opacity:.5}100%{opacity:.14}}
 .wp{position:absolute;z-index:3;left:50%;top:-2.2%;width:10.6%;margin-left:-5.3%;aspect-ratio:34/46;transform-origin:50% 28%;filter:drop-shadow(0 3px 4px #000b);pointer-events:none}
 .wp svg{display:block;width:100%;height:100%}
 .wp.fl{animation:wfl .13s ease-out}
 @keyframes wfl{from{transform:rotate(-20deg)}to{transform:rotate(0)}}
 .we{margin:0 0 6px;font:600 10px "Space Grotesk",Inter,sans-serif;letter-spacing:.34em;text-transform:uppercase;color:#6fb1ff}
-.wchh{margin:16px 0 8px;text-align:center;font:600 10px "Space Grotesk",Inter,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--mut)}
-.wch{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
-.wch span{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid #ffffff14;border-radius:999px;background:#ffffff08;font-size:12px;color:#cbd5e6;white-space:nowrap}
-.wch b{font-weight:700;color:#fff}.wch i{width:8px;height:8px;border-radius:50%;flex:none}
-.wch .gd{border-color:#f5c54299;background:#f5c5421c;color:#ffe08a}.wch .gd b{color:#ffe08a}
 .wres{margin:16px 0 0;padding:16px;border:1px solid var(--ln);border-radius:14px;background:#0a0c12;text-align:center}
 .wres.win{border-color:#1a8cff77;background:linear-gradient(160deg,#0b2447,#0a1226)}
 .wres.gold{border-color:#f5c54299;background:linear-gradient(160deg,#3a2a05,#14100a)}.wres.gold b{color:#ffe08a}
@@ -1103,10 +1098,8 @@ var WFILL={nista:["#090c12","#151a26"],nista2:["#0d1119","#1b2132"],p5:["#0c2a52
 var WTXT={nista:"#6f7a94",p5:"#fff",p10:"#fff",p20:"#fff",dostava:"#e6f0ff",ponovo:"#d6e2ff",artikal:"#2a1a00"};
 var WLAB={nista:[["NIŠTA",11,0,600]],p5:[["5%",19,-5,700],["POPUST",7.5,11,600]],p10:[["10%",19,-5,700],["POPUST",7.5,11,600]],p20:[["20%",19,-5,700],["POPUST",7.5,11,600]],
   dostava:[["BESPLATNA",7,-9,700],["DOSTAVA",11.5,4,700]],ponovo:[["ZAVRTI",7,-9,700],["PONOVO",11.5,4,700]],artikal:[["BESPLATAN",7,-9,800],["ARTIKAL",12.5,4,800]]};
-var WNAME={nista:"Ništa",dostava:"Besplatna dostava",p5:"Popust 5%",p10:"Popust 10%",p20:"Popust 20%",ponovo:"Zavrti ponovo",artikal:"Besplatan artikal"};
-var WDOT={nista:"#3a4560",dostava:"#4a74c0",p5:"#15427f",p10:"#1c66c6",p20:"#3d9eff",ponovo:"#7d8aa8",artikal:"#f5c542"};
-function wheelIds(all){var on={},ids=[];if(!all&&WC&&WC.sanse)WC.sanse.forEach(function(z){if(z.p>0)on[z.id]=1});
-  WTPL.forEach(function(x){if(all||!WC||!WC.sanse||on[x])ids.push(x)});return ids.length>=3?ids:WTPL.slice()}
+function wheelIds(all){var on={},ids=[];if(!all&&WC&&WC.nagrade)WC.nagrade.forEach(function(x){on[x]=1});
+  WTPL.forEach(function(x){if(all||!WC||!WC.nagrade||on[x])ids.push(x)});return ids.length>=3?ids:WTPL.slice()}
 var WFN="Space Grotesk,Inter,sans-serif";
 function wheelSvg(all){var ids=wheelIds(all),n=ids.length,sp=360/n,c=160,R=133,P="",T="",G="",O="",D="",i,id,a0,mid,k,d,key,cnt={};WG={};WS.seg=sp;
   function pt(g,rr){var t=g*Math.PI/180;return(c+rr*Math.sin(t)).toFixed(2)+" "+(c-rr*Math.cos(t)).toFixed(2)}
@@ -1119,53 +1112,50 @@ function wheelSvg(all){var ids=wheelIds(all),n=ids.length,sp=360/n,c=160,R=133,P
     G+='<circle cx="'+pt(a0,R-1).split(" ").join('" cy="')+'" r="2.5" fill="#e9c76e" stroke="#6b4e0f" stroke-width=".8"/>';
     O+='<path class="wo" data-i="'+i+'" d="'+d+'" fill="#fff"/>'}
   var bu="",ha="";for(k=0;k<24;k++){var q=pt(k*15+7.5,143.5).split(" ");ha+='<circle cx="'+q[0]+'" cy="'+q[1]+'" r="6.5" fill="#1a8cff" opacity=".2"/>';bu+='<circle cx="'+q[0]+'" cy="'+q[1]+'" r="3.3" fill="'+(k%2?"#f0c75a":"#d9ecff")+'"/>'}
-  return '<svg class="wl wst" viewBox="0 0 320 320" aria-hidden="true"><defs><linearGradient id="wbz" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#8e9ab6"/><stop offset=".22" stop-color="#232a3b"/><stop offset=".5" stop-color="#9aa6c2"/><stop offset=".78" stop-color="#1c2232"/><stop offset="1" stop-color="#6d7894"/></linearGradient></defs>'+
+  return '<div class="wwi"><svg class="wl" viewBox="0 0 320 320" aria-hidden="true"><defs><linearGradient id="wbz" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#8e9ab6"/><stop offset=".22" stop-color="#232a3b"/><stop offset=".5" stop-color="#9aa6c2"/><stop offset=".78" stop-color="#1c2232"/><stop offset="1" stop-color="#6d7894"/></linearGradient></defs>'+
     '<circle cx="160" cy="160" r="159" fill="url(#wbz)"/><circle cx="160" cy="160" r="153.5" fill="#080a10"/><circle cx="160" cy="160" r="153.5" fill="none" stroke="#fff" stroke-opacity=".1"/>'+ha+'<g class="wbu">'+bu+'</g></svg>'+
     '<svg id="wg" class="wl wg" viewBox="0 0 320 320" aria-hidden="true"><defs>'+D+'</defs>'+P+'<circle cx="160" cy="160" r="133" fill="none" stroke="#d4af5a" stroke-opacity=".75" stroke-width="1.6"/>'+T+G+O+'</svg>'+
     '<svg class="wl" viewBox="0 0 320 320" aria-hidden="true"><defs><linearGradient id="wgl" x1="0" y1="0" x2=".55" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient><linearGradient id="whb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset=".5" stop-color="#c9a13f"/><stop offset="1" stop-color="#7a5b12"/></linearGradient></defs>'+
-    '<circle cx="160" cy="160" r="133" fill="url(#wgl)"/><circle cx="160" cy="160" r="41" fill="url(#whb)"/><circle cx="160" cy="160" r="35" fill="#090b11"/>'+
-    '<text x="160" y="156" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700" letter-spacing="2" fill="#fff" font-family="'+WFN+'">DRIP</text><text x="160" y="172" text-anchor="middle" dominant-baseline="central" font-size="6.5" font-weight="600" letter-spacing="2.4" fill="#6fb1ff" font-family="'+WFN+'">SELECT</text></svg>'+
+    '<circle cx="160" cy="160" r="133" fill="url(#wgl)"/><circle cx="160" cy="160" r="46" fill="url(#whb)"/><circle cx="160" cy="160" r="40" fill="#0b0e16"/><clipPath id="whc"><circle cx="160" cy="160" r="40"/></clipPath>'+
+    '<image href="/logo.webp" x="124" y="138.4" width="72" height="44.8" preserveAspectRatio="xMidYMid meet" clip-path="url(#whc)"/></svg></div>'+
     '<div class="wp" aria-hidden="true"><svg viewBox="0 0 34 46"><defs><linearGradient id="wpg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset=".55" stop-color="#d5ab45"/><stop offset="1" stop-color="#8a6416"/></linearGradient></defs><path d="M17 45 L6.4 19.4 A12.4 12.4 0 1 1 27.6 19.4 Z" fill="url(#wpg)" stroke="#07080c" stroke-opacity=".55"/><circle cx="17" cy="13" r="4.6" fill="#0a0d14"/></svg></div>'}
-function wPct(p){return p<.1?"<0,1%":String(p).replace(".",",")+"%"}
-function wheelOdds(){var o=((WC&&WC.sanse)||[]).filter(function(z){return z.p>0});if(!o.length)return "";
-  o.sort(function(a,b){return(b.id==="artikal")-(a.id==="artikal")});
-  return '<div class="wchh">Šanse</div><div class="wch">'+o.map(function(z){return '<span'+(z.id==="artikal"?' class="gd"':'')+'><i style="background:'+(WDOT[z.id]||"#555")+'"></i>'+esc(WNAME[z.id]||z.naziv)+' <b>'+wPct(z.p)+'</b></span>'}).join("")+'</div>'}
 function wheelRules(){var l=["Kod dobijaš od nas. Za učešće nema doplate.","Kod je jednokratan i važi do isteka roka koji piše uz nagradu.","Popust važi na jedan artikal po tvom izboru, artikal do 20.000 din. je besplatan, a besplatna dostava važi u Srbiji.","Nagrade se ne isplaćuju u novcu."];
   return '<details class="wr"><summary>Pravila</summary><ol>'+l.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ol></details>'}
 function wheelView(){var on=!WC||WC.tocak,h='<button class="x" type="button" data-wclose aria-label="Zatvori">×</button><div class="we">Drip Select</div>';
   if(!on){$("#wc").innerHTML=h+'<h3 id="wt">Točak</h3><p>Točak trenutno nije aktivan.</p>';return}
   $("#wc").innerHTML=h+'<h3 id="wt">Zavrti točak</h3><p>Unesi kod koji si dobio od nas, pa zavrti. Jedan kod, jedno vrtenje.</p>'+
-  '<form class="wf" id="wf" autocomplete="off"><input id="wk" aria-label="Kod" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="30" placeholder="DRIP-XXXX-XXXX" value="'+esc(WS.kod||"")+'"><button class="btn" id="wgo" type="submit">Zavrti</button></form>'+
-  '<div class="wmsg" id="wmsg" role="alert"></div><div class="ww" role="img" aria-label="Točak sreće">'+wheelSvg()+'</div><div id="wres" aria-live="polite"></div>'+wheelOdds()+wheelRules();
+  '<form class="wf" id="wf" autocomplete="off"><input id="wk" aria-label="Kod" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="30" value="'+esc(WS.kod||"")+'"><button class="btn" id="wgo" type="submit">Zavrti</button></form>'+
+  '<div class="wmsg" id="wmsg" role="alert"></div><div class="ww" role="img" aria-label="Točak sreće">'+wheelSvg()+'</div><div id="wres" aria-live="polite"></div>'+wheelRules();
   var g=$("#wg");if(g&&WS.rot){g.style.transition="none";g.style.transform="rotate("+WS.rot+"deg)";void g.offsetWidth;g.style.transition=""}}
-function wheelOpen(code){if(!WC)loadWc();WS.kod=kodNorm(code||kodGet());WS.busy=0;wheelView();$("#wv").classList.add("on");var i=$("#wk");if(i)setTimeout(function(){try{i.focus({preventScroll:true})}catch(e){}},30)}
+function wheelOpen(code){if(!WC)loadWc();WS.kod=code?kodNorm(code):"";WS.busy=0;wheelView();$("#wv").classList.add("on");var i=$("#wk");if(i)setTimeout(function(){try{i.focus({preventScroll:true})}catch(e){}},30)}
 function wheelClose(){$("#wv").classList.remove("on");WS.busy=0}
 function wBusy(b){WS.busy=b?1:0;var g=$("#wgo");if(g){g.disabled=!!b;g.textContent=b?"Vrtim...":"Zavrti"}}
 function wErr(t){var m=$("#wmsg");if(m)m.textContent=t||""}
 function wCard(r){var h='<div class="wres'+(r.win?' win':'')+(r.gold?' gold':'')+'"><b>'+esc(r.h)+'</b><p>'+esc(r.p)+'</p>'+(r.rok?'<small>Važi do '+esc(r.rok)+'</small>':'')+(r.win?'<button class="btn full" type="button" data-wuse>Iskoristi u kasi</button>':'')+(r.again?'<button class="btn full" type="button" data-wgo2>Zavrti ponovo</button>':'')+'</div>';var e=$("#wres");if(e)e.innerHTML=h}
-function prizeCard(n,rok){var h,p;
+function prizeCard(n,rok,sj){var h,p;
   if(n.tip==="popust"){h=n.vrednost+"% popust!";p="Važi na jedan artikal po tvom izboru."}
   else if(n.tip==="dostava"){h="Besplatna dostava!";p="Važi za jednu porudžbinu u Srbiji."}
   else{h="Artikal po izboru!";p="Jedan artikal do "+fmt(n.max||20000)+" je besplatan."}
-  return{win:1,gold:n.tip==="artikal",h:h,p:p,rok:rokTxt(rok)}}
+  return{win:1,gold:sj==="zlato",h:h,p:p,rok:rokTxt(rok)}}
 function wheelTo(id,instant){var g=$("#wg"),zs=WG[id];if(!g||!zs)return;var z=zs[Math.floor(Math.random()*zs.length)],th=z.a0+z.sp*(.15+.7*Math.random()),cur=WS.rot,add=((360-th-(cur%360))%360+360)%360;
   WS.from=cur;WS.hit=z.i;WS.rot=cur+360*5+add;Array.prototype.forEach.call(g.querySelectorAll(".wo.on"),function(o){o.classList.remove("on")});
   if(instant||matchMedia("(prefers-reduced-motion:reduce)").matches){g.style.transition="none";g.style.transform="rotate("+WS.rot+"deg)";void g.offsetWidth;g.style.transition=""}
   else g.style.transform="rotate("+WS.rot+"deg)"}
-function wHit(){var o=$('#wg .wo[data-i="'+WS.hit+'"]');if(o)o.classList.add("on")}
+function wHit(sj){if(!sj)return;var o=$('#wg .wo[data-i="'+WS.hit+'"]');if(o){o.classList.toggle("g",sj==="zlato");o.classList.add("on")}}
 function wTick(){var g=$("#wg"),p=$(".wp"),seg=WS.seg||30,acc=WS.from||0,prev=null,last=Math.floor(acc/seg);if(!g||!p)return;
   (function f(){if(!WS.spin||!g.isConnected)return;var m=getComputedStyle(g).transform,a=0,v;
     if(m&&m!=="none"&&(v=m.match(/matrix\(([^)]+)\)/))){v=v[1].split(",");a=Math.atan2(+v[1],+v[0])*180/Math.PI}
     if(prev!==null){var d=a-prev;if(d<-180)d+=360;if(d>180)d-=360;acc+=d}prev=a;
     var k=Math.floor(acc/seg);if(k!==last){last=k;p.classList.remove("fl");void p.offsetWidth;p.classList.add("fl")}
     requestAnimationFrame(f)})()}
-function wheelSpin(id,done){   /* vrti točak do polja id, pa done() */
+function wheelSpin(id,sj,done){   /* vrti točak do polja id, pa done() */
   var w=$(".ww"),rm=matchMedia("(prefers-reduced-motion:reduce)").matches;
   if(!WG[id]&&w){WS.rot=0;w.innerHTML=wheelSvg(1);void w.offsetWidth}
   WS.spin=1;if(w)w.classList.add("sp");wheelTo(id);if(!rm)wTick();
-  setTimeout(function(){WS.spin=0;var x=$(".ww");if(x)x.classList.remove("sp");wHit();done()},rm?0:5400)}
-function burst(id){var w=$(".ww"),b=w?w.getBoundingClientRect():null,x=b?b.left+b.width/2:innerWidth/2,y=b?b.top+b.height/2:innerHeight/3,j=id==="artikal";
-  confetti({x:x,y:y,n:j?230:140,gold:j});setTimeout(function(){confetti({x:x,y:y,n:j?170:90,gold:j})},300);if(j)setTimeout(function(){confetti()},600)}
+  setTimeout(function(){WS.spin=0;var x=$(".ww");if(x)x.classList.remove("sp");wHit(sj);done()},rm?0:5400)}
+/* konfete: zlatne za retke nagrade (šansa do 10%), plave za češće, nikakve kad se ništa ne dobije; artikal je najveći prasak */
+function burst(id,sj){var w=$(".ww"),b=w?w.getBoundingClientRect():null,x=b?b.left+b.width/2:innerWidth/2,y=b?b.top+b.height/2:innerHeight/3,j=id==="artikal",g=sj==="zlato";
+  confetti({x:x,y:y,n:j?230:g?170:110,gold:g});setTimeout(function(){confetti({x:x,y:y,n:j?170:g?110:60,gold:g})},300);if(j)setTimeout(function(){confetti()},600)}
 function wheelGo(){if(WS.busy)return;var k=kodNorm(($("#wk")||{}).value);WS.kod=k;wErr("");var e=$("#wres");if(e)e.innerHTML="";
   if(!k)return wErr("Upiši kod.");
   wBusy(1);
@@ -1173,14 +1163,14 @@ function wheelGo(){if(WS.busy)return;var k=kodNorm(($("#wk")||{}).value);WS.kod=
     if(!r.ok&&r.razlog==="nije_za_tocak")return kodApi({a:"proveri",kod:k}).then(function(q){q.plain=1;return q});return r}).then(function(r){
     if(!r.ok){wBusy(0);return wErr(kodMsg(r.razlog))}
     if(r.plain){   /* kod sa fiksnom nagradom: bez vrtenja, da ne izgleda kao izvlačenje */
-      wBusy(0);if(r.stanje==="vazi"&&r.nagrada){kodSet(k);wCard(prizeCard(r.nagrada,r.rok));burst(r.nagrada.id);return}
+      wBusy(0);if(r.stanje==="vazi"&&r.nagrada){kodSet(k);var q=r.nagrada.tip==="artikal"?"zlato":"plavo";wCard(prizeCard(r.nagrada,r.rok,q));burst(r.nagrada.id,q);return}
       return wErr(kodMsg("")) }
-    var fin=function(){wBusy(0);
+    var sj=r.sjaj||"",fin=function(){wBusy(0);
       if(r.id==="ponovo")return wCard({h:"Zavrti ponovo!",p:"Kod nije potrošen, zavrti još jednom.",again:1});
       if(r.id==="nista")return wCard({h:"Ovaj put nije uspelo",p:"Hvala što si probao. Više sreće sledeći put."});
-      if(r.nagrada){kodSet(k);wCard(prizeCard(r.nagrada,r.rok));if(!r.vec)burst(r.id)}};
-    if(r.vec){wheelTo(r.id,1);wHit();return fin()}
-    wheelSpin(r.id,fin)})}
+      if(r.nagrada){kodSet(k);wCard(prizeCard(r.nagrada,r.rok,sj));if(!r.vec)burst(r.id,sj)}};
+    if(r.vec){wheelTo(r.id,1);wHit(sj);return fin()}
+    wheelSpin(r.id,sj,fin)})}
 
 /* --- kasa: polje za kod i izbor artikla --- */
 function kodPick(n){var best=null;co.forEach(function(i){var p=get(i);if(!p||(n.tip==="artikal"&&p.price>n.max))return;if(!best||p.price>best.price)best=p});return best?best.id:0}
@@ -1198,7 +1188,7 @@ function kodBox(ab,sp){if(!CFG.API||!LIVE)return "";
     else if(n.tip==="dostava"&&sp&&sp.frRaw)h+='<div class="kerr" style="color:var(--mut)">Dostava je već besplatna, pa kod ostaje neiskorišćen.</div>';
     if(n.tip!=="dostava"&&co.length>1)h+='<div class="kbp"><small>Na koji artikal ide popust?</small>'+co.map(function(i){var p=get(i),dis=n.tip==="artikal"&&p.price>n.max;return '<label class="kbr'+(dis?' off':'')+'"><input type="radio" name="kpick" value="'+i+'"'+(KS.izbor===i?' checked':'')+(dis?' disabled':'')+'><span>'+esc(p.name)+'</span><b>'+fmt(p.price)+'</b></label>'}).join("")+'</div>';
     return h+er+'</div>'}
-  return '<div class="kb"><label for="kk">Imaš kod za popust?</label><div class="wf"><input id="kk" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="30" placeholder="DRIP-XXXX-XXXX" value="'+esc(KS.kod)+'"><button class="btn ghost" type="button" data-kodok'+(KS.busy?' disabled':'')+'>'+(KS.busy?'Proveravam...':'Primeni')+'</button></div>'+er+'</div>'}
+  return '<div class="kb"><label for="kk">Imaš kod za popust?</label><div class="wf"><input id="kk" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="30" value="'+esc(KS.kod)+'"><button class="btn ghost" type="button" data-kodok'+(KS.busy?' disabled':'')+'>'+(KS.busy?'Proveravam...':'Primeni')+'</button></div>'+er+'</div>'}
 function sumUp(){var m=$("#sum");if(m&&co.length)m.innerHTML=sum()}
 function kodApply(){var k=kodNorm(KS.kod||($("#kk")||{}).value);KS.errw=0;if(!k){KS.err="Upiši kod.";return sumUp()}
   KS.kod=k;KS.busy=1;KS.err="";sumUp();
@@ -1327,7 +1317,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=32";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=33";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();

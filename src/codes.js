@@ -58,6 +58,15 @@ export function sanseFor(sett) {
   if (!(tot > 0)) { list.forEach((s, i) => { s.w = SANSE[i].w; }); tot = 100; }
   return list.map((s) => ({ ...s, p: Math.round((s.w / tot) * 1000) / 10 }));
 }
+// Sjaj dobitka na sajtu (konfete): "zlato" za retke nagrade (šansa 10% ili manja, a artikal uvek), "plavo" za češće, bez sjaja za "ništa" i "zavrti ponovo".
+export function sjaj(sett, id) {
+  if (!id || id === "nista" || id === "ponovo") return "";
+  if (id === "artikal") return "zlato";
+  const z = sanseFor(sett).find((x) => x.id === id);
+  return z && z.p <= 10 ? "zlato" : "plavo";
+}
+// Nagrade koje su trenutno na točku (težina veća od 0), bez procenata: šanse se ne objavljuju sajtu.
+export const aktivne = (sett) => sanseFor(sett).filter((z) => z.p > 0).map((z) => z.id);
 export function izvuci(rnd = rand01, list = SANSE) {
   const tot = list.reduce((a, s) => a + s.w, 0);
   if (!(tot > 0)) return "nista";
