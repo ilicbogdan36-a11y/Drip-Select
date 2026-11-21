@@ -997,14 +997,16 @@ function drop(){var m="",k;for(k=0;k<6;k++)m+='<span>Novi drop uskoro</span><i><
 document.addEventListener("input",function(e){if(e.target.id==="q"){F.q=e.target.value;drawGrid(0)}});
 document.addEventListener("submit",function(e){if(e.target.id!=="dn"&&e.target.id!=="dn2")return;e.preventDefault();var m=e.target.querySelector("input[type=email]").value.trim();S.mail=S.mail||[];
   if(!S.mail.some(function(x){return x.m===m}))S.mail.unshift({m:m,t:new Date().toLocaleString("sr-RS")});save();var fm=e.target;post("drop",{email:m,vreme:new Date().toLocaleString("sr-RS")}).then(function(){fm.innerHTML='<p class="ok">'+ico('check')+'Hvala! Javljamo ti se čim izađe novi drop.</p>'}).catch(function(er){fm.insertAdjacentHTML("beforeend",'<p class="err">'+(errMsg(er)||'Slanje nije uspelo, pokušaj ponovo.')+'</p>')})});
-function confetti(){
+function confetti(o){
   if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
   var c=document.createElement("canvas");c.style.cssText="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:80";document.body.appendChild(c);
-  var W=c.width=innerWidth,H=c.height=innerHeight,x=c.getContext("2d"),cl=["#000","#fff","#1a8cff","#0a5fc4","#fff","#1a8cff"],ps=[],i,t0=performance.now();
-  for(i=0;i<160;i++)ps.push({x:Math.random()*W,y:-20-Math.random()*H*.7,w:6+Math.random()*7,h:4+Math.random()*6,vx:Math.random()*2-1,vy:2+Math.random()*3.5,r:Math.random()*6,vr:Math.random()*.3-.15,c:cl[i%6]});
+  var W=c.width=innerWidth,H=c.height=innerHeight,x=c.getContext("2d"),cl=o?(o.gold?["#f5c542","#ffe08a","#fff","#1a8cff","#f5c542","#fff"]:["#1a8cff","#fff","#5aa8ff","#0a5fc4","#fff","#8cc4ff"]):["#000","#fff","#1a8cff","#0a5fc4","#fff","#1a8cff"],ps=[],i,t0=performance.now(),cnt=o?o.n||120:160,ag,sp;
+  for(i=0;i<cnt;i++){
+    if(o){ag=-Math.PI/2+(Math.random()-.5)*Math.PI*1.6;sp=5+Math.random()*10;ps.push({x:o.x,y:o.y,w:6+Math.random()*7,h:4+Math.random()*6,vx:Math.cos(ag)*sp,vy:Math.sin(ag)*sp,r:Math.random()*6,vr:Math.random()*.4-.2,c:cl[i%6]})}
+    else ps.push({x:Math.random()*W,y:-20-Math.random()*H*.7,w:6+Math.random()*7,h:4+Math.random()*6,vx:Math.random()*2-1,vy:2+Math.random()*3.5,r:Math.random()*6,vr:Math.random()*.3-.15,c:cl[i%6]})}
   (function f(n){x.clearRect(0,0,W,H);var a=false;
-    ps.forEach(function(p){p.x+=p.vx+Math.sin(p.y/40);p.y+=p.vy;p.r+=p.vr;if(p.y<H+20)a=true;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.w/2,-p.h/2,p.w,p.h);if(p.c==="#000"){x.strokeStyle="#ffffffaa";x.strokeRect(-p.w/2,-p.h/2,p.w,p.h)}x.restore()});
-    if(a&&n-t0<7000)requestAnimationFrame(f);else c.remove()})(t0);
+    ps.forEach(function(p){if(o){p.vy+=.22;p.vx*=.992;p.vy*=.992;p.x+=p.vx;p.y+=p.vy}else{p.x+=p.vx+Math.sin(p.y/40);p.y+=p.vy}p.r+=p.vr;if(p.y<H+20)a=true;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.w/2,-p.h/2,p.w,p.h);if(p.c==="#000"){x.strokeStyle="#ffffffaa";x.strokeRect(-p.w/2,-p.h/2,p.w,p.h)}x.restore()});
+    if(a&&n-t0<(o?5000:7000))requestAnimationFrame(f);else c.remove()})(t0);
 }
 function initBg(){
   var c=$("#bg"),g=c.getContext("webgl",{antialias:false,powerPreference:"low-power"});if(!g){c.style.display="none";return}
@@ -1076,10 +1078,13 @@ function rokTxt(ms){if(!ms)return "";var d=new Date(ms);return d.getDate()+"."+(
 function nagTxt(n){return n.tip==="popust"?n.vrednost+"% popust na jedan artikal":n.tip==="dostava"?"Besplatna dostava":"Jedan artikal do "+fmt(n.max||20000)+" besplatno"}
 
 /* --- točak (prozor) --- */
-var WCOL={nista:"#171c28",dostava:"#0d4a99",p5:"#1a8cff",p10:"#0a5fc4",p20:"#5aa8ff",ponovo:"#2a3345",artikal:"#f5c542"},WLB={nista:"Probaj opet",dostava:"Dostava",p5:"5%",p10:"10%",p20:"20%",ponovo:"Ponovo",artikal:""};
-function wheelSvg(){var s=(WC&&WC.sanse)||[],a=0,h="",c=140,r=132,tot=0;WG={};s.forEach(function(z){tot+=z.w});tot=tot||100;
+var WCOL={nista:"#171c28",dostava:"#0d4a99",p5:"#1a8cff",p10:"#0a5fc4",p20:"#5aa8ff",ponovo:"#2a3345",artikal:"#f5c542"},WLB={nista:"Probaj opet",dostava:"Dostava",p5:"5%",p10:"10%",p20:"20%",ponovo:"Ponovo",artikal:"Artikal"};
+/* Točak uključen: polja su prave šanse sa servera. Točak isključen: točak samo "otkriva" nagradu koja je kupcu već određena (10% ili 20%), polja se ponavljaju. */
+function wheelSlices(id){if(WC&&WC.tocak)return(WC.sanse||[]).map(function(z){return{id:z.id,w:z.w}});
+  var b=["p10","p20"],o=[],i;if(id&&b.indexOf(id)<0)b=[id,"p10","p20"];for(i=0;i<(b.length===2?4:3);i++)b.forEach(function(x){o.push({id:x,w:1})});return o}
+function wheelSvg(slices){var s=slices||wheelSlices(),a=0,h="",c=140,r=132,tot=0;WG={};s.forEach(function(z){tot+=z.w});tot=tot||100;
   function pt(g,rr){var t=g*Math.PI/180;return(c+rr*Math.sin(t)).toFixed(2)+" "+(c-rr*Math.cos(t)).toFixed(2)}
-  s.forEach(function(z){var sp=z.w/tot*360,a1=a+sp,mid=a+sp/2;WG[z.id]={a0:a,sp:sp};
+  s.forEach(function(z){var sp=z.w/tot*360,a1=a+sp,mid=a+sp/2;(WG[z.id]=WG[z.id]||[]).push({a0:a,sp:sp});
     h+='<path d="M'+c+' '+c+' L'+pt(a,r)+' A'+r+' '+r+' 0 '+(sp>180?1:0)+' 1 '+pt(a1,r)+' Z" fill="'+(WCOL[z.id]||"#222")+'" stroke="#07080c" stroke-width="1.5"/>';
     if(sp>=14&&WLB[z.id])h+='<text transform="translate('+pt(mid,r*.64).replace(" ",",")+') rotate('+(mid-90+(mid>180?180:0)).toFixed(1)+')" fill="#fff" font-size="13" font-weight="700" text-anchor="middle" dominant-baseline="central" font-family="Space Grotesk,Inter,sans-serif">'+WLB[z.id]+'</text>';
     a=a1});
@@ -1092,9 +1097,9 @@ function wheelRules(){var on=WC&&WC.tocak,d=(WC&&WC.rok_dana)||30,l=[];
   return h+'<ol>'+l.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ol></details>'}
 function wheelView(){var on=WC&&WC.tocak;
   $("#wc").innerHTML='<button class="x" type="button" data-wclose aria-label="Zatvori">×</button><h3 id="wt">'+(on?'Zavrti točak':'Imaš kod?')+'</h3>'+
-  '<p>'+(on?'Unesi kod iz mejla posle porudžbine, pa zavrti. Jedan kod, jedno vrtenje.':'Kod dobijaš u mejlu kad potvrdimo porudžbinu. Unesi ga da vidiš šta ti donosi.')+'</p>'+
+  '<p>'+(on?'Unesi kod iz mejla posle porudžbine, pa zavrti. Jedan kod, jedno vrtenje.':'Kod dobijaš u mejlu kad potvrdimo porudžbinu. Unesi ga i otkrij šta ti donosi.')+'</p>'+
   '<form class="wf" id="wf" autocomplete="off"><input id="wk" aria-label="Kod" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="30" placeholder="DRIP-XXXX-XXXX" value="'+esc(WS.kod||"")+'"><button class="btn" id="wgo" type="submit">'+(on?'Zavrti':'Proveri kod')+'</button></form>'+
-  '<div class="wmsg" id="wmsg" role="alert"></div>'+(on?'<div class="ww">'+wheelSvg()+'</div>':'')+'<div id="wres" aria-live="polite"></div>'+wheelRules();
+  '<div class="wmsg" id="wmsg" role="alert"></div>'+'<div class="ww">'+wheelSvg()+'</div>'+'<div id="wres" aria-live="polite"></div>'+wheelRules();
   var g=$("#wg");if(g&&WS.rot)g.style.transform="rotate("+WS.rot+"deg)"}
 function wheelOpen(code){if(!WC)loadWc();WS.kod=kodNorm(code||kodGet());WS.busy=0;wheelView();$("#wv").classList.add("on");var i=$("#wk");if(i)setTimeout(function(){try{i.focus({preventScroll:true})}catch(e){}},30)}
 function wheelClose(){$("#wv").classList.remove("on");WS.busy=0}
@@ -1106,23 +1111,30 @@ function prizeCard(n,rok){var h,p;
   else if(n.tip==="dostava"){h="Besplatna dostava!";p="Važi za jednu porudžbinu u Srbiji."}
   else{h="Artikal po izboru!";p="Jedan artikal do "+fmt(n.max||20000)+" je besplatan."}
   return{win:1,h:h,p:p,rok:rokTxt(rok)}}
-function wheelTo(id,ms){var g=$("#wg"),z=WG[id];if(!g||!z)return;var th=z.a0+z.sp*(.15+.7*Math.random()),cur=WS.rot,add=((360-th-(cur%360))%360+360)%360;
+function wheelTo(id){var g=$("#wg"),zs=WG[id];if(!g||!zs)return;var z=zs[Math.floor(Math.random()*zs.length)],th=z.a0+z.sp*(.15+.7*Math.random()),cur=WS.rot,add=((360-th-(cur%360))%360+360)%360;
   WS.rot=cur+360*5+add;if(matchMedia("(prefers-reduced-motion:reduce)").matches)g.style.transition="none";g.style.transform="rotate("+WS.rot+"deg)"}
+function wheelSpin(id,done){   /* vrti točak do polja id, pa done() */
+  if(!WG[id]){var w=$(".ww");if(w){WS.rot=0;w.innerHTML=wheelSvg(wheelSlices(id));void w.offsetWidth}}
+  wheelTo(id);setTimeout(done,matchMedia("(prefers-reduced-motion:reduce)").matches?0:5400)}
+function burst(id){var w=$(".ww"),b=w?w.getBoundingClientRect():null,x=b?b.left+b.width/2:innerWidth/2,y=b?b.top+b.height/2:innerHeight/3,j=id==="artikal";
+  confetti({x:x,y:y,n:j?230:140,gold:j});setTimeout(function(){confetti({x:x,y:y,n:j?170:90,gold:j})},300);if(j)setTimeout(function(){confetti()},600)}
 function wheelGo(){if(WS.busy)return;var k=kodNorm(($("#wk")||{}).value);WS.kod=k;wErr("");var e=$("#wres");if(e)e.innerHTML="";
   if(!k)return wErr("Upiši kod iz mejla.");
   var on=WC&&WC.tocak;wBusy(1);
   kodApi({a:on?"zavrti":"proveri",kod:k}).then(function(r){
     if(on&&!r.ok&&r.razlog==="nije_za_tocak")return kodApi({a:"proveri",kod:k}).then(function(q){q.plain=1;return q});return r}).then(function(r){
     if(!r.ok){wBusy(0);return wErr(kodMsg(r.razlog))}
-    if(r.plain||!on){wBusy(0);
-      if(r.stanje==="vazi"&&r.nagrada){kodSet(k);return wCard(prizeCard(r.nagrada,r.rok))}
-      return wCard({h:"Kod je ispravan",p:"Ovaj kod je za točak, a točak trenutno nije aktivan. Sačuvaj ga, važi do isteka roka.",rok:rokTxt(r.rok)})}
+    if(r.plain||!on){
+      if(r.stanje==="vazi"&&r.nagrada){kodSet(k);var n=r.nagrada,show=function(){wBusy(0);wCard(prizeCard(n,r.rok));burst(n.id)};
+        if(on){show();return}   /* običan kod u prozoru točka: bez vrtenja, da ne izgleda kao izvlačenje */
+        return wheelSpin(n.id,show)}
+      wBusy(0);return wCard({h:"Kod je ispravan",p:"Ovaj kod je za točak, a točak trenutno nije aktivan. Sačuvaj ga, važi do isteka roka.",rok:rokTxt(r.rok)})}
     var fin=function(){wBusy(0);
       if(r.id==="ponovo")return wCard({h:"Zavrti ponovo!",p:"Kod nije potrošen, zavrti još jednom.",again:1});
       if(r.id==="nista")return wCard({h:"Ovaj put nije uspelo",p:"Hvala što kupuješ kod nas. Probaj sledeći put sa novim kodom."});
-      if(r.nagrada){kodSet(k);wCard(prizeCard(r.nagrada,r.rok));if(r.id==="artikal")confetti()}};
+      if(r.nagrada){kodSet(k);wCard(prizeCard(r.nagrada,r.rok));if(!r.vec)burst(r.id)}};
     if(r.vec){wheelTo(r.id);return setTimeout(fin,400)}
-    wheelTo(r.id);setTimeout(fin,matchMedia("(prefers-reduced-motion:reduce)").matches?0:5400)})}
+    wheelSpin(r.id,fin)})}
 
 /* --- kasa: polje za kod i izbor artikla --- */
 function kodPick(n){var best=null;co.forEach(function(i){var p=get(i);if(!p||(n.tip==="artikal"&&p.price>n.max))return;if(!best||p.price>best.price)best=p});return best?best.id:0}
@@ -1269,7 +1281,7 @@ var LANG="sr";try{if(localStorage.getItem("dslang")==="en")LANG="en"}catch(e){}
 function langUI(){[].forEach.call(document.querySelectorAll("[data-lang]"),function(b){var o=b.getAttribute("data-lang")===LANG;b.className=o?"on":"";b.setAttribute("aria-pressed",o?"true":"false")})}
 function applyLang(){
   if(LANG==="en"){if(window.DSI18N)return DSI18N.on();
-    var sc=document.createElement("script");sc.src="/i18n.js?v=30";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
+    var sc=document.createElement("script");sc.src="/i18n.js?v=31";sc.onload=function(){if(LANG==="en"&&window.DSI18N)DSI18N.on()};document.head.appendChild(sc)}
   else if(window.DSI18N)DSI18N.off()}
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest("[data-lang]");if(!b)return;LANG=b.getAttribute("data-lang")==="en"?"en":"sr";try{localStorage.setItem("dslang",LANG)}catch(x){}langUI();applyLang();setTimeout(hh,60)});
 langUI();

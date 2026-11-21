@@ -129,7 +129,7 @@
     // točak i kodovi
     "Točak i kodovi": "Wheel and codes", "Točak sreće": "Wheel of fortune", "Zavrti točak": "Spin the wheel", "Imaš kod?": "Got a code?", "Imaš kod za popust?": "Got a discount code?",
     "Unesi kod iz mejla posle porudžbine, pa zavrti. Jedan kod, jedno vrtenje.": "Enter the code from the email you get after an order, then spin. One code, one spin.",
-    "Kod dobijaš u mejlu kad potvrdimo porudžbinu. Unesi ga da vidiš šta ti donosi.": "You get the code by email once we confirm your order. Enter it to see what it brings you.",
+    "Kod dobijaš u mejlu kad potvrdimo porudžbinu. Unesi ga i otkrij šta ti donosi.": "You get the code by email once we confirm your order. Enter it and find out what it brings you.",
     "Kod": "Code", "Zavrti": "Spin", "Proveri kod": "Check code", "Vrtim...": "Spinning...", "Upiši kod iz mejla.": "Enter the code from your email.", "Upiši kod.": "Enter a code.",
     "Pravila": "Rules", "Pravila i šanse": "Rules and odds", "Probaj opet": "Try again", "Ponovo": "Again",
     "Probaj sledeći put": "Better luck next time", "Besplatna dostava": "Free delivery", "5% popust": "5% off", "10% popust": "10% off", "20% popust": "20% off", "Zavrti ponovo": "Spin again", "Artikal do 20.000 din.": "Item up to 20.000 din.",
