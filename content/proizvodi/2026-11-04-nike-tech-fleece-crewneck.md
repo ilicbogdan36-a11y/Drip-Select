@@ -2,8 +2,8 @@
 title: Nike Tech Fleece Crewneck
 brand: Nike
 category: Gornji deo
-price: 4990
-old_price: 4490
+price: 4490
+old_price: 4990
 size: S
 color: Siva
 condition: 9
