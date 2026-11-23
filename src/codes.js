@@ -182,7 +182,7 @@ export async function nadjiKod(env, kod) {
   return e && e.data ? e : null;
 }
 
-// Nasumično izvlačenje (samo kod koji je za točak i još nije zavrten). Rezultat se upisuje pre odgovora, pa ga nije moguće ponoviti.
+// Nasumično izvlačenje (kod za točak koji još nije zavrten). Kod sa fiksnom nagradom se takođe "vrti", ali uvek staje na svoju nagradu. Rezultat se upisuje pre odgovora, pa ga nije moguće ponoviti.
 export async function zavrtiKod(env, kod, sett = DEFAULTS, rnd = rand01) {
   const cfg = cfgAt(env, KOD_DIR);
   if (!cfg) throw new Error("github nije podešen");
@@ -190,7 +190,10 @@ export async function zavrtiKod(env, kod, sett = DEFAULTS, rnd = rand01) {
     const e = await ucitaj(cfg, kod);
     if (!e || !e.data) return { ok: false, razlog: "nema" };
     const st = stanje(e.data);
-    if (e.data.vrsta !== "tocak") return { ok: false, razlog: st.s === "vazi" ? "nije_za_tocak" : st.s };
+    if (e.data.vrsta !== "tocak") {   // kod sa fiksnom nagradom: ništa se ne upisuje, točak se samo vrti do te nagrade
+      if (st.s !== "vazi") return { ok: false, razlog: st.s };
+      return { ok: true, id: e.data.vrsta, nagrada: javnaNagrada(st.prize), stanje: "vazi", rok: st.rok };
+    }
     if (st.s === "vazi") return { ok: true, vec: true, id: e.data.ishod, nagrada: javnaNagrada(st.prize), stanje: "vazi", rok: st.rok };
     if (st.s !== "zavrti") return { ok: false, razlog: st.s };
     const id = izvuci(rnd, sanseFor(sett));

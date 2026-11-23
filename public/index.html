@@ -1160,17 +1160,12 @@ function wheelGo(){if(WS.busy)return;var k=kodNorm(($("#wk")||{}).value);WS.kod=
   if(!k)return wErr("Upiši kod.");
   wBusy(1);
   kodApi({a:"zavrti",kod:k}).then(function(r){
-    if(!r.ok&&r.razlog==="nije_za_tocak")return kodApi({a:"proveri",kod:k}).then(function(q){q.plain=1;return q});return r}).then(function(r){
     if(!r.ok){wBusy(0);return wErr(kodMsg(r.razlog))}
-    if(r.plain){   /* kod sa fiksnom nagradom: bez vrtenja, da ne izgleda kao izvlačenje */
-      wBusy(0);if(r.stanje==="vazi"&&r.nagrada){kodSet(k);var q=r.nagrada.tip==="artikal"?"zlato":"plavo";wCard(prizeCard(r.nagrada,r.rok,q));burst(r.nagrada.id,q);return}
-      return wErr(kodMsg("")) }
     var sj=r.sjaj||"",fin=function(){wBusy(0);
       if(r.id==="ponovo")return wCard({h:"Zavrti ponovo!",p:"Kod nije potrošen, zavrti još jednom.",again:1});
       if(r.id==="nista")return wCard({h:"Ovaj put nije uspelo",p:"Hvala što si probao. Više sreće sledeći put."});
       if(r.nagrada){kodSet(k);wCard(prizeCard(r.nagrada,r.rok,sj));if(!r.vec)burst(r.id,sj)}};
-    if(r.vec){wheelTo(r.id,1);wHit(sj);return fin()}
-    wheelSpin(r.id,sj,fin)})}
+    wheelSpin(r.id,sj,fin)})}   /* svaki važeći kod se vrti i staje na svoju nagradu (fiksni kodovi i već izvučeni isto) */
 
 /* --- kasa: polje za kod i izbor artikla --- */
 function kodPick(n){var best=null;co.forEach(function(i){var p=get(i);if(!p||(n.tip==="artikal"&&p.price>n.max))return;if(!best||p.price>best.price)best=p});return best?best.id:0}
