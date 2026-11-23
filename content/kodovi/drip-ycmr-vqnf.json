@@ -1,7 +1,9 @@
 {
   "kod": "DRIP-YCMR-VQNF",
   "vrsta": "tocak",
-  "status": "aktivan",
+  "status": "iskoriscen",
   "nastao": "2026-11-23T14:11:36.000+01:00",
-  "rok_dana": 30
+  "rok_dana": 30,
+  "ishod": "nista",
+  "zavrteno": "2026-11-23T13:12:16.139Z"
 }
